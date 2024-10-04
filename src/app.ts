@@ -1,91 +1,52 @@
 import "dotenv/config";
 import express, { Application, Request, Response } from "express";
-import { authUrl, redeemCode } from "./auth";
-import {
-  getHubSpotProperties,
-  getNativeProperties,
-  createPropertyGroup,
-  createRequiredProperty,
-} from "./properties";
 import shutdown from './utils/shutdown';
-import { saveMapping, getMappings, deleteMapping } from "./mappings";
+import {getAssociationsByCustomerId, getMappings, saveMapping, deleteMapping} from "./mappings";
 import { PORT, getCustomerId } from "./utils/utils";
-import { Mapping, Properties } from "@prisma/client";
+import { AssociationMapping, Association } from "@prisma/client";
 import handleError from './utils/error'
 
 const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/install", (req: Request, res: Response) => {
-  res.send(authUrl);
-});
-
-app.get("/oauth-callback", async (req: Request, res: Response):Promise<void> => {
-  const code = req.query.code;
-
-  if (code) {
+app.get(
+  "/api/native-associations-with-mappings",
+  async (req: Request, res: Response): Promise<void> => {
     try {
-      const authInfo = await redeemCode(code.toString());
-      if(authInfo){
-      const accessToken = authInfo.accessToken;
-      await createPropertyGroup(accessToken);
-      await createRequiredProperty(accessToken);
-      res.redirect(`http://localhost:${PORT - 1}/`);
-      }
-    } catch (error: any) {
-      handleError(error, 'There was an issue in the Oauth callback ')
-      res.redirect(`/?errMessage=${error.message}`);
+      const customerId = getCustomerId(); // Assuming function to extract the customer ID
+      const associations = await getAssociationsByCustomerId(customerId);
+
+      const associationIds = associations.map((association) => association.id);
+      const mappings = await getMappings(associationIds);
+
+      const responseData = associations.map((association) => ({
+        association,
+        mappings: mappings.filter((mapping) => mapping.associationId === association.id),
+      }));
+
+      console.log('Response from native-associations-with-mappings:', responseData);
+      res.json(responseData);
+    } catch (error) {
+      handleError(error, 'There was an issue getting the native properties with mappings ');
+      res.status(500).send("Internal Server Error");
     }
   }
-})
+);
+// app.get("/api/hubspot-associations", async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const customerId: string = getCustomerId();
+//     const properties = await getHubSpotAssociations(customerId);
+//     res.send(properties);
+//   } catch (error) {
+//     handleError(error, 'There was an issue getting Hubspot properties ')
+//     res.status(500).send('Internal Server Error');
+//   }})
 
-app.get("/api/hubspot-properties", async (req: Request, res: Response): Promise<void> => {
-  try {
-    const customerId: string = getCustomerId();
-    const properties = await getHubSpotProperties(customerId, false);
-    res.send(properties);
-  } catch (error) {
-    handleError(error, 'There was an issue getting Hubspot properties ')
-    res.status(500).send('Internal Server Error');
-  }})
-// app.get("/api/hubspot-properties-skip-cache", async (req: Request, res: Response) => {
-//   const customerId = getCustomerId();
-//   const properties = await getHubSpotProperties(customerId, true);
-//   res.send(properties);
-// });
-
-
-
-// app.get("/api/native-properties/", async (req: Request, res: Response) => {
-//   const customerId = getCustomerId();
-//   const properties = await getNativeProperties(customerId);
-//   res.send(properties);
-// });
-
-app.get(
-  "/api/native-properties-with-mappings",
-  async (req: Request, res: Response):Promise<void> => {
-    try {
-      const customerId = getCustomerId();
-      const properties: Properties[] | undefined = await getNativeProperties(customerId);
-      const mappings: Mapping[] | undefined = await getMappings(customerId);
-      if(mappings && properties){
-      const propertiesWithMappings = properties.map((property) => {
-        const matchedMapping = mappings.find((mapping) => mapping.nativeName === property.name);
-        return { property, mapping: matchedMapping };
-      });
-      res.send(propertiesWithMappings);
-    }
-    } catch (error) {
-      handleError(error, 'There was an issue getting the native properties with mappings ')
-      res.status(500).send('Internal Server Error');
-    }
-  })
-
-app.post("/api/mappings", async (req: Request, res: Response): Promise<void> => {
+app.post("/api/association/mappings", async (req: Request, res: Response): Promise<void> => {
   try{
-    const response = await saveMapping(req.body as Mapping);
+    const response = await saveMapping(req.body as AssociationMapping);
+    console.log('succesfully saved mapping', response)
     res.send(response);
   } catch(error) {
     handleError(error, 'There was an issue while saving property mappings ')
@@ -93,7 +54,7 @@ app.post("/api/mappings", async (req: Request, res: Response): Promise<void> => 
   }
 });
 
-app.delete("/api/mappings/:mappingId", async (req: Request, res: Response): Promise<void> => {
+app.delete("/api/associations/mappings/:mappingId", async (req: Request, res: Response): Promise<void> => {
   const mappingToDelete = req.params.mappingId;
   const mappingId = parseInt(mappingToDelete);
   if (!mappingId ) {
@@ -107,18 +68,6 @@ app.delete("/api/mappings/:mappingId", async (req: Request, res: Response): Prom
   }
 });
 
-// app.get("/api/mappings", async (req: Request, res: Response) => {
-//   const mappings = await getMappings(getCustomerId());
-//   const formattedMappings = mappings.map((mapping) => {
-//     const { nativeName, hubspotLabel, hubspotName, id, object } = mapping;
-//     return {
-//       id,
-//       nativeName,
-//       property: { name: hubspotName, label: hubspotLabel, object },
-//     };
-//   });
-//   res.send(formattedMappings);
-// });
 
 const server = app.listen(PORT, function () {
   console.log(`App is listening on port ${PORT} !`);
