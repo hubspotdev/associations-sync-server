@@ -1,128 +1,108 @@
 import prisma from "../prisma/seed";
 import handleError from './utils/error';
 import { getCustomerId } from "./utils/utils";
-import { Mapping } from "@prisma/client";
-const getMappings = async (customerId: string): Promise<Mapping[] | undefined> => {
- try{
-  const mappings: Mapping[] = await prisma.mapping.findMany({
-    select: {
-      nativeName: true,
-      hubspotLabel: true,
-      hubspotName: true,
-      id: true,
-      object: true,
-      direction: true,
-      customerId: true,
-      modificationMetadata:true,
-    },
-    where: {
-      customerId,
-    },
-  });
-  console.log(mappings);
-  return mappings;
-} catch (error) {
-  handleError(error, "There was an issue while querying property mappings ")
-}
-};
+import { Association, AssociationMapping, Direction, AssociationType } from "@prisma/client";
 
-const deleteMapping = async (mappingId: number): Promise<Mapping | undefined> => {
-  console.log(mappingId, 'mappingId++')
+async function getAssociationsByCustomerId(customerId: string): Promise<Association[]> {
   try {
-    const deleteResults = await prisma.mapping.delete({
-      where: {
-        id: mappingId,
-      },
+    const associations = await prisma.association.findMany({
+      where: { customerId },
     });
-
-    return deleteResults;
+    return associations;
+  } catch (error) {
+    console.error("Error fetching associations:", error);
+    throw error;
   }
-  catch (error) {
-    handleError(error, 'There was an issue while attempting to delete property mappings ')
-  }
-};
+}
 
-const saveMapping = async (maybeMapping: Mapping): Promise<Mapping | undefined> => {
-  console.log("maybeMapping", maybeMapping);
-  const mappingName = maybeMapping.nativeName;
-  const hubspotName = maybeMapping.hubspotName;
-  const hubspotLabel = maybeMapping.hubspotLabel;
-  const object = maybeMapping.object;
-  const direction = maybeMapping.direction;
-  const modificationMetadata = maybeMapping.modificationMetadata
-  const customerId = getCustomerId();
+async function getMappings(associationIds: number[]): Promise<AssociationMapping[]> {
   try {
-    const mappingResult = await prisma.mapping.upsert({
+    const mappings = await prisma.associationMapping.findMany({
       where: {
-        nativeName_object_customerId: {
-          nativeName: mappingName,
-          customerId: customerId,
-          object: object,
+        associationId: {
+          in: associationIds,
         },
       },
+    });
+    return mappings;
+  } catch (error) {
+    console.error("Error fetching mappings:", error);
+    throw error;
+  }
+}
+
+
+interface MaybeMappingInput {
+  associationId: number; // ID of the associated association
+  hubSpotAssociationLabel: string;
+  hubSpotObject: string;
+  toHubSpotObject: string;
+  associationType: AssociationType;
+  direction: Direction;
+  nativeObject: string;
+  toNativeObject: string;
+  nativeAssociationLabel: string;
+  customerId: string;
+}
+
+const saveMapping = async (maybeMapping: MaybeMappingInput): Promise<AssociationMapping | undefined> => {
+  console.log("maybeMapping", maybeMapping);
+  const {
+    associationId,
+    hubSpotAssociationLabel,
+    hubSpotObject,
+    toHubSpotObject,
+    associationType,
+    direction,
+    nativeObject,
+    toNativeObject,
+    nativeAssociationLabel,
+    customerId,
+  } = maybeMapping;
+
+  try {
+    const mappingResult = await prisma.associationMapping.upsert({
+      where: {
+        associationId: associationId,
+      },
       update: {
-        hubspotLabel,
-        hubspotName,
+        hubSpotAssociationLabel,
+        hubSpotObject,
+        toHubSpotObject,
+        associationType,
         direction,
       },
       create: {
-        hubspotLabel,
-        hubspotName,
-        nativeName: mappingName,
-        object: object,
-        customerId: customerId,
-        direction: direction,
-        modificationMetadata:modificationMetadata || {},
+        associationId,
+        hubSpotAssociationLabel,
+        hubSpotObject,
+        toHubSpotObject,
+        associationType,
+        direction,
+        nativeObject,
+        toNativeObject,
+        nativeAssociationLabel,
+        customerId,
       },
     });
 
     return mappingResult;
   } catch (error) {
-    handleError(error, 'There was an issue while attempting to save the property mapping ')
+    handleError(error, 'There was an issue while attempting to save the association mapping');
   }
 };
 
-// const saveMappings = async (mappingsInput: Mapping[]) => {
-//   console.log("mappingsInput", mappingsInput);
+async function deleteMapping(mappingId: number): Promise<string | undefined> {
+  try {
+    const deleteResult = await prisma.associationMapping.delete({
+      where: {
+        id: mappingId,
+      },
+    });
+    return `Mapping with ID ${mappingId} deleted successfully.`;
+  } catch (error) {
+    handleError(error, 'There was an issue while deleting this association mapping')
+  }
+}
 
-//   if (mappingsInput.length > 0) {
-//     const mappingResults = mappingsInput.map(async (maybeMapping) => {
-//       const mappingName = maybeMapping.nativeName;
-//       const hubspotName = maybeMapping.hubspotName;
-//       const hubspotLabel = maybeMapping.hubspotLabel;
-//       const object = maybeMapping.object;
-//       const direction = maybeMapping.direction;
-//       const customerId = getCustomerId();
-
-//       const mappingResult = await prisma.mapping.upsert({
-//         where: {
-//           nativeName_object_customerId: {
-//             nativeName: mappingName,
-//             customerId: customerId,
-//             object: object,
-//           },
-//         },
-//         update: {
-//           hubspotLabel,
-//           hubspotName,
-//           direction,
-//         },
-//         create: {
-//           hubspotLabel,
-//           hubspotName,
-//           nativeName: mappingName,
-//           object: object,
-//           customerId: customerId,
-//           direction: direction,
-//         },
-//       });
-
-//       return mappingResult;
-//     });
-
-//     return await Promise.all(mappingResults);
-//   }
-//   return {};
-// };
-
-export { deleteMapping, getMappings, saveMapping };
+export { getAssociationsByCustomerId, getMappings, saveMapping, deleteMapping };
