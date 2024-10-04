@@ -6,60 +6,42 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+model Association {
+  id                         Int             @id @default(autoincrement())
+  nativeObject               String          @db.VarChar(255)
+  toNativeObject             String          @db.VarChar(255)
+  nativeAssociationLabel     String          @db.VarChar(255)
+  associationType            AssociationType // Represents the association type
+  customerId                 String          @db.VarChar(255)
 
-model Mapping {
-  id                     Int                  @id @default(autoincrement())
-  nativeName             String               @db.VarChar(255)
-  hubspotName            String?              @db.VarChar(255)
-  hubspotLabel           String?              @db.VarChar(255)
-  object                 Objects
-  customerId             String               @db.VarChar(255)
-  direction              Direction
-  modificationMetadata   Json
-
-  @@unique([nativeName, object, customerId])
+  @@unique([customerId, nativeObject, toNativeObject, nativeAssociationLabel])
 }
 
-model Authorization {
-  customerId   String    @id @db.VarChar(255)
-  hsPortalId   String    @db.VarChar(255)
-  accessToken  String    @db.VarChar(255)
-  refreshToken String    @db.VarChar(255)
-  expiresIn    Int?
-  expiresAt    DateTime? @db.Timestamp(6)
+model AssociationMapping {
+  id                         Int             @id @default(autoincrement())
+  associationId              Int             @unique
+  nativeObject               String          @db.VarChar(255)
+  toNativeObject             String          @db.VarChar(255)
+  nativeAssociationLabel     String          @db.VarChar(255)
+  hubSpotAssociationLabel    String          @db.VarChar(255)
+  hubSpotObject              String          @db.VarChar(255)
+  toHubSpotObject            String          @db.VarChar(255)
+  associationType            AssociationType
+  customerId                 String          @db.VarChar(255)
+  direction                  Direction
+  hubSpotAssociationId       Int?
+
+  @@unique([customerId, hubSpotObject, toHubSpotObject, associationType, direction])
 }
 
-model Properties {
-  name                   String               @db.VarChar(255)
-  label                  String?              @db.VarChar(255)
-  type                   PropertyType
-  object                 Objects
-  customerId             String               @db.VarChar(255)
-  modificationMetadata   Json
-
-  @@unique([name, object, customerId])
-}
-
-model HubSpotPropertiesCache {
-  id           Int      @id @default(autoincrement())
-  customerId   String   @unique @db.VarChar(255)
-  updatedAt    DateTime @updatedAt
-  propertyData Json
-}
-
-enum PropertyType {
-  String
-  Number
-  Option
-}
-
-enum Objects {
-  Company
-  Contact
+enum AssociationType {
+  ONE_TO_ONE
+  ONE_TO_MANY
+  MANY_TO_MANY
 }
 
 enum Direction {
   toHubSpot
-  toNative
+  fromHubSpot
   biDirectional
 }
