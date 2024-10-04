@@ -32,12 +32,12 @@ const CLIENT_SECRET: string =
 
 const REDIRECT_URI: string = `http://localhost:${PORT}/oauth-callback`;
 
-const SCOPES = [
-  "crm.schemas.companies.write",
-  "crm.schemas.contacts.write",
-  "crm.schemas.companies.read",
-  "crm.schemas.contacts.read",
-];
+// const SCOPES = [
+//   "crm.schemas.companies.write",
+//   "crm.schemas.contacts.write",
+//   "crm.schemas.companies.read",
+//   "crm.schemas.contacts.read",
+// ];
 
 const EXCHANGE_CONSTANTS = {
   redirect_uri: REDIRECT_URI,
@@ -47,13 +47,13 @@ const EXCHANGE_CONSTANTS = {
 
 const hubspotClient = new hubspot.Client();
 
-const scopeString = SCOPES.toString().replaceAll(",", " ");
+// const scopeString = SCOPES.toString().replaceAll(",", " ");
 
-const authUrl = hubspotClient.oauth.getAuthorizationUrl(
-  CLIENT_ID,
-  REDIRECT_URI,
-  scopeString
-);
+// const authUrl = hubspotClient.oauth.getAuthorizationUrl(
+//   CLIENT_ID,
+//   REDIRECT_URI,
+//   scopeString
+// );
 
 const getExpiresAt = (expiresIn: number): Date => {
   const now = new Date();
@@ -182,4 +182,4 @@ const getAccessToken = async (customerId: string): Promise<string | void> => {
   }
 };
 
-export { authUrl, exchangeForTokens, redeemCode, getAccessToken, prisma, hubspotClient };
+export { exchangeForTokens, redeemCode, getAccessToken, prisma, hubspotClient };
