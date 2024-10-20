@@ -7,41 +7,85 @@ generator client {
   provider = "prisma-client-js"
 }
 model Association {
-  id                         Int             @id @default(autoincrement())
-  nativeObject               String          @db.VarChar(255)
-  toNativeObject             String          @db.VarChar(255)
-  nativeAssociationLabel     String          @db.VarChar(255)
-  associationType            AssociationType // Represents the association type
+  id                         String    @id @default(cuid())  // Auto-generate ID using cuid
+  objectType                 String          @db.VarChar(255)
+  objectId                   String
+  toObjectType               String          @db.VarChar(255)
+  toObjectId                 String
+  associationLabel           String          @db.VarChar(255)
+  secondaryAssociationLabel  String?          @db.VarChar(255)
+  associationTypeId          Int
+  associationCategory  AssociationCategory
   customerId                 String          @db.VarChar(255)
+  cardinality                Cardinality
 
-  @@unique([customerId, nativeObject, toNativeObject, nativeAssociationLabel])
+  @@unique([customerId, toObjectId, objectId, associationLabel, associationTypeId])
 }
 
 model AssociationMapping {
-  id                         Int             @id @default(autoincrement())
-  associationId              Int             @unique
-  nativeObject               String          @db.VarChar(255)
-  toNativeObject             String          @db.VarChar(255)
-  nativeAssociationLabel     String          @db.VarChar(255)
-  hubSpotAssociationLabel    String          @db.VarChar(255)
-  hubSpotObject              String          @db.VarChar(255)
-  toHubSpotObject            String          @db.VarChar(255)
-  associationType            AssociationType
-  customerId                 String          @db.VarChar(255)
-  direction                  Direction
-  hubSpotAssociationId       Int?
+  id                      String    @id @default(cuid())  // Auto-generate ID using cuid
+  nativeAssociationId     String
+  nativeObjectId          String              @db.VarChar(255)
+  toNativeObjectId        String              @db.VarChar(255)
+  fromObjectType          String              @db.VarChar(255)
+  toObjectType            String              @db.VarChar(255)
+  nativeAssociationLabel  String              @db.VarChar(255)
+  hubSpotAssociationLabel String              @db.VarChar(255)
+  fromHubSpotObjectId     String              @db.VarChar(255)
+  toHubSpotObjectId       String              @db.VarChar(255)
+  customerId              String              @db.VarChar(255)
+  associationTypeId       Int
+  associationCategory  AssociationCategory
+  cardinality             Cardinality
 
-  @@unique([customerId, hubSpotObject, toHubSpotObject, associationType, direction])
+  @@unique([customerId, fromHubSpotObjectId, toHubSpotObjectId, associationTypeId ])
 }
 
-enum AssociationType {
+
+model Company {
+  id                String    @id @default(cuid())  // Auto-generate ID using cuid
+  createdate        DateTime
+  domain            String    @db.VarChar(255)
+  name              String    @db.VarChar(255)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now())
+  archived          Boolean
+
+  @@unique([id])
+}
+
+model Contact {
+  id                String    @id @default(cuid())  // Auto-generate ID using cuid
+  createdate        DateTime
+  email             String    @db.VarChar(255)
+  firstname         String    @db.VarChar(255)
+  lastmodifieddate  DateTime
+  lastname          String    @db.VarChar(255)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now())
+  archived          Boolean
+
+  @@unique([id])
+}
+
+enum AssociationCategory {
+  HUBSPOT_DEFINED
+  INTEGRATOR_DEFINED
+  USER_DEFINED
+}
+
+enum Cardinality {
   ONE_TO_ONE
   ONE_TO_MANY
+  MANY_TO_ONE
   MANY_TO_MANY
 }
 
-enum Direction {
-  toHubSpot
-  fromHubSpot
-  biDirectional
+model Authorization {
+  customerId   String    @id @db.VarChar(255)
+  hsPortalId   String    @db.VarChar(255)
+  accessToken  String    @db.VarChar(255)
+  refreshToken String    @db.VarChar(255)
+  expiresIn    Int?
+  expiresAt    DateTime? @db.Timestamp(6)
 }
