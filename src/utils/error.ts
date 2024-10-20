@@ -1,6 +1,6 @@
-import { logger } from './logger';
-import shutdown from './shutdown'
-import { LogObject } from 'default';
+import Logger from './logger';
+import shutdown from './shutdown';
+import { LogObject } from '../../types/common';
 
 function isHubSpotApiError(error: any) {
   return Boolean(error?.message?.includes('hubapi'));
@@ -10,7 +10,7 @@ function isGeneralPrismaError(error: any): boolean {
 }
 
 function formatError(logMessage: any, context: string = ''): any {
-  const error: LogObject = {logMessage, context}
+  const error: LogObject = { logMessage, context };
   if (context) error.context = context;
   if (isGeneralPrismaError(error)) {
     error.type = 'Prisma';
@@ -26,9 +26,9 @@ function formatError(logMessage: any, context: string = ''): any {
 
 function handleError(error: any, context: string = '', critical: boolean = false): void {
   const formattedError = formatError(error, context);
-  logger.error(formattedError);
+  Logger.error(formattedError);
 
   if (critical) shutdown();
 }
 
-export default handleError
+export default handleError;

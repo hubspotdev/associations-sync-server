@@ -29,7 +29,7 @@ async function shutdown(): Promise<void> {
       }).catch((err) => {
         console.error('Error during server close:', err);
       }),
-      disconnectPrisma().catch(err => console.error('Error during Prisma disconnection:', err))
+      disconnectPrisma().catch((err) => console.error('Error during Prisma disconnection:', err)),
     ]);
 
     console.log('Graceful shutdown complete.');
@@ -40,4 +40,4 @@ async function shutdown(): Promise<void> {
   }
 }
 
-export default shutdown
+export default shutdown;

@@ -1,12 +1,12 @@
-import { LogObject } from 'default';
+import { LogObject } from '../../types/common';
 
-
+type Level = 'Info' | 'Warning' | 'Error';
 class Logger {
-  private log(message: LogObject): void {
+  private static log(message: LogObject, level: Level): void {
     const timestamp = new Date().toISOString();
-    const logOutput = this.formatLogMessage(message, timestamp);
+    const logOutput = Logger.formatLogMessage(message, timestamp);
 
-    switch (message.level) {
+    switch (level) {
       case 'Error':
         console.error(logOutput);
         break;
@@ -20,12 +20,16 @@ class Logger {
     }
   }
 
-  private formatLogMessage(logObject: LogObject, timestamp: string): string {
-    const { type = 'Unknown', context, logMessage, level } = logObject;
-    const { code, statusCode, correlationId, details, data, stack, message } = logMessage;
+  private static formatLogMessage(logObject: LogObject, timestamp: string): string {
+    const {
+      type = 'Unknown', context, logMessage, level,
+    } = logObject;
+    const {
+      code, statusCode, correlationId, details, data, stack, message,
+    } = logMessage;
 
     const outputLines: string[] = [
-      `${type} ${level} at ${timestamp}`
+      `${type} ${level} at ${timestamp}`,
     ];
 
     if (context) outputLines.push(`Context: ${context}`);
@@ -40,21 +44,22 @@ class Logger {
     return outputLines.join('\n');
   }
 
-
-  public info(message: LogObject): void {
-    message.level = 'Info'
-    this.log(message);
+  public static info(message: LogObject): void {
+    const level = 'Info';
+    Logger.log(message, level);
   }
 
-  public warn(message: LogObject): void {
-    message.level = 'Warning'
-    this.log(message);
+  public static warn(message: LogObject): void {
+    const level = 'Warning';
+    Logger.log(message, level);
   }
 
-  public error(message: LogObject): void {
-    message.level = 'Error'
-    this.log(message);
+  public static error(message: LogObject): void {
+    const level = 'Error';
+    Logger.log(message, level);
   }
 }
 
-export const logger = new Logger();
+// const logger = new Logger();
+
+export default Logger;
