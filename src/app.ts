@@ -1,17 +1,53 @@
-import "dotenv/config";
-import express, { Application, Request, Response } from "express";
+import 'dotenv/config';
+import express, { Application, Request, Response } from 'express';
 import shutdown from './utils/shutdown';
-import {getAssociationsByCustomerId, getMappings, saveMapping, deleteMapping} from "./mappings";
-import { PORT, getCustomerId } from "./utils/utils";
-import { AssociationMapping, Association } from "@prisma/client";
-import handleError from './utils/error'
+import {
+  getAssociationsByCustomerId,
+  getMappings,
+  savePrismaMapping,
+  deleteMapping,
+  deleteBatchPrismaMappings,
+  getSingleAssociationMapping,
+  saveBatchPrismaMapping,
+  getBatchAssociationMappings,
+} from './prisma-mappings';
+import {
+  saveSingleHubspotAssociation,
+  saveBatchHubspotAssociation,
+  archiveSingleHubspotAssociation,
+  archiveBatchHubspotAssociation,
+} from './hubspot-client';
+import { authUrl, redeemCode } from './auth';
+import { PORT, getCustomerId } from './utils/utils';
+// import { AssociationMapping, Association } from "@prisma/client";
+// import { AssociationMapping } from 'default'
+import handleError from './utils/error';
 
 const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/api/install', (req: Request, res: Response) => {
+  res.redirect(authUrl);
+});
+
+app.get('/oauth-callback', async (req: Request) => {
+  const { code } = req.query;
+  if (code) {
+    try {
+      const authInfo = await redeemCode(code.toString());
+      if (authInfo) {
+        const { accessToken } = authInfo;
+        console.log('ACcess token ==', accessToken);
+      }
+    } catch (error) {
+      console.log('oops');
+    }
+  }
+});
+
 app.get(
-  "/api/native-associations-with-mappings",
+  '/api/native-associations-with-mappings',
   async (req: Request, res: Response): Promise<void> => {
     try {
       const customerId = getCustomerId(); // Assuming function to extract the customer ID
@@ -22,16 +58,16 @@ app.get(
 
       const responseData = associations.map((association) => ({
         association,
-        mappings: mappings.filter((mapping) => mapping.associationId === association.id),
+        mappings: mappings.filter((mapping) => mapping.id === association.id),
       }));
 
       console.log('Response from native-associations-with-mappings:', responseData);
       res.json(responseData);
     } catch (error) {
       handleError(error, 'There was an issue getting the native properties with mappings ');
-      res.status(500).send("Internal Server Error");
+      res.status(500).send('Internal Server Error');
     }
-  }
+  },
 );
 // app.get("/api/hubspot-associations", async (req: Request, res: Response): Promise<void> => {
 //   try {
@@ -43,39 +79,69 @@ app.get(
 //     res.status(500).send('Internal Server Error');
 //   }})
 
-app.post("/api/association/mappings", async (req: Request, res: Response): Promise<void> => {
-  try{
-    const response = await saveMapping(req.body as AssociationMapping);
-    console.log('succesfully saved mapping', response)
+app.post('/api/association/mapping', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const response = await saveSingleHubspotAssociation(req.body);
+    const prismaResponse = await savePrismaMapping(req.body);
+    console.log('succesfully saved mapping to Prisma', prismaResponse);
     res.send(response);
-  } catch(error) {
-    handleError(error, 'There was an issue while saving property mappings ')
-    res.status(500).send('Error saving mapping')
+  } catch (error) {
+    handleError(error, 'There was an issue while saving property mappings ');
+    res.status(500).send('Error saving mapping');
   }
 });
 
-app.delete("/api/associations/mappings/:mappingId", async (req: Request, res: Response): Promise<void> => {
+app.post('/api/association/mappings', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const prismaResponse = await saveBatchPrismaMapping(req.body);
+    console.log('succesfully saved mappings to Prisma', prismaResponse);
+    const response = await saveBatchHubspotAssociation(req.body);
+    res.send(response);
+  } catch (error) {
+    handleError(error, 'There was an issue while saving property mappings ');
+    res.status(500).send('Error saving mapping');
+  }
+});
+
+app.delete('/api/associations/mapping/:mappingId', async (req: Request, res: Response): Promise<void> => {
   const mappingToDelete = req.params.mappingId;
-  const mappingId = parseInt(mappingToDelete);
-  if (!mappingId ) {
-    res.status(400).send("Invalid mapping Id format");
+  // const mappingId = parseInt(mappingToDelete);
+  if (!mappingToDelete) {
+    res.status(400).send('Invalid mapping Id format');
   }
   try {
-    const deleteMappingResult = await deleteMapping(mappingId);
+    const associationMapping = await getSingleAssociationMapping(mappingToDelete);
+    const deleteMappingResult = await deleteMapping(mappingToDelete);
+    if (associationMapping) await archiveSingleHubspotAssociation(associationMapping);
     res.send(deleteMappingResult);
-  } catch(error) {
-    handleError(error, 'There was an issue while attempting to delete the mapping ')
+  } catch (error) {
+    handleError(error, 'There was an issue while attempting to delete the mapping ');
   }
 });
 
+app.delete('/api/associations/mappings', async (req: Request, res: Response): Promise<void> => {
+  const mappingsToDelete = req.body;
+  // const mappingId = parseInt(mappingsToDelete);
+  if (!mappingsToDelete) {
+    res.status(400).send('Invalid mapping Id format');
+  }
+  try {
+    const associationMapping = await getBatchAssociationMappings(mappingsToDelete);
+    const deleteMappingResult = await deleteBatchPrismaMappings(mappingsToDelete);
+    if (associationMapping) await archiveBatchHubspotAssociation(associationMapping);
+    res.send(deleteMappingResult);
+  } catch (error) {
+    handleError(error, 'There was an issue while attempting to delete the mapping ');
+  }
+});
 
-const server = app.listen(PORT, function () {
+const server = app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT} !`);
 });
 
 process.on('SIGTERM', () => {
   console.info('SIGTERM signal received.');
-  shutdown()
+  shutdown();
 });
 
-export default server
+export default server;
