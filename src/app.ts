@@ -7,10 +7,12 @@ import {
   savePrismaMapping,
   deleteMapping,
   deleteBatchPrismaMappings,
-  getSingleAssociationMapping,
+  getSingleAssociationMappingFromId,
   saveBatchPrismaMapping,
   getBatchAssociationMappings,
+  getSingleAssociationMapping,
 } from './prisma-mappings';
+import { saveAssociation, deleteAssociation } from './prisma-records';
 import {
   saveSingleHubspotAssociation,
   saveBatchHubspotAssociation,
@@ -31,7 +33,7 @@ app.get('/api/install', (req: Request, res: Response) => {
   res.redirect(authUrl);
 });
 
-app.get('/oauth-callback', async (req: Request) => {
+app.get('/oauth-callback', async (req: Request, res: Response) => {
   const { code } = req.query;
   if (code) {
     try {
@@ -39,6 +41,7 @@ app.get('/oauth-callback', async (req: Request) => {
       if (authInfo) {
         const { accessToken } = authInfo;
         console.log('ACcess token ==', accessToken);
+        res.send('Success!');
       }
     } catch (error) {
       console.log('oops');
@@ -79,14 +82,26 @@ app.get(
 //     res.status(500).send('Internal Server Error');
 //   }})
 
+app.post('/api/association', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const prismaResponse = await saveAssociation(req.body);
+    console.log('succesfully saved association to Prisma', prismaResponse);
+    res.send(prismaResponse);
+  } catch (error) {
+    handleError(error, 'There was an issue while saving association ');
+    res.status(500).send('Error saving mapping');
+  }
+});
+
 app.post('/api/association/mapping', async (req: Request, res: Response): Promise<void> => {
   try {
     const response = await saveSingleHubspotAssociation(req.body);
+    console.log('successfully saved association to hubspot');
     const prismaResponse = await savePrismaMapping(req.body);
     console.log('succesfully saved mapping to Prisma', prismaResponse);
     res.send(response);
   } catch (error) {
-    handleError(error, 'There was an issue while saving property mappings ');
+    handleError(error, 'There was an issue while saving association mappings ');
     res.status(500).send('Error saving mapping');
   }
 });
@@ -98,22 +113,40 @@ app.post('/api/association/mappings', async (req: Request, res: Response): Promi
     const response = await saveBatchHubspotAssociation(req.body);
     res.send(response);
   } catch (error) {
-    handleError(error, 'There was an issue while saving property mappings ');
+    handleError(error, 'There was an issue while saving association mappings ');
     res.status(500).send('Error saving mapping');
   }
 });
 
 app.delete('/api/associations/mapping/:mappingId', async (req: Request, res: Response): Promise<void> => {
   const mappingToDelete = req.params.mappingId;
-  // const mappingId = parseInt(mappingToDelete);
+  console.log('in deleteMapping endpoint');
   if (!mappingToDelete) {
     res.status(400).send('Invalid mapping Id format');
   }
   try {
-    const associationMapping = await getSingleAssociationMapping(mappingToDelete);
+    const associationMapping = await getSingleAssociationMappingFromId(mappingToDelete);
     const deleteMappingResult = await deleteMapping(mappingToDelete);
     if (associationMapping) await archiveSingleHubspotAssociation(associationMapping);
     res.send(deleteMappingResult);
+  } catch (error) {
+    handleError(error, 'There was an issue while attempting to delete the mapping ');
+  }
+});
+
+app.delete('/api/associations/:associationId', async (req: Request, res: Response): Promise<void> => {
+  const { associationId } = req.params;
+  if (!associationId) {
+    res.status(400).send('Invalid request format');
+  }
+  try {
+    deleteAssociation(associationId);
+    const associationMapping = await getSingleAssociationMapping(associationId);
+    if (associationMapping) {
+      const deleteMappingResult = await deleteMapping(associationMapping.id);
+      await archiveSingleHubspotAssociation(associationMapping);
+      res.send(deleteMappingResult);
+    }
   } catch (error) {
     handleError(error, 'There was an issue while attempting to delete the mapping ');
   }
