@@ -77,7 +77,7 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
   try {
     if (associationType[0].associationCategory) {
       // eslint-disable-next-line max-len
-      await hubspotClient.crm.associations.v4.basicApi.create(objectId, objectType, toObjectId, toObjectType, associationType);
+      await hubspotClient.crm.associations.v4.basicApi.create(objectType, objectId, toObjectType, toObjectId, associationType);
     }
   } catch (error:any) {
     handleError('There was an issue saving this association in HubSpot', error);
@@ -92,9 +92,9 @@ async function archiveSingleHubspotAssociation(data: AssociationMapping) {
   } = formatSingleRequestData(data);
   if (accessToken) hubspotClient.setAccessToken(accessToken);
   try {
-    await hubspotClient.crm.associations.v4.basicApi.archive(objectId, objectType, toObjectId, toObjectType);
+    await hubspotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, toObjectId);
   } catch (error:any) {
-    handleError('There was an issue saving this association in HubSpot', error);
+    handleError('There was an issue archiving this association in HubSpot', error);
   }
 }
 
