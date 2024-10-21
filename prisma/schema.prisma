@@ -24,7 +24,7 @@ model Association {
 
 model AssociationMapping {
   id                      String    @id @default(cuid())  // Auto-generate ID using cuid
-  nativeAssociationId     String
+  nativeAssociationId     String    @unique
   nativeObjectId          String              @db.VarChar(255)
   toNativeObjectId        String              @db.VarChar(255)
   fromObjectType          String              @db.VarChar(255)

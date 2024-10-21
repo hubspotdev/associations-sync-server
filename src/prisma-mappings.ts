@@ -122,6 +122,7 @@ const savePrismaMapping = async (maybeMapping: MaybeMappingInput) => {
 };
 
 async function deleteMapping(mappingId: string): Promise<string | undefined> {
+  console.log('mappingid in deletemapping function', mappingId);
   try {
     await prisma.associationMapping.delete({
       where: {
@@ -229,7 +230,7 @@ async function getBatchAssociationMappings(mappingIds: string[]) {
   }
 }
 
-async function getSingleAssociationMapping(mappingId: string) {
+async function getSingleAssociationMappingFromId(mappingId: string) {
   try {
     const mapping = await prisma.associationMapping.findUnique({
       where: { id: mappingId },
@@ -247,13 +248,36 @@ async function getSingleAssociationMapping(mappingId: string) {
   }
 }
 
+async function getSingleAssociationMapping(
+  nativeAssociationId:string,
+) {
+  try {
+    const mapping = await prisma.associationMapping.findUnique({
+      where: {
+        nativeAssociationId,
+      },
+    });
+
+    if (!mapping) {
+      console.log(`Mapping with ID ${nativeAssociationId} was not found.`);
+      return null;
+    }
+
+    return mapping;
+  } catch (error) {
+    handleError(error, 'There was an issue while fetching the association mapping');
+    throw error;
+  }
+}
+
 export {
   getAssociationsByCustomerId,
   getMappings,
   savePrismaMapping,
   deleteMapping,
-  getSingleAssociationMapping,
+  getSingleAssociationMappingFromId,
   saveBatchPrismaMapping,
   deleteBatchPrismaMappings,
   getBatchAssociationMappings,
+  getSingleAssociationMapping,
 };
