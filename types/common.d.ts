@@ -58,10 +58,10 @@ export interface AssociationBatchArchiveRequest {
   toObjectType: string;
   associations: BatchInputPublicAssociationMultiArchive;
 }
-type AssociationCategory =
-  'HUBSPOT_DEFINED' |
-  'INTEGRATOR_DEFINED' |
-  'USER_DEFINED'
+// type AssociationCategory =
+//   'HUBSPOT_DEFINED' |
+//   'INTEGRATOR_DEFINED' |
+//   'USER_DEFINED'
 
 export interface AssociationMapping {
   id: number;
@@ -79,6 +79,34 @@ export interface AssociationMapping {
   associationTypeId: number;
   associationCategory: AssociationSpecAssociationCategoryEnum;
   cardinality: string;
+}
+
+export enum AssociationCategory {
+  HUBSPOT_DEFINED = "HUBSPOT_DEFINED",
+  INTEGRATOR_DEFINED = "INTEGRATOR_DEFINED",
+  USER_DEFINED = "USER_DEFINED"
+}
+
+// TypeScript equivalent for Prisma enum `Cardinality`
+enum Cardinality {
+  ONE_TO_ONE = "ONE_TO_ONE",
+  ONE_TO_MANY = "ONE_TO_MANY",
+  MANY_TO_ONE = "MANY_TO_ONE",
+  MANY_TO_MANY = "MANY_TO_MANY"
+}
+
+export interface Association {
+  id: string;
+  objectType: string;
+  objectId: string;
+  toObjectType: string;
+  toObjectId: string;
+  associationLabel: string;
+  secondaryAssociationLabel?: string; // Optional property
+  associationTypeId: number;
+  associationCategory: AssociationCategory;
+  customerId: string;
+  cardinality: Cardinality;
 }
 
 // }

@@ -1,4 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+import { Association } from '../types/common';
+import handleError from './utils/error';
 
 const prisma = new PrismaClient();
 
@@ -52,4 +54,42 @@ async function getAllCompanies() {
   }
 }
 
-export { getAllCompanies, getAllContacts };
+async function saveAssociation(data: Association) {
+  try {
+    const newAssociation = await prisma.association.create({
+      data: {
+        objectType: data.objectType,
+        objectId: data.objectId,
+        toObjectType: data.toObjectType,
+        toObjectId: data.toObjectId,
+        associationLabel: data.associationLabel,
+        secondaryAssociationLabel: data.secondaryAssociationLabel,
+        associationTypeId: data.associationTypeId,
+        associationCategory: data.associationCategory,
+        customerId: data.customerId,
+        cardinality: data.cardinality,
+      },
+    });
+    console.log('Association saved:', newAssociation);
+    return newAssociation;
+  } catch (error) {
+    handleError(error, 'There was an issue saving this association');
+  }
+}
+
+async function deleteAssociation(id: string): Promise<void> {
+  try {
+    const deletedAssociation = await prisma.association.delete({
+      where: {
+        id,
+      },
+    });
+    console.log('Deleted association:', deletedAssociation);
+  } catch (error) {
+    handleError(error, 'There was an issue deleting this association');
+  }
+}
+
+export {
+  getAllCompanies, getAllContacts, saveAssociation, deleteAssociation,
+};
