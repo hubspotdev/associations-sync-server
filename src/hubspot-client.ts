@@ -2,7 +2,6 @@ import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 // import {batchInputPublicAssociationMultiPost, BatchInputPublicAssociationMultiArchive} from "@hubspot/api-client"
 // import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
 // import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
-import { from } from 'form-data';
 import { hubspotClient, getAccessToken } from './auth';
 import {
   getCustomerId,
@@ -40,8 +39,10 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
     console.log('here is the formatted association definition data', response);
+    return response;
   } catch (error: any) {
     handleError('There was an issue saving the association definition in HubSpot', error);
+    return undefined;
   }
 }
 

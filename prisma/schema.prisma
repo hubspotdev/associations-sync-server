@@ -9,6 +9,7 @@ generator client {
 
 model AssociationDefinition {
   id                         String    @id @default(cuid())  // Auto-generate ID using cuid
+  typeId                     Int?
   fromObjectType             String          @db.VarChar(255)
   toObjectType               String          @db.VarChar(255)
   associationLabel           String          @db.VarChar(255)

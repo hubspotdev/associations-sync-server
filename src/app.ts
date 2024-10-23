@@ -113,9 +113,12 @@ app.put('/api/association/definitions/:associationId', async (req: Request, res:
 
 app.post('/api/associations/definition', async (req: Request, res: Response): Promise<void> => {
   try {
-    await savePrismaAssociationDefinition(req.body);
     const response = await saveAssociationDefinition(req.body);
-    res.send(response);
+    if (response) {
+      const { typeId } = response.results[0];
+      await savePrismaAssociationDefinition({ ...req.body, typeId });
+      res.send(response);
+    }
   } catch (error) {
     handleError(error, 'There was an issue while saving the association definition');
     res.status(500).send('Error saving association definition');
