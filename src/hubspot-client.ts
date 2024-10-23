@@ -1,53 +1,24 @@
-import { AssociationMapping } from '@prisma/client';
+import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 // import {batchInputPublicAssociationMultiPost, BatchInputPublicAssociationMultiArchive} from "@hubspot/api-client"
-import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
-import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
+// import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+// import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
+import { from } from 'form-data';
 import { hubspotClient, getAccessToken } from './auth';
-import { getCustomerId } from './utils/utils';
+import {
+  getCustomerId,
+  formatBatchArchiveRequest,
+  formatBatchRequestData,
+  formatDefinitionPostRequest,
+  formatDefinitionUpdateRequest,
+  formatSingleRequestData,
+} from './utils/utils';
 import handleError from './utils/error';
-import { AssociationRequest, AssociationBatchRequest, AssociationBatchArchiveRequest } from '../types/common';
-
-function formatSingleRequestData(data: AssociationMapping): AssociationRequest {
-  const associationSpec: AssociationSpec = {
-    associationCategory: data.associationCategory as AssociationSpecAssociationCategoryEnum, // Type casting if confident
-    associationTypeId: data.associationTypeId,
-  };
-
-  return {
-    objectType: data.fromObjectType, // Assign from object type
-    objectId: data.fromHubSpotObjectId, // Use fromHubSpotObjectId as ID for 'from'
-    toObjectType: data.toObjectType, // Assign to object type
-    toObjectId: data.toHubSpotObjectId, // Use toHubSpotObjectId as ID for 'to'
-    associationType: [associationSpec], // Apply type casting if necessary
-  };
-}
-
-function formatBatchRequestData(data: any): AssociationBatchRequest {
-  return {
-    objectType: data.fromObjectType, // Assign from object type
-    objectId: data.hubSpotAssociationLabel, // Use hubSpotAssociationLabel as ID for 'from'
-    toObjectType: data.toObjectType, // Assign to object type
-    toObjectId: data.toObjectId, // Use nativeAssociationLabel as ID for 'to'
-    associations: data.associations, // Set associationType, default if undefined
-  };
-}
-
-function formatBatchArchiveRequest(data: any): AssociationBatchArchiveRequest {
-  return {
-    objectType: data.fromObjectType, // Assign from object type
-    toObjectType: data.toObjectType, // Assign to object type
-    associations: data.associations, // Set associationType, default if undefined
-  };
-}
+import {
+  AssociationDefinitionArchiveRequest,
+  AssociationDefinitionUpdateRequest,
+} from '../types/common';
 
 async function saveBatchHubspotAssociation(data: AssociationMapping) {
-  // const associationRequest = {
-  //   fromObjectType: "contact",
-  //   fromObjectId: "1234567890",
-  //   toObjectType: "company",
-  //   toObjectId: "9876543210",
-  //   associationType: "default",
-  // };
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
   const { objectType, toObjectType, associations } = formatBatchRequestData(data);
@@ -58,15 +29,57 @@ async function saveBatchHubspotAssociation(data: AssociationMapping) {
     handleError('There was an issue saving these associations in HubSpot', error);
   }
 }
+async function saveAssociationDefinition(data: AssociationDefinition) {
+  const formattedData = formatDefinitionPostRequest(data);
+  console.log('here is the formatted association definition data', formattedData);
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  const { fromObject, toObject, requestInfo } = formattedData;
+  if (accessToken) hubspotClient.setAccessToken(accessToken);
+
+  try {
+    const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
+    console.log('here is the formatted association definition data', response);
+  } catch (error: any) {
+    handleError('There was an issue saving the association definition in HubSpot', error);
+  }
+}
+
+async function updateAssociationDefinition(data: AssociationDefinitionUpdateRequest) {
+  const formattedData = formatDefinitionUpdateRequest(data);
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  const { fromObject, toObject, requestInfo } = formattedData;
+
+  if (accessToken) hubspotClient.setAccessToken(accessToken);
+
+  try {
+    await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, requestInfo);
+  } catch (error: any) {
+    handleError('There was an issue updating the association definition in HubSpot', error);
+  }
+}
+
+async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRequest) {
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  const { fromObjectType, toObjectType, associationTypeId } = data;
+  console.log('data in archive association definition', data);
+  if (accessToken) hubspotClient.setAccessToken(accessToken);
+
+  try {
+    const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.archive(
+      fromObjectType,
+      toObjectType,
+      associationTypeId,
+    );
+    console.log('Archived HubSpot association definition', response);
+  } catch (error: any) {
+    handleError('There was an issue archiving the association definition in HubSpot', error);
+  }
+}
 
 async function saveSingleHubspotAssociation(data: AssociationMapping) {
-// const associationRequest = {
-//   fromObjectType: "contact",
-//   fromObjectId: "1234567890",
-//   toObjectType: "company",
-//   toObjectId: "9876543210",
-//   associationType: "default",
-// };
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
   const {
@@ -76,11 +89,29 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
   if (accessToken) hubspotClient.setAccessToken(accessToken);
   try {
     if (associationType[0].associationCategory) {
-      // eslint-disable-next-line max-len
-      await hubspotClient.crm.associations.v4.basicApi.create(objectType, objectId, toObjectType, toObjectId, associationType);
+      await hubspotClient.crm.associations.v4.basicApi.create(
+        objectType,
+        objectId,
+        toObjectType,
+        toObjectId,
+        associationType,
+      );
     }
   } catch (error:any) {
     handleError('There was an issue saving this association in HubSpot', error);
+  }
+}
+
+async function getAllAssociationDefinitions(data: any) {
+  const { toObject, fromObject } = data;
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  if (accessToken) hubspotClient.setAccessToken(accessToken);
+  try {
+    const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(toObject, fromObject);
+    return response;
+  } catch (error) {
+    handleError(error, 'There was an error getting all association definitions');
   }
 }
 
@@ -101,18 +132,28 @@ async function archiveSingleHubspotAssociation(data: AssociationMapping) {
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
-  const { objectType, toObjectType, associations } = formatBatchArchiveRequest(data);
+  const formattedData = formatBatchArchiveRequest(data);
   if (accessToken) hubspotClient.setAccessToken(accessToken);
   try {
-    await hubspotClient.crm.associations.v4.batchApi.archive(objectType, toObjectType, associations);
+    if (formattedData) {
+      await hubspotClient.crm.associations.v4.batchApi.archive(
+        formattedData.fromObjectType,
+        formattedData.toObjectType,
+        { inputs: formattedData.inputs },
+      );
+    }
   } catch (error:any) {
     handleError('There was an issue saving this association in HubSpot', error);
   }
 }
 
-// async function getContactFromHubspot(data: any){
-//   hubspotClient.crm.properties.coreApi.getById
-// }
 export {
-  saveSingleHubspotAssociation, saveBatchHubspotAssociation, archiveSingleHubspotAssociation, archiveBatchHubspotAssociation,
+  getAllAssociationDefinitions,
+  saveSingleHubspotAssociation,
+  saveBatchHubspotAssociation,
+  archiveSingleHubspotAssociation,
+  archiveBatchHubspotAssociation,
+  saveAssociationDefinition,
+  archiveAssociationDefinition,
+  updateAssociationDefinition,
 };

@@ -109,4 +109,30 @@ export interface Association {
   cardinality: Cardinality;
 }
 
+type AssociationDefinitionCreateRequest = {
+  fromObject: string;
+  toObject: string;
+  requestInfo: {
+    label:string;
+    name: string;
+    inverseLabel?:string
+  }
+};
+
+type AssociationDefinitionUpdateRequest = {
+  fromObject: string;
+  toObject: string;
+  requestInfo: {
+    label:string;
+    associationTypeId: number;
+    inverseLabel?:string
+  }
+};
+
+type AssociationDefinitionArchiveRequest = {
+  fromObjectType: string;
+  toObjectType: string;
+  associationTypeId: number;
+};
+
 // }

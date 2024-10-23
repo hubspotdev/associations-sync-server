@@ -6,6 +6,20 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model AssociationDefinition {
+  id                         String    @id @default(cuid())  // Auto-generate ID using cuid
+  fromObjectType             String          @db.VarChar(255)
+  toObjectType               String          @db.VarChar(255)
+  associationLabel           String          @db.VarChar(255)
+  name                       String          @db.VarChar(255)
+  inverseLabel  String?          @db.VarChar(255)
+  associationTypeId          Int
+  customerId                 String          @db.VarChar(255)
+  cardinality                Cardinality
+  associationCategory  AssociationCategory
+  @@unique([fromObjectType, toObjectType, associationLabel, associationTypeId])
+}
 model Association {
   id                         String    @id @default(cuid())  // Auto-generate ID using cuid
   objectType                 String          @db.VarChar(255)
@@ -13,12 +27,10 @@ model Association {
   toObjectType               String          @db.VarChar(255)
   toObjectId                 String
   associationLabel           String          @db.VarChar(255)
-  secondaryAssociationLabel  String?          @db.VarChar(255)
   associationTypeId          Int
   associationCategory  AssociationCategory
   customerId                 String          @db.VarChar(255)
   cardinality                Cardinality
-
   @@unique([customerId, toObjectId, objectId, associationLabel, associationTypeId])
 }
 

@@ -34,12 +34,7 @@ const CLIENT_SECRET: string = process.env.CLIENT_SECRET || 'CLIENT_SECRET requir
 const REDIRECT_URI: string = `http://localhost:${PORT}/oauth-callback`;
 const hubspotClient = new hubspot.Client();
 
-// Uncomment and adjust scopes as needed
 const SCOPES = [
-  // 'crm.schemas.companies.write',
-  // 'crm.schemas.contacts.write',
-  // 'crm.schemas.companies.read',
-  // 'crm.schemas.contacts.read',
   ' crm.objects.companies.write',
   'crm.objects.contacts.write',
   'crm.objects.deals.write',
@@ -152,6 +147,7 @@ const exchangeForTokens = async (
 };
 
 const getAccessToken = async (customerId: string): Promise<string | void | null> => {
+  if (process.env.ACCESS_TOKEN) return process.env.ACCESS_TOKEN;
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {

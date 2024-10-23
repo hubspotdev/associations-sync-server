@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from 'express';
 import shutdown from './utils/shutdown';
 import {
   getAssociationsByCustomerId,
+  getSingleAssociation,
   getMappings,
   savePrismaMapping,
   deleteMapping,
@@ -12,17 +13,26 @@ import {
   getBatchAssociationMappings,
   getSingleAssociationMapping,
 } from './prisma-mappings';
-import { saveAssociation, deleteAssociation } from './prisma-records';
+import {
+  deleteAssociation,
+  deletePrismaAssociationDefinition,
+  savePrismaAssociationDefinition,
+  updatePrismaAssociationDefinition,
+  savePrismaAssociation,
+  getAssociationDefinitionsByType,
+} from './prisma-associations';
 import {
   saveSingleHubspotAssociation,
   saveBatchHubspotAssociation,
   archiveSingleHubspotAssociation,
   archiveBatchHubspotAssociation,
+  archiveAssociationDefinition,
+  saveAssociationDefinition,
+  updateAssociationDefinition,
+  getAllAssociationDefinitions,
 } from './hubspot-client';
 import { authUrl, redeemCode } from './auth';
 import { PORT, getCustomerId } from './utils/utils';
-// import { AssociationMapping, Association } from "@prisma/client";
-// import { AssociationMapping } from 'default'
 import handleError from './utils/error';
 
 const app: Application = express();
@@ -50,10 +60,10 @@ app.get('/oauth-callback', async (req: Request, res: Response) => {
 });
 
 app.get(
-  '/api/native-associations-with-mappings',
+  '/api/associations',
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const customerId = getCustomerId(); // Assuming function to extract the customer ID
+      const customerId = getCustomerId();
       const associations = await getAssociationsByCustomerId(customerId);
 
       const associationIds = associations.map((association) => association.id);
@@ -64,7 +74,7 @@ app.get(
         mappings: mappings.filter((mapping) => mapping.id === association.id),
       }));
 
-      console.log('Response from native-associations-with-mappings:', responseData);
+      console.log('Response', responseData);
       res.json(responseData);
     } catch (error) {
       handleError(error, 'There was an issue getting the native properties with mappings ');
@@ -72,20 +82,76 @@ app.get(
     }
   },
 );
-// app.get("/api/hubspot-associations", async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const customerId: string = getCustomerId();
-//     const properties = await getHubSpotAssociations(customerId);
-//     res.send(properties);
-//   } catch (error) {
-//     handleError(error, 'There was an issue getting Hubspot properties ')
-//     res.status(500).send('Internal Server Error');
-//   }})
 
-app.post('/api/association', async (req: Request, res: Response): Promise<void> => {
+app.get(
+  '/api/associations',
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const associations = await getAssociationDefinitionsByType(req.body);
+      const associationDefinitions = await getAllAssociationDefinitions(req.body);
+      res.send(`All associations ${req.body.fromObject} to ${req.body.toObject}`);
+      console.log(`All associations ${req.body.fromObject} to ${req.body.toObject}`, associationDefinitions, associations);
+    } catch (error) {
+      handleError(error, 'There was an issue getting the native properties with mappings ');
+      res.status(500).send('Internal Server Error');
+    }
+  },
+);
+
+app.put('/api/association/definitions/:associationId', async (req: Request, res: Response): Promise<void> => {
   try {
-    const prismaResponse = await saveAssociation(req.body);
+    await deletePrismaAssociationDefinition(req.params.associationId);
+    console.log('About to delete response from hubspot');
+    const response = await archiveAssociationDefinition(req.body);
+    console.log('Deleted response from hubspot', response);
+    res.send(response);
+  } catch (error) {
+    handleError(error, 'There was an issue while archiving the association definition');
+    res.status(500).send('Error archiving association definition');
+  }
+});
+
+app.post('/api/associations/definition', async (req: Request, res: Response): Promise<void> => {
+  try {
+    await savePrismaAssociationDefinition(req.body);
+    const response = await saveAssociationDefinition(req.body);
+    res.send(response);
+  } catch (error) {
+    handleError(error, 'There was an issue while saving the association definition');
+    res.status(500).send('Error saving association definition');
+  }
+});
+
+app.put('/api/associations/definition/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    await updatePrismaAssociationDefinition(req.body, req.params.id);
+    console.log('after prisma update', req.body);
+    const response = await updateAssociationDefinition(req.body);
+    res.send(response);
+  } catch (error) {
+    handleError(error, 'There was an issue while updating the association definition');
+    res.status(500).send('Error updating association definition');
+  }
+});
+
+app.delete('/api/associations/definition/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    await deletePrismaAssociationDefinition(req.params.id);
+    const response = await archiveAssociationDefinition(req.body);
+    res.send(response);
+  } catch (error) {
+    handleError(error, 'There was an issue while updating the association definition');
+    res.status(500).send('Error updating association definition');
+  }
+});
+
+app.post('/api/associations', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const prismaResponse = await savePrismaAssociation(req.body);
     console.log('succesfully saved association to Prisma', prismaResponse);
+    const hubspotResponse = saveSingleHubspotAssociation(req.body);
+    console.log('succesfully saved association to HubSpot', hubspotResponse);
+
     res.send(prismaResponse);
   } catch (error) {
     handleError(error, 'There was an issue while saving association ');
@@ -93,7 +159,7 @@ app.post('/api/association', async (req: Request, res: Response): Promise<void> 
   }
 });
 
-app.post('/api/association/mapping', async (req: Request, res: Response): Promise<void> => {
+app.post('/api/associations/mapping', async (req: Request, res: Response): Promise<void> => {
   try {
     const response = await saveSingleHubspotAssociation(req.body);
     console.log('successfully saved association to hubspot');
@@ -106,7 +172,7 @@ app.post('/api/association/mapping', async (req: Request, res: Response): Promis
   }
 });
 
-app.post('/api/association/mappings', async (req: Request, res: Response): Promise<void> => {
+app.post('/api/associations/mappings', async (req: Request, res: Response): Promise<void> => {
   try {
     const prismaResponse = await saveBatchPrismaMapping(req.body);
     console.log('succesfully saved mappings to Prisma', prismaResponse);
@@ -120,7 +186,6 @@ app.post('/api/association/mappings', async (req: Request, res: Response): Promi
 
 app.delete('/api/associations/mapping/:mappingId', async (req: Request, res: Response): Promise<void> => {
   const mappingToDelete = req.params.mappingId;
-  console.log('in deleteMapping endpoint');
   if (!mappingToDelete) {
     res.status(400).send('Invalid mapping Id format');
   }
@@ -131,6 +196,32 @@ app.delete('/api/associations/mapping/:mappingId', async (req: Request, res: Res
     res.send(deleteMappingResult);
   } catch (error) {
     handleError(error, 'There was an issue while attempting to delete the mapping ');
+  }
+});
+
+app.get('/api/associations/mapping/:mappingId', async (req: Request, res: Response): Promise<void> => {
+  const { mappingId } = req.params;
+  if (!mappingId) {
+    res.status(400).send('Invalid request format');
+  }
+  try {
+    const associationMapping = await getSingleAssociationMapping(mappingId);
+    res.send(associationMapping);
+  } catch (error) {
+    handleError(error, 'Error getting association');
+  }
+});
+
+app.get('/api/associations/:associationId', async (req: Request, res: Response): Promise<void> => {
+  const { associationId } = req.params;
+  if (!associationId) {
+    res.status(400).send('Invalid request format');
+  }
+  try {
+    const associationMapping = await getSingleAssociation(associationId);
+    res.send(associationMapping);
+  } catch (error) {
+    handleError(error, 'Error getting association');
   }
 });
 
@@ -154,7 +245,6 @@ app.delete('/api/associations/:associationId', async (req: Request, res: Respons
 
 app.delete('/api/associations/mappings', async (req: Request, res: Response): Promise<void> => {
   const mappingsToDelete = req.body;
-  // const mappingId = parseInt(mappingsToDelete);
   if (!mappingsToDelete) {
     res.status(400).send('Invalid mapping Id format');
   }

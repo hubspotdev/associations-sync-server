@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { Association } from '../types/common';
 import handleError from './utils/error';
 
 const prisma = new PrismaClient();
@@ -25,7 +24,7 @@ async function getAllContacts() {
 
     return contacts;
   } catch (error) {
-    console.error('Error fetching contacts:', error);
+    handleError(error, 'Error fetching contacts:');
     throw error;
   }
 }
@@ -49,47 +48,57 @@ async function getAllCompanies() {
 
     return companies;
   } catch (error) {
+    handleError(error, 'Error fetching companies:');
+    throw error;
+  }
+}
+
+async function getCompany(id: string) {
+  try {
+    const company = await prisma.company.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        domain: true,
+        name: true,
+        archived: true,
+      },
+    });
+
+    return company;
+  } catch (error) {
     console.error('Error fetching companies:', error);
     throw error;
   }
 }
 
-async function saveAssociation(data: Association) {
+async function getContact(id: string) {
   try {
-    const newAssociation = await prisma.association.create({
-      data: {
-        objectType: data.objectType,
-        objectId: data.objectId,
-        toObjectType: data.toObjectType,
-        toObjectId: data.toObjectId,
-        associationLabel: data.associationLabel,
-        secondaryAssociationLabel: data.secondaryAssociationLabel,
-        associationTypeId: data.associationTypeId,
-        associationCategory: data.associationCategory,
-        customerId: data.customerId,
-        cardinality: data.cardinality,
-      },
-    });
-    console.log('Association saved:', newAssociation);
-    return newAssociation;
-  } catch (error) {
-    handleError(error, 'There was an issue saving this association');
-  }
-}
-
-async function deleteAssociation(id: string): Promise<void> {
-  try {
-    const deletedAssociation = await prisma.association.delete({
+    const company = await prisma.contact.findUnique({
       where: {
         id,
       },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        email: true,
+        archived: true,
+      },
     });
-    console.log('Deleted association:', deletedAssociation);
+
+    return company;
   } catch (error) {
-    handleError(error, 'There was an issue deleting this association');
+    console.error('Error fetching companies:', error);
+    throw error;
   }
 }
 
 export {
-  getAllCompanies, getAllContacts, saveAssociation, deleteAssociation,
+  getAllCompanies,
+  getAllContacts,
+  getCompany,
+  getContact,
 };
