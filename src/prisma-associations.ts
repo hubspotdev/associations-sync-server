@@ -31,7 +31,7 @@ async function getAssociationsByCustomerId(customerId: string): Promise<Associat
   }
 }
 
-const savePrismaAssociation = async (maybeAssociation: MaybeAssociationInput): Promise<Association | null> => {
+const savePrismaAssociation = async (maybeAssociation: Association): Promise<Association | null> => {
   const {
     objectType,
     objectId,

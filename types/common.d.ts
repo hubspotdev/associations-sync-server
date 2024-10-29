@@ -122,11 +122,13 @@ type AssociationDefinitionCreateRequest = {
 type AssociationDefinitionUpdateRequest = {
   fromObject: string;
   toObject: string;
+  fromCardinality?:number,
+  toCardinality?:number,
   requestInfo: {
     label:string;
     associationTypeId: number;
     inverseLabel?:string
-  }
+  }[]
 };
 
 type AssociationDefinitionArchiveRequest = {

@@ -57,6 +57,8 @@ interface MaybeMappingInput {
   // hubSpotAssociationId: string;
   fromObjectType: string;
   toObjectType: string;
+  fromCardinality?:number,
+  toCardinality?:number,
   associationCategory: AssociationCategory;
   cardinality: Cardinality;
 }
