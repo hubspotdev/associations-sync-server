@@ -5,7 +5,7 @@ const prisma = new PrismaClient({
   log: ['info', 'warn', 'error'],
 });
 
-async function getAssociationsByCustomerId(customerId: string): Promise<Association[]> {
+async function getDBAssociationsByCustomerId(customerId: string): Promise<Association[]> {
   try {
     const associations = await prisma.association.findMany({
       where: { customerId },
@@ -17,7 +17,7 @@ async function getAssociationsByCustomerId(customerId: string): Promise<Associat
   }
 }
 
-async function getMappings(nativeAssociationIds: string[]) {
+async function getDBMappings(nativeAssociationIds: string[]) {
   try {
     const mappings = await prisma.associationMapping.findMany({
       where: {
@@ -63,7 +63,7 @@ interface MaybeMappingInput {
   cardinality: Cardinality;
 }
 
-const savePrismaMapping = async (maybeMapping: MaybeMappingInput) => {
+const saveDBMapping = async (maybeMapping: MaybeMappingInput) => {
   console.log('maybeMapping', maybeMapping);
   const {
     nativeAssociationId,
@@ -123,7 +123,7 @@ const savePrismaMapping = async (maybeMapping: MaybeMappingInput) => {
   }
 };
 
-async function deleteMapping(mappingId: string): Promise<string | undefined> {
+async function deleteDBMapping(mappingId: string): Promise<string | undefined> {
   try {
     await prisma.associationMapping.delete({
       where: {
@@ -137,7 +137,7 @@ async function deleteMapping(mappingId: string): Promise<string | undefined> {
   }
 }
 
-const saveBatchPrismaMapping = async (maybeMappings: MaybeMappingInput[]) => {
+const saveBatchDBMapping = async (maybeMappings: MaybeMappingInput[]) => {
   try {
     const operations = maybeMappings.map((maybeMapping) => {
       const {
@@ -199,7 +199,7 @@ const saveBatchPrismaMapping = async (maybeMappings: MaybeMappingInput[]) => {
   }
 };
 
-async function deleteBatchPrismaMappings(mappingIds: string[]): Promise<string | undefined> {
+async function deleteBatchDBMappings(mappingIds: string[]): Promise<string | undefined> {
   try {
     await prisma.$transaction(
       mappingIds.map((id) => prisma.associationMapping.delete({
@@ -213,7 +213,7 @@ async function deleteBatchPrismaMappings(mappingIds: string[]): Promise<string |
   }
 }
 
-async function getBatchAssociationMappings(mappingIds: string[]) {
+async function getBatchDBAssociationMappings(mappingIds: string[]) {
   try {
     const mappings = await prisma.associationMapping.findMany({
       where: { id: { in: mappingIds } },
@@ -231,7 +231,7 @@ async function getBatchAssociationMappings(mappingIds: string[]) {
   }
 }
 
-async function getSingleAssociationMappingFromId(mappingId: string) {
+async function getSingleDBAssociationMappingFromId(mappingId: string) {
   try {
     const mapping = await prisma.associationMapping.findUnique({
       where: { id: mappingId },
@@ -248,29 +248,8 @@ async function getSingleAssociationMappingFromId(mappingId: string) {
     throw error;
   }
 }
-async function getSingleAssociation(
-  id:string,
-) {
-  try {
-    const mapping = await prisma.associationMapping.findUnique({
-      where: {
-        id,
-      },
-    });
 
-    if (!mapping) {
-      console.log(`Mapping with ID ${id} was not found.`);
-      return null;
-    }
-
-    return mapping;
-  } catch (error) {
-    handleError(error, 'There was an issue while fetching the association mapping');
-    throw error;
-  }
-}
-
-async function getSingleAssociationMapping(
+async function getSingleDBAssociationMapping(
   nativeAssociationId:string,
 ) {
   try {
@@ -293,14 +272,13 @@ async function getSingleAssociationMapping(
 }
 
 export {
-  getAssociationsByCustomerId,
-  getSingleAssociation,
-  getMappings,
-  savePrismaMapping,
-  deleteMapping,
-  getSingleAssociationMappingFromId,
-  saveBatchPrismaMapping,
-  deleteBatchPrismaMappings,
-  getBatchAssociationMappings,
-  getSingleAssociationMapping,
+  getDBAssociationsByCustomerId,
+  getDBMappings,
+  saveDBMapping,
+  deleteDBMapping,
+  getSingleDBAssociationMappingFromId,
+  saveBatchDBMapping,
+  deleteBatchDBMappings,
+  getBatchDBAssociationMappings,
+  getSingleDBAssociationMapping,
 };

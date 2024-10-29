@@ -19,7 +19,7 @@ interface MaybeAssociationInput {
   cardinality: Cardinality;
 }
 
-async function getAssociationsByCustomerId(customerId: string): Promise<Association[]> {
+async function getDBAssociationsByCustomerId(customerId: string): Promise<Association[]> {
   try {
     const associations = await prisma.association.findMany({
       where: { customerId },
@@ -31,7 +31,29 @@ async function getAssociationsByCustomerId(customerId: string): Promise<Associat
   }
 }
 
-const savePrismaAssociation = async (maybeAssociation: Association): Promise<Association | null> => {
+async function getSingleDBAssociationById(
+  id:string,
+) {
+  try {
+    const mapping = await prisma.associationMapping.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!mapping) {
+      console.log(`Mapping with ID ${id} was not found.`);
+      return null;
+    }
+
+    return mapping;
+  } catch (error) {
+    handleError(error, 'There was an issue while fetching the association mapping');
+    throw error;
+  }
+}
+
+const saveDBAssociation = async (maybeAssociation: Association): Promise<Association | null> => {
   const {
     objectType,
     objectId,
@@ -79,7 +101,7 @@ const savePrismaAssociation = async (maybeAssociation: Association): Promise<Ass
   }
 };
 
-async function getSingleAssociation(id: string): Promise<Association | null > {
+async function getDBSingleAssociation(id: string): Promise<Association | null > {
   try {
     const association = await prisma.association.findUnique({
       where: { id },
@@ -90,7 +112,7 @@ async function getSingleAssociation(id: string): Promise<Association | null > {
     return null;
   }
 }
-async function getAssociationDefinitionsByType(data: any): Promise<AssociationDefinition[]> {
+async function getDBAssociationDefinitionsByType(data: any): Promise<AssociationDefinition[]> {
   const fromObjectType = data.fromObject;
   const toObjectType = data.toObject;
 
@@ -105,7 +127,7 @@ async function getAssociationDefinitionsByType(data: any): Promise<AssociationDe
   }
 }
 
-async function deleteAssociation(id: string): Promise<void> {
+async function deleteDBAssociation(id: string): Promise<void> {
   try {
     const deletedAssociation = await prisma.association.delete({
       where: {
@@ -118,7 +140,7 @@ async function deleteAssociation(id: string): Promise<void> {
   }
 }
 
-async function savePrismaAssociationDefinition(data: AssociationDefinition) {
+async function saveDBAssociationDefinition(data: AssociationDefinition) {
   try {
     const result = await prisma.associationDefinition.create({ data });
     console.log('Successfully saved association definition in Prisma', result);
@@ -129,7 +151,7 @@ async function savePrismaAssociationDefinition(data: AssociationDefinition) {
   }
 }
 
-async function updatePrismaAssociationDefinition(data: any, id: string) {
+async function updateDBAssociationDefinition(data: any, id: string) {
   try {
     const result = await prisma.associationDefinition.update({
       where: { id },
@@ -143,7 +165,7 @@ async function updatePrismaAssociationDefinition(data: any, id: string) {
   }
 }
 
-async function deletePrismaAssociationDefinition(id: string) {
+async function deleteDBAssociationDefinition(id: string) {
   try {
     const result = await prisma.associationDefinition.delete({
       where: { id },
@@ -157,12 +179,13 @@ async function deletePrismaAssociationDefinition(id: string) {
 }
 
 export {
-  getAssociationDefinitionsByType,
-  getAssociationsByCustomerId,
-  savePrismaAssociation,
-  deleteAssociation,
-  getSingleAssociation,
-  deletePrismaAssociationDefinition,
-  updatePrismaAssociationDefinition,
-  savePrismaAssociationDefinition,
+  getDBAssociationDefinitionsByType,
+  getSingleDBAssociationById,
+  getDBAssociationsByCustomerId,
+  saveDBAssociation,
+  deleteDBAssociation,
+  getDBSingleAssociation,
+  deleteDBAssociationDefinition,
+  updateDBAssociationDefinition,
+  saveDBAssociationDefinition,
 };
