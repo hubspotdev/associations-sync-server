@@ -1,35 +1,17 @@
-import { AssociationMapping, AssociationDefinition } from '@prisma/client';
-// import {batchInputPublicAssociationMultiPost, BatchInputPublicAssociationMultiArchive} from "@hubspot/api-client"
-// import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
-// import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
-import { hubspotClient, getAccessToken } from './auth';
-import {
-  getCustomerId,
-  formatBatchArchiveRequest,
-  formatBatchRequestData,
-  formatDefinitionPostRequest,
-  formatDefinitionUpdateRequest,
-  formatSingleRequestData,
-  formaCreateCardinalityRequest,
-  formatUpdateCardinalityRequest,
-} from './utils/utils';
-import handleError from './utils/error';
+import { AssociationDefinition } from '@prisma/client';
+import { hubspotClient, getAccessToken } from '../auth';
+import handleError from '../utils/error';
 import {
   AssociationDefinitionArchiveRequest,
   AssociationDefinitionUpdateRequest,
-} from '../types/common';
-
-async function saveBatchHubspotAssociation(data: AssociationMapping) {
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  const { objectType, toObjectType, associations } = formatBatchRequestData(data);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
-  try {
-    await hubspotClient.crm.associations.v4.batchApi.create(objectType, toObjectType, associations);
-  } catch (error:any) {
-    handleError('There was an issue saving these associations in HubSpot', error);
-  }
-}
+} from '../../types/common';
+import {
+  formatDefinitionPostRequest,
+  formatDefinitionUpdateRequest,
+  formaCreateCardinalityRequest,
+  formatUpdateCardinalityRequest,
+  getCustomerId,
+} from '../utils/utils';
 
 async function saveAssociationDefinitionConfiguration(
   response: any,
@@ -49,12 +31,12 @@ async function saveAssociationDefinitionConfiguration(
 
     console.log('Configured definition response:', definitionWithConfig);
     if (inputs.inputs.length === 2) {
-      const definitionWithConfig = await hubspotClient.apiRequest({
+      const secondDefinitionWithConfig = await hubspotClient.apiRequest({
         method: 'POST',
         path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/create`,
         body: inputs,
       });
-      console.log('attempting second post', definitionWithConfig);
+      console.log('attempting second post', secondDefinitionWithConfig);
     }
   } catch (error) {
     handleError(error, 'There was an issue configuring the association definition');
@@ -71,6 +53,7 @@ async function getHubSpotAssociationDefinitionsByType(data: AssociationDefinitio
     handleError(error);
   }
 }
+
 async function updateAssociationDefinitionConfiguration(
   data: AssociationDefinition,
   fromObject: string,
@@ -85,7 +68,14 @@ async function updateAssociationDefinitionConfiguration(
       path: `/crm/v4/associations/definitions/configurations/${fromObject}/${toObject}/batch/update`,
       body: inputs,
     });
-
+    if (inputs.inputs.length === 2) {
+      const secondDefinitionWithConfig = await hubspotClient.apiRequest({
+        method: 'POST',
+        path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/create`,
+        body: inputs,
+      });
+      console.log('attempting second post', secondDefinitionWithConfig);
+    }
     console.log('Configured definition response:', definitionWithConfig);
     return definitionWithConfig;
   } catch (error) {
@@ -149,29 +139,6 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
   }
 }
 
-async function saveSingleHubspotAssociation(data: AssociationMapping) {
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  const {
-    objectId, objectType, toObjectId, toObjectType, associationType,
-  } = formatSingleRequestData(data);
-
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
-  try {
-    if (associationType[0].associationCategory) {
-      await hubspotClient.crm.associations.v4.basicApi.create(
-        objectType,
-        objectId,
-        toObjectType,
-        toObjectId,
-        associationType,
-      );
-    }
-  } catch (error:any) {
-    handleError('There was an issue saving this association in HubSpot', error);
-  }
-}
-
 async function getAllAssociationDefinitions(data: any) {
   const { toObject, fromObject } = data;
   const customerId = getCustomerId();
@@ -185,44 +152,8 @@ async function getAllAssociationDefinitions(data: any) {
   }
 }
 
-async function archiveSingleHubspotAssociation(data: AssociationMapping) {
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  const {
-    objectId, objectType, toObjectId, toObjectType,
-  } = formatSingleRequestData(data);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
-  try {
-    await hubspotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, toObjectId);
-  } catch (error:any) {
-    handleError('There was an issue archiving this association in HubSpot', error);
-  }
-}
-
-async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  const formattedData = formatBatchArchiveRequest(data);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
-  try {
-    if (formattedData) {
-      await hubspotClient.crm.associations.v4.batchApi.archive(
-        formattedData.fromObjectType,
-        formattedData.toObjectType,
-        { inputs: formattedData.inputs },
-      );
-    }
-  } catch (error:any) {
-    handleError('There was an issue saving this association in HubSpot', error);
-  }
-}
-
 export {
   getAllAssociationDefinitions,
-  saveSingleHubspotAssociation,
-  saveBatchHubspotAssociation,
-  archiveSingleHubspotAssociation,
-  archiveBatchHubspotAssociation,
   saveAssociationDefinition,
   archiveAssociationDefinition,
   updateAssociationDefinition,

@@ -2,14 +2,11 @@ import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/
 import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
-  AssociationRequest, AssociationDefinitionCreateRequest, AssociationBatchRequest, AssociationDefinitionUpdateRequest,
+  AssociationRequest, AssociationDefinitionCreateRequest, AssociationBatchRequest,
 } from '../../types/common';
-// import { getHubSpotAssociationDefinitionsByType } from '../hubspot-client';
 
 const PORT = 3001;
 const getCustomerId = () => '1'; // faking this because building an account provisiong/login system is out of scope
-
-export { PORT, getCustomerId };
 
 export function formatSingleRequestData(data: AssociationMapping): AssociationRequest {
   const associationSpec: AssociationSpec = {
@@ -100,16 +97,9 @@ export function formaCreateCardinalityRequest(response: any, data: AssociationDe
 
   return { inputs };
 }
-// export function filterAssociationDefinitionConfigurations(
-//   data: any,
-//   requestInfo: AssociationDefinitionUpdateRequest['requestInfo'],
-// ) {
-//   return data.results.filter((obj: any) => requestInfo.some((requestInfoObj: any) => requestInfoObj.typeId === obj.typeId));
-// }
+
 export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   const inputs: any[] = [];
-  // const associationConfigurations = getHubSpotAssociationDefinitionsByType(data);
-  // const response = filterAssociationDefinitionConfigurations(associationConfigurations, data.requestInfo);
   if (data.fromCardinality) {
     inputs.push({
       typeId: data.toTypeId,
@@ -128,3 +118,5 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
 
   return { inputs };
 }
+
+export { PORT, getCustomerId };
