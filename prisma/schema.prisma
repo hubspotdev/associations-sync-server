@@ -9,15 +9,18 @@ generator client {
 
 model AssociationDefinition {
   id                         String    @id @default(cuid())  // Auto-generate ID using cuid
-  typeId                     Int?
+  fromTypeId                     Int?
+  toTypeId                     Int?
   fromObjectType             String          @db.VarChar(255)
   toObjectType               String          @db.VarChar(255)
   associationLabel           String          @db.VarChar(255)
   name                       String          @db.VarChar(255)
-  inverseLabel  String?          @db.VarChar(255)
-  associationTypeId          Int
+  inverseLabel                String?          @db.VarChar(255)
+  associationTypeId          Int?
   customerId                 String          @db.VarChar(255)
   cardinality                Cardinality
+  fromCardinality            Int?
+  toCardinality              Int?
   associationCategory  AssociationCategory
   @@unique([fromObjectType, toObjectType, associationLabel, associationTypeId])
 }
