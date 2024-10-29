@@ -7,12 +7,12 @@ const prisma = new PrismaClient({
 
 async function main() {
   // Clear existing data (only for the development environment)
-  await prisma.association.deleteMany();
-  await prisma.associationMapping.deleteMany();
-  await prisma.associationDefinition.deleteMany();
-  await prisma.company.deleteMany();
-  await prisma.contact.deleteMany();
-  await prisma.authorization.deleteMany()
+  // await prisma.association.deleteMany();
+  // await prisma.associationMapping.deleteMany();
+  // await prisma.associationDefinition.deleteMany();
+  // await prisma.company.deleteMany();
+  // await prisma.contact.deleteMany();
+  // await prisma.authorization.deleteMany()
 
   const company1 = await prisma.company.create({
     data: {
@@ -59,11 +59,12 @@ async function main() {
     data: {
       fromObjectType: 'Contact',
       toObjectType: 'Company',
-      associationLabel: 'Is Employee Of',
-      name:'is_employee_of',
+      associationLabel: 'Employee Of',
+      name:'employee_of',
       associationTypeId: 2,
       customerId: '1',
       cardinality: 'ONE_TO_MANY',
+      fromCardinality: 1,
       associationCategory: 'INTEGRATOR_DEFINED'
     },
   });
@@ -75,7 +76,7 @@ async function main() {
       objectId: contact1.id,
       toObjectType: 'Company',
       toObjectId: company1.id,
-      associationLabel: 'Employee',
+      associationLabel: 'CEO of',
       associationTypeId: 2,
       associationCategory: 'HUBSPOT_DEFINED',
       customerId: '1',
@@ -135,12 +136,12 @@ async function main() {
   });
 }
 
-main()
-  .catch((e) => {
-    handleError(e, 'There was an issue seeding the database');
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-});
+// main()
+//   .catch((e) => {
+//     handleError(e, 'There was an issue seeding the database');
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+// });
 
 export default prisma;
