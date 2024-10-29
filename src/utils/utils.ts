@@ -1,9 +1,10 @@
 import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
-import { AssociationMapping } from '@prisma/client';
+import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
-  AssociationRequest, AssociationDefinitionCreateRequest, AssociationBatchRequest,
+  AssociationRequest, AssociationDefinitionCreateRequest, AssociationBatchRequest, AssociationDefinitionUpdateRequest,
 } from '../../types/common';
+// import { getHubSpotAssociationDefinitionsByType } from '../hubspot-client';
 
 const PORT = 3001;
 const getCustomerId = () => '1'; // faking this because building an account provisiong/login system is out of scope
@@ -43,7 +44,7 @@ export function formatDefinitionUpdateRequest(def: any) {
     toObject: def.toObjectType,
     requestInfo: {
       label: def.associationLabel || '',
-      associationTypeId: def.associationTypeId,
+      associationTypeId: def.toTypeId,
       inverseLabel: def.inverseLabel || undefined,
     },
   };
@@ -52,7 +53,7 @@ export function formatDefinitionUpdateRequest(def: any) {
 export function formatBatchRequestData(data: any): AssociationBatchRequest {
   return {
     objectType: data.fromObjectType,
-    objectId: data.hubSpotAssociationLabel,
+    objectId: data.objectId,
     toObjectType: data.toObjectType,
     toObjectId: data.toObjectId,
     associations: data.associations,
@@ -75,4 +76,55 @@ export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
     toObjectType,
     inputs,
   };
+}
+
+// Utility function to create the request body
+export function formaCreateCardinalityRequest(response: any, data: AssociationDefinition) {
+  const inputs: any[] = [];
+
+  if (data.fromCardinality) {
+    inputs.push({
+      typeId: response.results[0].typeId,
+      category: response.results[0].category,
+      maxToObjectIds: data.fromCardinality,
+    });
+  }
+
+  if (data.toCardinality) {
+    inputs.push({
+      typeId: response.results[1].typeId,
+      category: response.results[1].category,
+      maxToObjectIds: data.toCardinality,
+    });
+  }
+
+  return { inputs };
+}
+// export function filterAssociationDefinitionConfigurations(
+//   data: any,
+//   requestInfo: AssociationDefinitionUpdateRequest['requestInfo'],
+// ) {
+//   return data.results.filter((obj: any) => requestInfo.some((requestInfoObj: any) => requestInfoObj.typeId === obj.typeId));
+// }
+export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
+  const inputs: any[] = [];
+  // const associationConfigurations = getHubSpotAssociationDefinitionsByType(data);
+  // const response = filterAssociationDefinitionConfigurations(associationConfigurations, data.requestInfo);
+  if (data.fromCardinality) {
+    inputs.push({
+      typeId: data.toTypeId,
+      category: data.associationCategory,
+      maxToObjectIds: data.toCardinality,
+    });
+  }
+
+  if (data.toCardinality) {
+    inputs.push({
+      typeId: data.fromTypeId,
+      category: data.associationCategory,
+      maxToObjectIds: data.fromCardinality,
+    });
+  }
+
+  return { inputs };
 }
