@@ -28,7 +28,7 @@ async function saveDBAssociationDefinition(data: AssociationDefinition) {
   }
 }
 
-async function updateDBAssociationDefinition(data: any, id: string) {
+async function updateDBAssociationDefinition(data: AssociationDefinition, id: string) {
   try {
     const result = await prisma.associationDefinition.update({
       where: { id },

@@ -46,13 +46,11 @@ export interface AssociationRequest {
   associationType:AssociationSpec[];
 }
 
-export interface AssociationBatchRequest {
-  objectType: string;
-  objectId: string;
-  toObjectType: string;
-  toObjectId: string;
-  associations: BatchInputPublicAssociationMultiPost;
-}
+// export interface AssociationBatchRequest {
+//   fromObjectType: string;
+//   toObjectType: string;
+//   inputs: BatchInputPublicAssociationMultiPost;
+// }
 export interface AssociationBatchArchiveRequest {
   objectType: string;
   toObjectType: string;
