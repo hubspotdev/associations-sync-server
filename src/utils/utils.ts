@@ -2,7 +2,7 @@ import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/
 import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
-  AssociationRequest, AssociationDefinitionCreateRequest, AssociationBatchRequest,
+  AssociationRequest, AssociationDefinitionCreateRequest,
 } from '../../types/common';
 
 const PORT = 3001;
@@ -47,16 +47,28 @@ export function formatDefinitionUpdateRequest(def: any) {
   };
 }
 
-export function formatBatchRequestData(data: any): AssociationBatchRequest {
+export function formatBatchRequestData(data: AssociationMapping[]) {
+  // Extract object types from the first item
+  const { fromObjectType, toObjectType } = data[0];
+
+  // Map data to the expected input format
+  const formattedInputs = data.map((item) => ({
+    types: [
+      {
+        associationCategory: item.associationCategory,
+        associationTypeId: item.associationTypeId,
+      },
+    ],
+    _from: item.fromHubSpotObjectId,
+    to: item.toHubSpotObjectId,
+  }));
+
   return {
-    objectType: data.fromObjectType,
-    objectId: data.objectId,
-    toObjectType: data.toObjectType,
-    toObjectId: data.toObjectId,
-    associations: data.associations,
+    fromObjectType,
+    toObjectType,
+    inputs: formattedInputs,
   };
 }
-
 export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
   if (definitions.length === 0) return null;
 
