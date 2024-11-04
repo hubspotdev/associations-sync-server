@@ -27,6 +27,31 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
   }
 }
 
+async function updateSingleHubspotAssociation(data: AssociationMapping) {
+  const customerId = getCustomerId();
+  const accessToken = await getAccessToken(customerId);
+  const {
+    objectId, objectType, toObjectId, toObjectType, associationType,
+  } = formatSingleRequestData(data);
+
+  if (accessToken) hubspotClient.setAccessToken(accessToken);
+
+  try {
+    // Change this to patch/put API request using client
+    if (associationType[0].associationCategory) {
+      await hubspotClient.crm.associations.v4.basicApi.create(
+        objectType,
+        objectId,
+        toObjectType,
+        toObjectId,
+        associationType,
+      );
+    }
+  } catch (error: any) {
+    handleError('There was an issue saving this association in HubSpot', error);
+  }
+}
+
 async function archiveSingleHubspotAssociation(data: AssociationMapping) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
