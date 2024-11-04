@@ -6,15 +6,25 @@ import { formatBatchArchiveRequest, formatBatchRequestData, getCustomerId } from
 async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
-  const { objectType, toObjectType, associations } = formatBatchRequestData(data);
+  const formattedRequest = formatBatchRequestData(data);
 
   if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
-    await hubspotClient.crm.associations.v4.batchApi.create(objectType, toObjectType, associations);
+    await hubspotClient.crm.associations.v4.batchApi.create(
+      data[0].fromObjectType,
+      data[0].toObjectType,
+      // formattedRequest.fromObjectType,
+      // formattedRequest.toObjectType,
+      formattedRequest.inputs,
+    );
   } catch (error: any) {
     handleError('There was an issue saving these associations in HubSpot', error);
   }
+}
+
+async function getAllProperties(objectType){
+  const properties = hubspotClient.crm.properties.coreApi.getAll(objectType)
 }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
