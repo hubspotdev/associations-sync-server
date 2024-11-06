@@ -14,8 +14,6 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
     await hubspotClient.crm.associations.v4.batchApi.create(
       data[0].fromObjectType,
       data[0].toObjectType,
-      // formattedRequest.fromObjectType,
-      // formattedRequest.toObjectType,
       formattedRequest.inputs,
     );
   } catch (error: any) {
@@ -23,9 +21,9 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
   }
 }
 
-async function getAllProperties(objectType){
-  const properties = hubspotClient.crm.properties.coreApi.getAll(objectType)
-}
+// async function getAllProperties(objectType){
+//   const properties = hubspotClient.crm.properties.coreApi.getAll(objectType)
+// }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();

@@ -1,16 +1,17 @@
-import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+// import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
 import { AssociationMapping, AssociationDefinition } from '@prisma/client';
 import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
   AssociationRequest, AssociationDefinitionCreateRequest,
 } from '../../types/common';
+import { hubspotClient } from '../auth';
 
 const PORT = 3001;
-const getCustomerId = () => '1'; // faking this because building an account provisiong/login system is out of scope
+const getCustomerId = () => '1'; // faking this because buåilding an account provisiong/login system is out of scope
 
-export function formatSingleRequestData(data: AssociationMapping): AssociationRequest {
+export function formatSingleRequestData(data: any): AssociationRequest {
   const associationSpec: AssociationSpec = {
-    associationCategory: data.associationCategory as AssociationSpecAssociationCategoryEnum, // Type casting if confident
+    associationCategory: data.associationCategory,
     associationTypeId: data.associationTypeId,
   };
 
@@ -46,13 +47,16 @@ export function formatDefinitionUpdateRequest(def: any) {
     },
   };
 }
+type HubspotBatchInput = Parameters<typeof hubspotClient.crm.associations.v4.batchApi.create>[2];
 
-export function formatBatchRequestData(data: AssociationMapping[]) {
-  // Extract object types from the first item
+export function formatBatchRequestData(data: any): {
+  fromObjectType: string;
+  toObjectType: string;
+  inputs: HubspotBatchInput; // Use the type here
+} {
   const { fromObjectType, toObjectType } = data[0];
 
-  // Map data to the expected input format
-  const formattedInputs = data.map((item) => ({
+  const formattedInputs = data.map((item: any) => ({
     types: [
       {
         associationCategory: item.associationCategory,
@@ -62,13 +66,36 @@ export function formatBatchRequestData(data: AssociationMapping[]) {
     _from: item.fromHubSpotObjectId,
     to: item.toHubSpotObjectId,
   }));
-
   return {
     fromObjectType,
     toObjectType,
-    inputs: formattedInputs,
+    inputs: {
+      inputs: formattedInputs, // Nest the array under an inputs property
+    },
   };
 }
+// export function formatBatchRequestData(data: AssociationMapping[]) {
+//   // Extract object types from the first item
+//   const { fromObjectType, toObjectType } = data[0];
+
+//   // Map data to the expected input format
+//   const formattedInputs = data.map((item) => ({
+//     types: [
+//       {
+//         associationCategory: item.associationCategory,
+//         associationTypeId: item.associationTypeId,
+//       },
+//     ],
+//     _from: item.fromHubSpotObjectId,
+//     to: item.toHubSpotObjectId,
+//   }));
+
+//   return {
+//     fromObjectType,
+//     toObjectType,
+//     inputs: formattedInputs,
+//   };
+// }
 export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
   if (definitions.length === 0) return null;
 
