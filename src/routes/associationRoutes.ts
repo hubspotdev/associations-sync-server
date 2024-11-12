@@ -19,9 +19,13 @@ import handleError from '../utils/error';
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/definitions/:fromObject/:toObject', async (req: Request, res: Response) => {
   try {
-    const associations = await getDBAssociationDefinitionsByType(req.body);
+    const associations = await getDBAssociationDefinitionsByType({
+      fromObject: req.params.fromObject,
+      toObject: req.params.toObject,
+    });
+    console.log('associations', associations);
     res.json(associations);
   } catch (error) {
     handleError(error, 'There was an issue getting the native properties with mappings');
@@ -93,5 +97,43 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(500).send('Error saving mapping');
   }
 });
+
+// router.get('/definitions/by-role/:roleType', async (req: Request, res: Response) => {
+//   try {
+//     const associations = await getDBAssociationDefinitionsByRole(req.params.roleType);
+//     res.json(associations);
+//   } catch (error) {
+//     handleError(error, 'Error getting associations by role type');
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
+// // Get all available roles between two object types
+// router.get('/definitions/:fromType/:toType', async (req: Request, res: Response) => {
+//   try {
+//     const { fromType, toType } = req.params;
+
+//     // Get from both sources in parallel
+//     const [dbAssociations, hubspotAssociations] = await Promise.all([
+//       getDBAssociationDefinitionsByTypes(fromType, toType),
+//       getHubspotAssociationDefinitions(fromType, toType),
+//     ]);
+
+//     // Compare and flag any discrepancies
+//     const merged = mergeAndFlagDiscrepancies(dbAssociations, hubspotAssociations);
+
+//     res.json({
+//       data: merged,
+//       sources: {
+//         database: { count: dbAssociations.length },
+//         hubspot: { count: hubspotAssociations.length },
+//       },
+//       syncStatus: merged.some((m) => m.hasDiscrepancy) ? 'out_of_sync' : 'in_sync',
+//     });
+//   } catch (error) {
+//     handleError(error, 'Error getting associations between object types');
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 
 export default router;

@@ -26,6 +26,16 @@ import {AssociationSpec} from '@hubspot/api-client/lib/codegen/crm/associations/
     details?: any[];
     error?: Error
 }
+export enum AssociationSpecAssociationCategoryEnum {
+  HUBSPOT_DEFINED = 'HUBSPOT_DEFINED',
+  INTEGRATOR_DEFINED = 'INTEGRATOR_DEFINED',
+  USER_DEFINED = 'USER_DEFINED'
+}
+
+// Helper function to convert Prisma enum to HubSpot enum
+export function convertToHubSpotAssociationCategory(category: AssociationCategory): AssociationSpecAssociationCategoryEnum {
+  return AssociationSpecAssociationCategoryEnum[category];
+}
 
 type LogLevel = 'Info' | 'Warning' | 'Error';
 

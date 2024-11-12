@@ -5,11 +5,22 @@ import prisma from '../../prisma/seed';
 async function getDBAssociationDefinitionsByType(data: any): Promise<AssociationDefinition[]> {
   const fromObjectType = data.fromObject;
   const toObjectType = data.toObject;
-
+  console.log('from object and to object in getDB', fromObjectType, toObjectType);
   try {
     const associations = await prisma.associationDefinition.findMany({
-      where: { fromObjectType, toObjectType },
+      where: {
+        fromObjectType: {
+          equals: fromObjectType,
+          mode: 'insensitive', // Add this if you want case-insensitive matching
+        },
+        toObjectType: {
+          equals: toObjectType,
+          mode: 'insensitive',
+        },
+      },
     });
+    console.log('associations in getDB', associations);
+
     return associations;
   } catch (error) {
     console.error('Error fetching associations:', error);

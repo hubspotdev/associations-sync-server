@@ -12,18 +12,14 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
 
   try {
     await hubspotClient.crm.associations.v4.batchApi.create(
-      data[0].fromObjectType,
-      data[0].toObjectType,
-      formattedRequest.inputs,
+      formattedRequest.fromObjectType,
+      formattedRequest.toObjectType,
+      { inputs: formattedRequest.inputs },
     );
   } catch (error: any) {
     handleError('There was an issue saving these associations in HubSpot', error);
   }
 }
-
-// async function getAllProperties(objectType){
-//   const properties = hubspotClient.crm.properties.coreApi.getAll(objectType)
-// }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();

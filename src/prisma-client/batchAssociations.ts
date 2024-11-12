@@ -23,7 +23,7 @@ const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
 
       return prisma.associationMapping.upsert({
         where: {
-          id: nativeAssociationId,
+          nativeAssociationId,
         },
         update: {
           hubSpotAssociationLabel,

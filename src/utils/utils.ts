@@ -1,10 +1,12 @@
 // import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
 import { AssociationMapping, AssociationDefinition } from '@prisma/client';
-import { AssociationSpec } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
+import {
+  AssociationSpec,
+  AssociationSpecAssociationCategoryEnum,
+} from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
   AssociationRequest, AssociationDefinitionCreateRequest,
 } from '../../types/common';
-import { hubspotClient } from '../auth';
 
 const PORT = 3001;
 const getCustomerId = () => '1'; // faking this because buåilding an account provisiong/login system is out of scope
@@ -47,31 +49,53 @@ export function formatDefinitionUpdateRequest(def: any) {
     },
   };
 }
-type HubspotBatchInput = Parameters<typeof hubspotClient.crm.associations.v4.batchApi.create>[2];
+// type HubspotBatchInput = Parameters<typeof hubspotClient.crm.associations.v4.batchApi.create>[2];
 
-export function formatBatchRequestData(data: any): {
-  fromObjectType: string;
-  toObjectType: string;
-  inputs: HubspotBatchInput; // Use the type here
-} {
-  const { fromObjectType, toObjectType } = data[0];
+// export function formatBatchRequestData(data: AssociationMapping[]): {
+//   fromObjectType: string;
+//   toObjectType: string;
+//   inputs: HubspotBatchInput; // Use the type here
+// } {
+//   const { fromObjectType, toObjectType } = data[0];
 
-  const formattedInputs = data.map((item: any) => ({
-    types: [
-      {
-        associationCategory: item.associationCategory,
-        associationTypeId: item.associationTypeId,
-      },
-    ],
-    _from: item.fromHubSpotObjectId,
-    to: item.toHubSpotObjectId,
+//   const formattedInputs = data.map((item: any) => ({
+//     types: [
+//       {
+//         associationCategory: item.associationCategory,
+//         associationTypeId: item.associationTypeId,
+//       },
+//     ],
+//     _from: item.fromHubSpotObjectId,
+//     to: item.toHubSpotObjectId,
+//   }));
+//   return {
+//     fromObjectType,
+//     toObjectType,
+//     inputs: {
+//       inputs: formattedInputs, // Nest the array under an inputs property
+//     },
+//   };
+// }
+const AssociationCategoryMapping = {
+  HUBSPOT_DEFINED: AssociationSpecAssociationCategoryEnum.HubspotDefined,
+  INTEGRATOR_DEFINED: AssociationSpecAssociationCategoryEnum.IntegratorDefined,
+  USER_DEFINED: AssociationSpecAssociationCategoryEnum.UserDefined,
+};
+
+export function formatBatchRequestData(data: AssociationMapping[]) {
+  const formattedInputs = data.map((item) => ({
+    _from: { id: item.fromHubSpotObjectId },
+    to: { id: item.toHubSpotObjectId }, // Changed from array to single PublicObjectId
+    types: [{
+      associationCategory: AssociationCategoryMapping[item.associationCategory],
+      associationTypeId: item.associationTypeId,
+    }],
   }));
+
   return {
-    fromObjectType,
-    toObjectType,
-    inputs: {
-      inputs: formattedInputs, // Nest the array under an inputs property
-    },
+    fromObjectType: data[0].fromObjectType,
+    toObjectType: data[0].toObjectType,
+    inputs: formattedInputs,
   };
 }
 // export function formatBatchRequestData(data: AssociationMapping[]) {
@@ -157,5 +181,18 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
 
   return { inputs };
 }
+
+// export function mergeAndFlagDiscrepancies(dbData: any[], hubspotData: any[]) {
+//   // Implement merging logic here
+//   // Flag any differences between DB and HubSpot data
+//   return dbData.map(dbItem => {
+//     const hubspotItem = hubspotData.find(h => h.id === dbItem.hubspotId);
+//     return {
+//       ...dbItem,
+//       hasDiscrepancy: !hubspotItem || !areEquivalent(dbItem, hubspotItem),
+//       hubspotData: hubspotItem || null
+//     };
+//   });
+// }
 
 export { PORT, getCustomerId };
