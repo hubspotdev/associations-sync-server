@@ -6,7 +6,6 @@ Used a getting started with [Express and Typescript](https://dev.to/codeozz/expr
 
 - A database using prisma to store auth and mappings
 - An OAuth handler to install apps
-- A basic caching layer to reduce unecesssary requests to HubSpot's API
 
 ## Getting Started
 
@@ -48,3 +47,21 @@ must have database up and running
 npx prisma db push (creates schema)
 
 npx prisma db seed (adds data)
+
+Example Association Mapping Request Body
+
+` {
+    "nativeAssociationId": "DATABASE_ASSOCIATION_ID",
+    "nativeObjectId": "DATABASE_OBJECT_ID",
+    "toNativeObjectId": ""DATABASE_OBJECT_ID",
+    "fromObjectType": "Contact",
+    "toObjectType": "Company",
+    "nativeAssociationLabel": "CEO of",
+    "hubSpotAssociationLabel": "Owner of",
+    "fromHubSpotObjectId": "HUBSPOT_OBJECT_ID",
+    "toHubSpotObjectId":"HUBSPOT_OBJECT_ID",
+    "customerId": "1",
+    "associationTypeId": 49,
+    "associationCategory": "USER_DEFINED",
+    "cardinality": "ONE_TO_MANY"
+  }`
