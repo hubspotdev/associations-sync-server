@@ -17,8 +17,8 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
       { inputs: formattedRequest.inputs },
     );
     console.log('response from hubspot', response);
-  } catch (error: any) {
-    handleError('There was an issue saving these associations in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue saving these associations in HubSpot');
   }
 }
 
@@ -26,13 +26,6 @@ async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
   const formattedData = formatBatchArchiveRequest(data);
-  console.log(
-    'formattedData + data',
-    // formattedData,
-    formattedData?.fromObjectType,
-    formattedData?.toObjectType,
-    formattedData?.inputs,
-  );
   if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
@@ -44,8 +37,8 @@ async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
       );
       console.log('response', response);
     }
-  } catch (error: any) {
-    handleError('There was an issue saving this association in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue saving this association in HubSpot');
   }
 }
 

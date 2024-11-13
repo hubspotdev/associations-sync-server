@@ -38,7 +38,7 @@ async function saveAssociationDefinitionConfiguration(
       });
       console.log('attempting second post', secondDefinitionWithConfig);
     }
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue configuring the association definition');
     throw error;
   }
@@ -49,8 +49,8 @@ async function getHubSpotAssociationDefinitionsByType(data: AssociationDefinitio
   try {
     const results = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(fromObject, toObject);
     return results;
-  } catch (error:any) {
-    handleError(error);
+  } catch (error:unknown) {
+    handleError(error, 'There was an issue getting the HubSpot association definition');
   }
 }
 
@@ -78,7 +78,7 @@ async function updateAssociationDefinitionConfiguration(
     }
     console.log('Configured definition response:', definitionWithConfig);
     return definitionWithConfig;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue configuring the association definition');
     throw error;
   }
@@ -96,8 +96,8 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
       await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
     return response;
-  } catch (error: any) {
-    handleError('There was an issue saving the association definition in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue saving the association definition in HubSpot');
     return undefined;
   }
 }
@@ -115,8 +115,8 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
     if (data.fromCardinality || data.toCardinality) {
       await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
     }
-  } catch (error: any) {
-    handleError('There was an issue updating the association definition in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue updating the association definition in HubSpot');
   }
 }
 
@@ -134,8 +134,8 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
       associationTypeId,
     );
     console.log('Archived HubSpot association definition', response);
-  } catch (error: any) {
-    handleError('There was an issue archiving the association definition in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue archiving the association definition in HubSpot');
   }
 }
 
@@ -147,7 +147,7 @@ async function getAllAssociationDefinitions(data: { toObject:string, fromObject:
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(toObject, fromObject);
     return response;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an error getting all association definitions');
   }
 }

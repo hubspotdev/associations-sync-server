@@ -12,7 +12,7 @@ async function getDBMappings(nativeAssociationIds: string[]) {
       },
     });
     return mappings;
-  } catch (error) {
+  } catch (error:unknown) {
     console.error('Error fetching mappings:', error);
     throw error;
   }
@@ -68,7 +68,7 @@ async function saveDBMapping(maybeMapping: AssociationMapping) {
     });
 
     return mappingResult;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to save the association mapping');
     throw error;
   }
@@ -82,7 +82,7 @@ async function deleteDBMapping(mappingId: string): Promise<string | undefined> {
       },
     });
     return `Mapping with ID ${mappingId} deleted successfully.`;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while deleting this association mapping');
     throw error;
   }
@@ -100,7 +100,7 @@ async function getSingleDBAssociationMappingFromId(mappingId: string) {
     }
 
     return mapping;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while fetching the association mapping');
     throw error;
   }
@@ -120,7 +120,7 @@ async function getSingleDBAssociationMapping(nativeAssociationId: string) {
     }
 
     return mapping;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while fetching the association mapping');
     throw error;
   }
@@ -131,7 +131,7 @@ async function getAllDBMappings() {
     const mappings = await prisma.associationMapping.findMany();
     console.log('all mappings', mappings);
     return mappings;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Error fetching all association mappings');
     throw error;
   }

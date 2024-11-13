@@ -8,7 +8,7 @@ async function getDBAssociationsByCustomerId(customerId: string): Promise<Associ
       where: { customerId },
     });
     return associations;
-  } catch (error) {
+  } catch (error:unknown) {
     console.error('Error fetching associations:', error);
     throw error;
   }
@@ -20,7 +20,7 @@ async function getSingleDBAssociationById(id: string): Promise<Association | nul
       where: { id },
     });
     return association ?? null;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while fetching the association');
     throw error;
   }
@@ -68,7 +68,7 @@ const saveDBAssociation = async (maybeAssociation: Association): Promise<Associa
     });
 
     return associationResult;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to save the association');
     return null;
   }
@@ -80,7 +80,7 @@ async function getDBSingleAssociation(id: string): Promise<Association | null> {
       where: { id },
     });
     return association ?? null;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while fetching the association');
     throw error;
   }
@@ -92,7 +92,7 @@ async function deleteDBAssociation(id: string): Promise<void> {
       where: { id },
     });
     console.log('Deleted association:', deletedAssociation);
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue deleting this association');
   }
 }

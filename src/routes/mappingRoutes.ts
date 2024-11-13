@@ -39,7 +39,7 @@ router.post('/', async (req: Request, res: Response) => {
       hubspot: hubspotResponse,
       database: dbResponse,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while saving association mapping');
     return res.status(500).json({
       error: 'Error saving mapping',
@@ -66,7 +66,7 @@ router.post('/batch', async (req: Request, res: Response) => {
       hubspot: hubspotResponse,
       database: dbResponse,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while saving association mappings');
     return res.status(500).send('Error saving mapping');
   }
@@ -87,7 +87,7 @@ router.delete('/batch', async (req: Request, res: Response) => {
     }
 
     return res.status(404).json({ error: 'No mappings were deleted' });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to delete the mappings');
     return res.status(500).json({
       error: 'Failed to delete mappings',
@@ -117,7 +117,7 @@ router.delete('/basic/:mappingId', async (req: Request, res: Response) => {
     }
 
     return res.json({ success: true, deletedId: mappingId });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to delete the mapping');
     return res.status(500).json({
       error: 'Failed to delete mapping',
@@ -145,7 +145,7 @@ router.get('/basic/:mappingId', async (req: Request, res: Response) => {
     }
 
     return res.json(associationMapping);
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Error getting association mapping');
     return res.status(500).json({
       error: 'Error retrieving mapping',
@@ -158,7 +158,7 @@ router.get('/all', async (req: Request, res: Response) => {
   try {
     const mappings = await getAllDBMappings();
     res.send(mappings);
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Error getting all association mappings');
     res.status(500).send('Error fetching mappings');
   }

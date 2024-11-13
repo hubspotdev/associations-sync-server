@@ -37,7 +37,7 @@ router.get('/definitions/:fromObject/:toObject', async (req: Request, res: Respo
       success: true,
       data: { dbAssociations, hubspotAssociations },
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Failed to fetch association definitions');
     return res.status(500).json({
       success: false,
@@ -60,7 +60,7 @@ router.delete('/definitions/:associationId', async (req: Request, res: Response)
       success: true,
       data: response,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Failed to archive association definition');
     return res.status(500).json({
       success: false,
@@ -91,7 +91,7 @@ router.post('/definition', async (req: Request, res: Response) => {
       success: true,
       data: response,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Failed to save association definition');
     return res.status(500).json({
       success: false,
@@ -105,7 +105,7 @@ router.put('/definition/:id', async (req: Request, res: Response) => {
     await updateDBAssociationDefinition(req.body, req.params.id);
     const response = await updateAssociationDefinition(req.body);
     res.send(response);
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while updating the association definition');
     res.status(500).send('Error updating association definition');
   }
@@ -115,7 +115,7 @@ router.get('/:associationId', async (req: Request, res: Response) => {
   try {
     const association = await getSingleDBAssociationById(req.params.associationId);
     res.send(association);
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Error getting association');
   }
 });
@@ -128,7 +128,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
       success: true,
       message: `Association with ID ${associationId} deleted successfully`,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Failed to delete association');
     return res.status(500).json({
       success: false,
@@ -148,7 +148,7 @@ router.post('/', async (req: Request, res: Response) => {
       success: true,
       data: prismaResponse,
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Failed to save association');
     return res.status(500).json({
       success: false,
@@ -161,7 +161,7 @@ router.post('/', async (req: Request, res: Response) => {
 //   try {
 //     const associations = await getDBAssociationDefinitionsByRole(req.params.roleType);
 //     res.json(associations);
-//   } catch (error) {
+//   } catch(error:unknown) {
 //     handleError(error, 'Error getting associations by role type');
 //     res.status(500).send('Internal Server Error');
 //   }
@@ -189,7 +189,7 @@ router.post('/', async (req: Request, res: Response) => {
 //       },
 //       syncStatus: merged.some((m) => m.hasDiscrepancy) ? 'out_of_sync' : 'in_sync',
 //     });
-//   } catch (error) {
+//   } catch(error:unknown) {
 //     handleError(error, 'Error getting associations between object types');
 //     res.status(500).send('Internal Server Error');
 //   }

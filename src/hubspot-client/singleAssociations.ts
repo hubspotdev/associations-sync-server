@@ -22,34 +22,34 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
         associationType,
       );
     }
-  } catch (error: any) {
-    handleError('There was an issue saving this association in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue saving this association in HubSpot');
   }
 }
 
-async function updateSingleHubspotAssociation(data: AssociationMapping) {
-  const customerId = getCustomerId();
-  const accessToken = await getAccessToken(customerId);
-  const {
-    objectId, objectType, toObjectId, toObjectType, associationType,
-  } = formatSingleRequestData(data);
+// async function updateSingleHubspotAssociation(data: AssociationMapping) {
+//   const customerId = getCustomerId();
+//   const accessToken = await getAccessToken(customerId);
+//   const {
+//     objectId, objectType, toObjectId, toObjectType, associationType,
+//   } = formatSingleRequestData(data);
 
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
+//   if (accessToken) hubspotClient.setAccessToken(accessToken);
 
-  try {
-    if (associationType[0].associationCategory) {
-      await hubspotClient.crm.associations.v4.basicApi.create(
-        objectType,
-        objectId,
-        toObjectType,
-        toObjectId,
-        associationType,
-      );
-    }
-  } catch (error: any) {
-    handleError('There was an issue saving this association in HubSpot', error);
-  }
-}
+//   try {
+//     if (associationType[0].associationCategory) {
+//       await hubspotClient.crm.associations.v4.basicApi.create(
+//         objectType,
+//         objectId,
+//         toObjectType,
+//         toObjectId,
+//         associationType,
+//       );
+//     }
+//   } catch (error: unknown) {
+//     handleError('There was an issue saving this association in HubSpot', error);
+//   }
+// }
 
 async function archiveSingleHubspotAssociation(data: AssociationMapping) {
   const customerId = getCustomerId();
@@ -62,8 +62,8 @@ async function archiveSingleHubspotAssociation(data: AssociationMapping) {
 
   try {
     await hubspotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, toObjectId);
-  } catch (error: any) {
-    handleError('There was an issue archiving this association in HubSpot', error);
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue archiving this association in HubSpot');
   }
 }
 

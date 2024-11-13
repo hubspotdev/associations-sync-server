@@ -73,7 +73,7 @@ const getHubSpotId = async (accessToken: string): Promise<string | void | null> 
     const hubspotAccountInfo: HubspotAccountInfo = await hubspotAccountInfoResponse.json();
     const hubSpotPortalId = hubspotAccountInfo.portalId;
     return hubSpotPortalId.toString();
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'Error getting HubSpot ID');
     return null;
   }
@@ -140,7 +140,7 @@ const exchangeForTokens = async (
     });
 
     return tokenInfo;
-  } catch (error) {
+  } catch (error: unknown) {
     handleError(error, "There was an issue upserting the user's auth token info to Prisma", true);
     return null;
   }
@@ -175,7 +175,7 @@ const getAccessToken = async (customerId: string): Promise<string | void | null>
     } else {
       return updatedCreds?.accessToken;
     }
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue getting or exchanging access tokens', true);
     return null;
   }
@@ -188,7 +188,7 @@ const redeemCode = async (code: string): Promise<Authorization | null | void> =>
       code,
       grant_type: 'authorization_code',
     });
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while exchanging OAuth tokens');
     return null;
   }

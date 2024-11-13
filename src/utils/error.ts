@@ -24,7 +24,7 @@ function formatError(logMessage: any, context: string = ''): any {
   return error;
 }
 
-function handleError(error: any, context: string = '', critical: boolean = false): void {
+function handleError(error: unknown, context: string = '', critical: boolean = false): void {
   const formattedError = formatError(error, context);
   Logger.error(formattedError);
 

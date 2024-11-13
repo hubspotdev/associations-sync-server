@@ -22,7 +22,7 @@ async function getDBAssociationDefinitionsByType(data: any): Promise<Association
     console.log('associations in getDB', associations);
 
     return associations;
-  } catch (error) {
+  } catch (error:unknown) {
     console.error('Error fetching associations:', error);
     throw error;
   }
@@ -33,7 +33,7 @@ async function saveDBAssociationDefinition(data: AssociationDefinition) {
     const result = await prisma.associationDefinition.create({ data });
     console.log('Successfully saved association definition in Prisma', result);
     return result;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue saving the association definition in Prisma');
     throw error;
   }
@@ -47,7 +47,7 @@ async function updateDBAssociationDefinition(data: AssociationDefinition, id: st
     });
     console.log('Successfully updated association definition in Prisma', result);
     return result;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue updating the association definition in Prisma');
     throw error;
   }
@@ -60,7 +60,7 @@ async function deleteDBAssociationDefinition(id: string) {
     });
     console.log('Successfully deleted association definition in Prisma', result);
     return result;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue archiving the association definition in Prisma');
     throw error;
   }

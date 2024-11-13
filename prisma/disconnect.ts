@@ -5,7 +5,7 @@ async function disconnectPrisma(): Promise<void> {
     console.log('Disconnecting from the database...');
     await prismaSeed.$disconnect();
     console.log('Disconnected from the database successfully.');
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error while disconnecting from the database:', error);
     throw error;
   }

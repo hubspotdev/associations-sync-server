@@ -136,12 +136,12 @@ async function main() {
   });
 }
 
-main()
-  .catch((e) => {
-    handleError(e, 'There was an issue seeding the database');
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-});
+// main()
+//   .catch((e) => {
+//     handleError(e, 'There was an issue seeding the database');
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+// });
 
 export default prisma;

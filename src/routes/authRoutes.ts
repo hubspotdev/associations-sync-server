@@ -17,7 +17,7 @@ router.get('/oauth-callback', async (req: Request, res: Response) => {
         console.log('Access token ==', accessToken);
         res.send('Success!');
       }
-    } catch (error) {
+    } catch (error:unknown) {
       console.log('oops');
     }
   }
