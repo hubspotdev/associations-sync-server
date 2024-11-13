@@ -54,6 +54,7 @@ const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
     });
 
     const mappingResults = await prisma.$transaction(operations);
+    console.log('results from prisma', mappingResults);
     return mappingResults;
   } catch (error) {
     handleError(error, 'There was an issue while attempting to save the association mappings');

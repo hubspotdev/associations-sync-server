@@ -25,7 +25,6 @@ router.get('/definitions/:fromObject/:toObject', async (req: Request, res: Respo
       fromObject: req.params.fromObject,
       toObject: req.params.toObject,
     });
-    console.log('associations', associations);
     res.json(associations);
   } catch (error) {
     handleError(error, 'There was an issue getting the native properties with mappings');

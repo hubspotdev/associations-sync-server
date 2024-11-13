@@ -38,7 +38,7 @@ async function saveDBMapping(maybeMapping: AssociationMapping) {
   try {
     const mappingResult = await prisma.associationMapping.upsert({
       where: {
-        id: nativeAssociationId,
+        nativeAssociationId,
       },
       update: {
         hubSpotAssociationLabel,
@@ -125,8 +125,20 @@ async function getSingleDBAssociationMapping(nativeAssociationId: string) {
     throw error;
   }
 }
+async function getAllDBMappings() {
+  console.log('in getallDB');
+  try {
+    const mappings = await prisma.associationMapping.findMany();
+    console.log('all mappings', mappings);
+    return mappings;
+  } catch (error) {
+    handleError(error, 'Error fetching all association mappings');
+    throw error;
+  }
+}
 
 export {
+  getAllDBMappings,
   getDBMappings,
   saveDBMapping,
   deleteDBMapping,

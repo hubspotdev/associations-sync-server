@@ -49,33 +49,7 @@ export function formatDefinitionUpdateRequest(def: any) {
     },
   };
 }
-// type HubspotBatchInput = Parameters<typeof hubspotClient.crm.associations.v4.batchApi.create>[2];
 
-// export function formatBatchRequestData(data: AssociationMapping[]): {
-//   fromObjectType: string;
-//   toObjectType: string;
-//   inputs: HubspotBatchInput; // Use the type here
-// } {
-//   const { fromObjectType, toObjectType } = data[0];
-
-//   const formattedInputs = data.map((item: any) => ({
-//     types: [
-//       {
-//         associationCategory: item.associationCategory,
-//         associationTypeId: item.associationTypeId,
-//       },
-//     ],
-//     _from: item.fromHubSpotObjectId,
-//     to: item.toHubSpotObjectId,
-//   }));
-//   return {
-//     fromObjectType,
-//     toObjectType,
-//     inputs: {
-//       inputs: formattedInputs, // Nest the array under an inputs property
-//     },
-//   };
-// }
 const AssociationCategoryMapping = {
   HUBSPOT_DEFINED: AssociationSpecAssociationCategoryEnum.HubspotDefined,
   INTEGRATOR_DEFINED: AssociationSpecAssociationCategoryEnum.IntegratorDefined,
@@ -98,28 +72,7 @@ export function formatBatchRequestData(data: AssociationMapping[]) {
     inputs: formattedInputs,
   };
 }
-// export function formatBatchRequestData(data: AssociationMapping[]) {
-//   // Extract object types from the first item
-//   const { fromObjectType, toObjectType } = data[0];
 
-//   // Map data to the expected input format
-//   const formattedInputs = data.map((item) => ({
-//     types: [
-//       {
-//         associationCategory: item.associationCategory,
-//         associationTypeId: item.associationTypeId,
-//       },
-//     ],
-//     _from: item.fromHubSpotObjectId,
-//     to: item.toHubSpotObjectId,
-//   }));
-
-//   return {
-//     fromObjectType,
-//     toObjectType,
-//     inputs: formattedInputs,
-//   };
-// }
 export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
   if (definitions.length === 0) return null;
 

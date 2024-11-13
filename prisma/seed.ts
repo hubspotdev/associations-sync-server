@@ -7,12 +7,12 @@ const prisma = new PrismaClient({
 
 async function main() {
   // Clear existing data (only for the development environment)
-  // await prisma.association.deleteMany();
-  // await prisma.associationMapping.deleteMany();
-  // await prisma.associationDefinition.deleteMany();
-  // await prisma.company.deleteMany();
-  // await prisma.contact.deleteMany();
-  // await prisma.authorization.deleteMany()
+  await prisma.association.deleteMany();
+  await prisma.associationMapping.deleteMany();
+  await prisma.associationDefinition.deleteMany();
+  await prisma.company.deleteMany();
+  await prisma.contact.deleteMany();
+  await prisma.authorization.deleteMany()
 
   const company1 = await prisma.company.create({
     data: {
@@ -136,12 +136,12 @@ async function main() {
   });
 }
 
-// main()
-//   .catch((e) => {
-//     handleError(e, 'There was an issue seeding the database');
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect();
-// });
+main()
+  .catch((e) => {
+    handleError(e, 'There was an issue seeding the database');
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+});
 
 export default prisma;
