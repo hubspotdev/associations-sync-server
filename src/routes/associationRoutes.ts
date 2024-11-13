@@ -14,6 +14,7 @@ import {
   saveAssociationDefinition,
   updateAssociationDefinition,
   archiveAssociationDefinition,
+  getAllAssociationDefinitions,
 } from '../hubspot-client/definitionAssociations';
 import handleError from '../utils/error';
 
@@ -21,11 +22,15 @@ const router = express.Router();
 
 router.get('/definitions/:fromObject/:toObject', async (req: Request, res: Response) => {
   try {
-    const associations = await getDBAssociationDefinitionsByType({
+    const dbAssociations = await getDBAssociationDefinitionsByType({
       fromObject: req.params.fromObject,
       toObject: req.params.toObject,
     });
-    res.json(associations);
+    const hubspotAssociations = await getAllAssociationDefinitions({
+      fromObject: req.params.fromObject,
+      toObject: req.params.toObject,
+    });
+    res.json({ dbAssociations, hubspotAssociations });
   } catch (error) {
     handleError(error, 'There was an issue getting the native properties with mappings');
     res.status(500).send('Internal Server Error');

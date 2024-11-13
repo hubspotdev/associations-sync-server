@@ -139,7 +139,7 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
   }
 }
 
-async function getAllAssociationDefinitions(data: any) {
+async function getAllAssociationDefinitions(data: { toObject:string, fromObject:string }) {
   const { toObject, fromObject } = data;
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
