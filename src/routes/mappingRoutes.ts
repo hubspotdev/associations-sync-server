@@ -24,61 +24,137 @@ const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const response = await saveSingleHubspotAssociation(req.body);
-    await saveDBMapping(req.body);
-    res.send(response);
+    const associationData = req.body;
+    const [hubspotResponse, dbResponse] = await Promise.all([
+      saveSingleHubspotAssociation(associationData),
+      saveDBMapping(associationData),
+    ]);
+
+    if (hubspotResponse === undefined || dbResponse === undefined) {
+      throw new Error('Failed to save association');
+    }
+
+    return res.status(201).json({
+      success: true,
+      hubspot: hubspotResponse,
+      database: dbResponse,
+    });
   } catch (error) {
-    handleError(error, 'There was an issue while saving association mappings');
-    res.status(500).send('Error saving mapping');
+    handleError(error, 'There was an issue while saving association mapping');
+    return res.status(500).json({
+      error: 'Error saving mapping',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 });
 
 router.post('/batch', async (req: Request, res: Response) => {
   try {
-    await saveBatchDBMapping(req.body);
-    const response = await saveBatchHubspotAssociation(req.body);
-    res.send(response);
+    const mappings = req.body;
+    console.log('mappings', mappings);
+    // Basic validation
+    if (!Array.isArray(mappings) || mappings.length === 0) {
+      return res.status(400).json({
+        error: 'Invalid request: mappings must be a non-empty array',
+      });
+    }
+    const dbResponse = await saveBatchDBMapping(req.body);
+    const hubspotResponse = await saveBatchHubspotAssociation(req.body);
+
+    return res.status(201).json({
+      success: true,
+      hubspot: hubspotResponse,
+      database: dbResponse,
+    });
   } catch (error) {
     handleError(error, 'There was an issue while saving association mappings');
-    res.status(500).send('Error saving mapping');
+    return res.status(500).send('Error saving mapping');
   }
 });
 
 router.delete('/batch', async (req: Request, res: Response) => {
   try {
     const mappingsToDelete = req.body.mappingIds;
+    if (!Array.isArray(mappingsToDelete) || mappingsToDelete.length === 0) {
+      return res.status(400).json({ error: 'Invalid or empty mappingIds array' });
+    }
+
     const associationMappings = await getBatchDBAssociationMappings(mappingsToDelete);
     const response = await deleteBatchDBMappings(mappingsToDelete);
-    if (response) await archiveBatchHubspotAssociation(associationMappings);
-    res.send(response);
+    if (response) {
+      await archiveBatchHubspotAssociation(associationMappings);
+      return res.json({ success: true, deletedCount: mappingsToDelete.length });
+    }
+
+    return res.status(404).json({ error: 'No mappings were deleted' });
   } catch (error) {
     handleError(error, 'There was an issue while attempting to delete the mappings');
+    return res.status(500).json({
+      error: 'Failed to delete mappings',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 });
 
 router.delete('/basic/:mappingId', async (req: Request, res: Response) => {
-  console.log('in basic delete route');
   try {
-    const associationMapping = await getSingleDBAssociationMappingFromId(req.params.mappingId);
-    const response = await deleteDBMapping(req.params.mappingId);
-    if (associationMapping) await archiveSingleHubspotAssociation(associationMapping);
-    res.send(response);
+    const { mappingId } = req.params;
+    if (!mappingId) {
+      return res.status(400).json({ error: 'Missing mappingId parameter' });
+    }
+
+    const [associationMapping, deleteResponse] = await Promise.all([
+      getSingleDBAssociationMappingFromId(mappingId),
+      deleteDBMapping(mappingId),
+    ]);
+
+    if (!deleteResponse) {
+      return res.status(404).json({ error: 'Mapping not found' });
+    }
+
+    if (associationMapping) {
+      await archiveSingleHubspotAssociation(associationMapping);
+    }
+
+    return res.json({ success: true, deletedId: mappingId });
   } catch (error) {
     handleError(error, 'There was an issue while attempting to delete the mapping');
+    return res.status(500).json({
+      error: 'Failed to delete mapping',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 });
 
 router.get('/basic/:mappingId', async (req: Request, res: Response) => {
   try {
-    const associationMapping = await getSingleDBAssociationMappingFromId(req.params.mappingId);
-    res.send(associationMapping);
+    const { mappingId } = req.params;
+
+    if (!mappingId) {
+      return res.status(400).json({
+        error: 'Missing mappingId parameter',
+      });
+    }
+
+    const associationMapping = await getSingleDBAssociationMappingFromId(mappingId);
+
+    if (!associationMapping) {
+      return res.status(404).json({
+        error: 'Mapping not found',
+      });
+    }
+
+    return res.json(associationMapping);
   } catch (error) {
     handleError(error, 'Error getting association mapping');
+    return res.status(500).json({
+      error: 'Error retrieving mapping',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 });
 
 router.get('/all', async (req: Request, res: Response) => {
-  console.log('in get all');
   try {
     const mappings = await getAllDBMappings();
     res.send(mappings);
