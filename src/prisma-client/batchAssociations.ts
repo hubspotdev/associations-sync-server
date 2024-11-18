@@ -56,7 +56,7 @@ const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
     const mappingResults = await prisma.$transaction(operations);
     console.log('results from prisma', mappingResults);
     return mappingResults;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to save the association mappings');
     throw error;
   }
@@ -70,7 +70,7 @@ async function deleteBatchDBMappings(mappingIds: string[]): Promise<string | und
       })),
     );
     return `Mappings with IDs ${mappingIds.join(', ')} were deleted successfully.`;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while deleting the association mappings.');
     throw error;
   }
@@ -88,7 +88,7 @@ async function getBatchDBAssociationMappings(mappingIds: string[]) {
     }
 
     return mappings;
-  } catch (error) {
+  } catch (error:unknown) {
     handleError(error, 'There was an issue while fetching the association mappings');
     throw error;
   }
