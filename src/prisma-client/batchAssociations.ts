@@ -1,6 +1,6 @@
 import { AssociationMapping } from '@prisma/client';
 import handleError from '../utils/error';
-import prisma from '../../prisma/seed';
+import prisma from '../../prisma/seeds/index';
 
 const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
   try {

@@ -1,6 +1,6 @@
 import { AssociationDefinition } from '@prisma/client';
 import handleError from '../utils/error';
-import prisma from '../../prisma/seed';
+import prisma from '../../prisma/seeds/partnership';
 
 async function getDBAssociationDefinitionsByType(data: any): Promise<AssociationDefinition[]> {
   const fromObjectType = data.fromObject;

@@ -1,5 +1,5 @@
 import { Association } from '@prisma/client';
-import prisma from '../../prisma/seed';
+import prisma from '../../prisma/seeds/partnership';
 import handleError from '../utils/error';
 
 async function getDBAssociationsByCustomerId(customerId: string): Promise<Association[]> {
