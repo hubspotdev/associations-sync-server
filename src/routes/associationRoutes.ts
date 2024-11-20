@@ -63,7 +63,7 @@ const router = express.Router();
  *           example: 1
  *         associationCategory:
  *           type: string
- *           description: Category indicating the origin of the association definition
+ *           description: Indicates who defined the association type
  *           enum: [HUBSPOT_DEFINED, INTEGRATOR_DEFINED, USER_DEFINED]
  *           example: "USER_DEFINED"
  *         customerId:
@@ -75,6 +75,7 @@ const router = express.Router();
  *           description: Defines the relationship multiplicity between associated objects
  *           enum: [ONE_TO_ONE, ONE_TO_MANY, MANY_TO_ONE, MANY_TO_MANY]
  *           example: "ONE_TO_MANY"
+ */
 
 /**
  * @swagger
@@ -90,7 +91,7 @@ const router = express.Router();
  *           type: string
  *         description: The association ID
  *     responses:
- *       200:
+ *       '200':
  *         description: Successfully retrieved association
  *         content:
  *           application/json:
@@ -102,18 +103,32 @@ const router = express.Router();
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Association'
- *       404:
+ *       '404':
  *         description: Association not found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       500:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Association not found"
+ *       '500':
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "There was an issue getting the association: Record not found in database"
  */
 router.get('/:associationId', async (req: Request, res: Response) => {
   try {
@@ -175,13 +190,27 @@ router.get('/:associationId', async (req: Request, res: Response) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Association not found"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to delete association: Database connection error"
  */
 router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
@@ -250,13 +279,27 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Request body is required"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to save association: Invalid input data"
  */
 router.post('/', async (req: Request, res: Response) => {
   if (!req.body || Object.keys(req.body).length === 0) {
