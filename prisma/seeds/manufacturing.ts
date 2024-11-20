@@ -1,11 +1,10 @@
 import { PrismaClient, AssociationCategory, Cardinality } from '@prisma/client'
-import { Client } from "@hubspot/api-client"
+import { hubspotClient } from '../../src/auth'
 import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 
 export async function seedManufacturingData(prisma: PrismaClient) {
-  const hubspotClient = new Client({ accessToken: process.env.ACCESS_TOKEN })
   console.log('🚀 Starting manufacturing data seed...')
 
   // Create AssociationDefinitions in Prisma first (without associationTypeId)

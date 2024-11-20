@@ -1,4 +1,4 @@
-import prismaSeed from '../prisma/seed';
+import prismaSeed from './seeds/index';
 
 async function disconnectPrisma(): Promise<void> {
   try {
