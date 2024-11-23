@@ -1,12 +1,12 @@
-import { AssociationCategory, Cardinality } from '@prisma/client'
+import { AssociationCategory, Cardinality, PrismaClient } from '@prisma/client'
 import { hubspotClient } from '../../src/auth'
 import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec'
 import handleError from '../../src/utils/error'
-import prisma from './index'
+// import prisma from './index'
 
-async function seedBaseData() {
+export async function seedPRMData(prisma: PrismaClient) {
   console.log('🚀 Starting base data seed...')
 
   // Clear existing data (only for development)
@@ -229,13 +229,3 @@ async function seedBaseData() {
 
   console.log('✨ Base data seed completed successfully!')
 }
-
-seedBaseData()
-  .catch((e) => {
-    handleError(e, 'There was an issue seeding the database')
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
-
-export default prisma

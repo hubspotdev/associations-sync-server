@@ -3,7 +3,7 @@ import { seedEducationData } from './education'
 import { seedHealthcareData } from './healthcare'
 import { seedRealEstateData } from './real-estate'
 import { seedManufacturingData } from './manufacturing'
-
+import { seedPRMData } from './partnership'
 const prisma = new PrismaClient({
   log: ['info', 'warn', 'error'],
 });
@@ -25,6 +25,9 @@ async function main() {
       break
     case 'MANUFACTURING':
       await seedManufacturingData(prisma)
+      break
+    case 'PRM':
+      await seedPRMData(prisma)
       break
     default:
       console.log('Invalid seed type specified')
