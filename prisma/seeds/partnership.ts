@@ -1,5 +1,4 @@
 import { AssociationCategory, Cardinality, PrismaClient } from '@prisma/client'
-import { hubspotClient } from '../../src/auth'
 import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec'
