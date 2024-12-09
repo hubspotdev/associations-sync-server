@@ -135,17 +135,4 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   return { inputs };
 }
 
-// export function mergeAndFlagDiscrepancies(dbData: any[], hubspotData: any[]) {
-//   // Implement merging logic here
-//   // Flag any differences between DB and HubSpot data
-//   return dbData.map(dbItem => {
-//     const hubspotItem = hubspotData.find(h => h.id === dbItem.hubspotId);
-//     return {
-//       ...dbItem,
-//       hasDiscrepancy: !hubspotItem || !areEquivalent(dbItem, hubspotItem),
-//       hubspotData: hubspotItem || null
-//     };
-//   });
-// }
-
 export { PORT, getCustomerId };

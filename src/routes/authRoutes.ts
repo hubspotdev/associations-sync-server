@@ -3,7 +3,7 @@ import { authUrl, redeemCode } from '../auth';
 
 const router = express.Router();
 
-router.get('/install', (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   res.redirect(authUrl);
 });
 
