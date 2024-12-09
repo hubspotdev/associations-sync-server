@@ -3,8 +3,9 @@ import { hubspotClient } from '../../src/auth'
 import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
+import { Client } from '@hubspot/api-client';
 
-export async function seedHealthcareData(prisma: PrismaClient) {
+export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Client) {
   console.log('🚀 Starting healthcare data seed...')
 
   // Create AssociationDefinitions in Prisma

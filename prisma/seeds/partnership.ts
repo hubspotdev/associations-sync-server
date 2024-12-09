@@ -4,9 +4,9 @@ import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec'
 import handleError from '../../src/utils/error'
-// import prisma from './index'
+import { Client } from '@hubspot/api-client';
 
-export async function seedPRMData(prisma: PrismaClient) {
+export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
   console.log('🚀 Starting base data seed...')
 
   // Clear existing data (only for development)

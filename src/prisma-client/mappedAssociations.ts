@@ -1,6 +1,6 @@
 import { AssociationMapping } from '@prisma/client';
 import handleError from '../utils/error';
-import prisma from '../../prisma/seeds/partnership';
+import prisma from './prisma-initalization';
 
 async function getDBMappings(nativeAssociationIds: string[]) {
   try {

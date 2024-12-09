@@ -3,8 +3,8 @@ import {
   AssociationSpecAssociationCategoryEnum,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import { hubspotClient } from '../../src/auth'
-
-export async function seedEducationData(prisma: PrismaClient) {
+import { Client } from '@hubspot/api-client';
+export async function seedEducationData(prisma: PrismaClient, hubspotClient:Client) {
   console.log('🚀 Starting education data seed...')
 
   // Create AssociationDefinition in Prisma

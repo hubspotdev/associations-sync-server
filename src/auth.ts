@@ -4,7 +4,7 @@ import * as hubspot from '@hubspot/api-client';
 import { Authorization } from '@prisma/client';
 import { PORT, getCustomerId } from './utils/utils';
 import handleError from './utils/error';
-import prisma from '../prisma/seeds/index';
+import prisma from './prisma-client/prisma-initalization';
 
 interface ExchangeProof {
   grant_type: string;
@@ -31,7 +31,7 @@ type HubspotAccountInfo = {
 const CLIENT_ID: string = process.env.CLIENT_ID || 'CLIENT_ID required';
 const CLIENT_SECRET: string = process.env.CLIENT_SECRET || 'CLIENT_SECRET required';
 
-const REDIRECT_URI: string = `http://localhost:${PORT}/oauth-callback`;
+const REDIRECT_URI: string = `http://localhost:${PORT}/api/install/oauth-callback`;
 const hubspotClient = new hubspot.Client();
 
 const SCOPES = [
@@ -146,8 +146,11 @@ const exchangeForTokens = async (
   }
 };
 
-const getAccessToken = async (customerId: string): Promise<string | void | null> => {
-  if (process.env.ACCESS_TOKEN) return process.env.ACCESS_TOKEN;
+async function getAccessToken(customerId: string): Promise<string | void | null> {
+  if (process.env.ACCESS_TOKEN) {
+    console.log('getting access token from env', process.env.ACCESS_TOKEN);
+    return process.env.ACCESS_TOKEN;
+  }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {
@@ -179,7 +182,7 @@ const getAccessToken = async (customerId: string): Promise<string | void | null>
     handleError(error, 'There was an issue getting or exchanging access tokens', true);
     return null;
   }
-};
+}
 
 const redeemCode = async (code: string): Promise<Authorization | null | void> => {
   try {
