@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client'
 import { seedEducationData } from './education'
 import { seedHealthcareData } from './healthcare'
 import { seedRealEstateData } from './real-estate'
@@ -47,5 +46,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
-
-  // export default prisma
