@@ -13,7 +13,7 @@ async function main() {
   const accessToken = await getAccessToken(customerId);
   if(accessToken) hubspotClient.setAccessToken(accessToken)
 
-  const seedType = process.env.SEED_TYPE || 'EDUCATION'
+  const seedType = process.env.INDUSTRY || 'EDUCATION'
 
   console.log(`Seeding database and HubSpot with ${seedType} data...`)
 
