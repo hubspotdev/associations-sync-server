@@ -8,16 +8,16 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
   console.log('🚀 Starting real estate data seed...')
 
   // Create AssociationDefinitions in Prisma
-  const agentDealAssociationDef = await prisma.associationDefinition.create({
+  const agentCompanyAssociationDef = await prisma.associationDefinition.create({
     data: {
-      fromObjectType: 'Agent',
-      toObjectType: 'Deal',
-      associationLabel: 'agent_deal',
-      name: 'Agent to Deal',
-      inverseLabel: 'deal_agent',
+      fromObjectType: 'Contact',
+      toObjectType: 'Company',
+      associationLabel: 'agent_company',
+      name: 'Agent to Company',
+      inverseLabel: 'company_agent',
       customerId: '1',
       cardinality: Cardinality.ONE_TO_MANY,
-      associationCategory: AssociationCategory.HUBSPOT_DEFINED
+      associationCategory: AssociationCategory.USER_DEFINED
     }
   })
   console.log('✅ Created association definition in Prisma')
@@ -44,92 +44,93 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
   })
   console.log('✅ Created agent in HubSpot:', `${hubspotAgent.properties.firstname} ${hubspotAgent.properties.lastname}`)
 
-  // Create deal in HubSpot
-  const hubspotDeal = await hubspotClient.crm.deals.basicApi.create({
+  // Create company in HubSpot (instead of deal)
+  const hubspotCompany = await hubspotClient.crm.companies.basicApi.create({
     properties: {
-      dealname: '123 Luxury Villa Sale',
-      amount: '1000000',
-      dealstage: 'appointmentscheduled',
-      pipeline: 'default',
+      name: '123 Luxury Villa',
+      domain: 'luxuryestates.com',
     }
   })
-  console.log('✅ Created deal in HubSpot:', hubspotDeal.properties.dealname)
+  console.log('✅ Created company in HubSpot:', hubspotCompany.properties.name)
 
-  // Create deal record in Prisma
-  const deal = await prisma.company.create({
+  // Create company record in Prisma
+  const company = await prisma.company.create({
     data: {
       createdate: new Date(),
       domain: 'luxuryestates.com',
-      name: '123 Luxury Villa Sale',
+      name: '123 Luxury Villa',
       archived: false
     }
   })
-  console.log('✅ Created deal in Prisma:', deal.name)
+  console.log('✅ Created company in Prisma:', company.name)
 
   // Create association definition in HubSpot
   const associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
     'contacts',
-    'deals',
+    'companies',
     {
-      label: 'Agent to Deal',
-      name: 'agent_to_deal'
+      label: 'Agent to Company',
+      name: 'agent_to_company'
     }
   )
   console.log('✅ Created association definition in HubSpot with typeId:', associationDefinition.results[0].typeId)
 
   // Update Prisma association definition with HubSpot typeId
   await prisma.associationDefinition.update({
-    where: { id: agentDealAssociationDef.id },
+    where: { id: agentCompanyAssociationDef.id },
     data: {
       associationTypeId: associationDefinition.results[0].typeId
     }
   })
   console.log('✅ Updated Prisma association definition with HubSpot typeId')
+  console.log('contact, company and typeID', hubspotAgent, hubspotCompany, associationDefinition.results)
 
+  // Add a delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
   // Create HubSpot association
   await hubspotClient.crm.associations.v4.basicApi.create(
     'contacts',
     hubspotAgent.id,
-    'deals',
-    hubspotDeal.id,
+    'companies',
+    hubspotCompany.id,
     [{
       associationCategory: AssociationSpecAssociationCategoryEnum.UserDefined,
-      associationTypeId: associationDefinition.results[0].typeId
+      associationTypeId: associationDefinition.results[1].typeId
     }]
   )
-  console.log('✅ Created association in HubSpot between agent and deal')
+  console.log('✅ Created association in HubSpot between agent and company')
 
   // Create Prisma association
-  const agentDealAssociation = await prisma.association.create({
+  const agentCompanyAssociation = await prisma.association.create({
     data: {
-      objectType: 'Agent',
+      objectType: 'Contact',
       objectId: agent.id,
-      toObjectType: 'Deal',
-      toObjectId: deal.id,
-      associationLabel: 'agent_deal',
-      associationTypeId: associationDefinition.results[0].typeId,
+      toObjectType: 'Company',
+      toObjectId: company.id,
+      associationLabel: 'agent_company',
+      associationTypeId: associationDefinition.results[1].typeId,
       customerId: '1',
       cardinality: Cardinality.ONE_TO_MANY,
-      associationCategory: AssociationCategory.HUBSPOT_DEFINED
+      associationCategory: AssociationCategory.USER_DEFINED
     }
   })
-  console.log('✅ Created association in Prisma between agent and deal')
+  console.log('✅ Created association in Prisma between agent and company')
 
   // Create AssociationMapping
   await prisma.associationMapping.create({
     data: {
-      nativeAssociationId: agentDealAssociation.id,
+      nativeAssociationId: agentCompanyAssociation.id,
       nativeObjectId: agent.id,
-      toNativeObjectId: deal.id,
-      fromObjectType: 'Agent',
-      toObjectType: 'Deal',
-      nativeAssociationLabel: 'agent_deal',
-      hubSpotAssociationLabel: 'contact_to_deal',
+      toNativeObjectId: company.id,
+      fromObjectType: 'Contact',
+      toObjectType: 'Company',
+      nativeAssociationLabel: 'agent_company',
+      hubSpotAssociationLabel: 'contact_to_company',
       fromHubSpotObjectId: hubspotAgent.id,
-      toHubSpotObjectId: hubspotDeal.id,
+      toHubSpotObjectId: hubspotCompany.id,
       customerId: '1',
-      associationTypeId: associationDefinition.results[0].typeId,
-      associationCategory: AssociationCategory.HUBSPOT_DEFINED,
+      associationTypeId: associationDefinition.results[1].typeId,
+      associationCategory: AssociationCategory.USER_DEFINED,
       cardinality: Cardinality.ONE_TO_MANY
     }
   })

@@ -35,12 +35,13 @@ const REDIRECT_URI: string = `http://localhost:${PORT}/api/install/oauth-callbac
 const hubspotClient = new hubspot.Client();
 
 const SCOPES = [
-  ' crm.objects.companies.write',
-  'crm.objects.contacts.write',
-  'crm.objects.deals.write',
   'crm.objects.companies.read',
+  'crm.objects.companies.write',
   'crm.objects.contacts.read',
+  'crm.objects.contacts.write',
   'crm.objects.deals.read',
+  'crm.objects.deals.write',
+  'oauth',
 ];
 
 const scopeString = SCOPES.toString().replaceAll(',', ' ').trim();
