@@ -83,6 +83,7 @@ const getHubSpotId = async (accessToken: string): Promise<string | void | null> 
 const exchangeForTokens = async (
   exchangeProof: ExchangeProof,
 ): Promise<Authorization | void | null> => {
+  console.log('exchangeProof', exchangeProof);
   const {
     code,
     redirect_uri,
@@ -148,10 +149,10 @@ const exchangeForTokens = async (
 };
 
 async function getAccessToken(customerId: string): Promise<string | void | null> {
-  if (process.env.ACCESS_TOKEN) {
-    console.log('getting access token from env', process.env.ACCESS_TOKEN);
-    return process.env.ACCESS_TOKEN;
-  }
+  // if (process.env.ACCESS_TOKEN) {
+  //   console.log('getting access token from env', process.env.ACCESS_TOKEN);
+  //   return process.env.ACCESS_TOKEN;
+  // }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {
@@ -186,7 +187,9 @@ async function getAccessToken(customerId: string): Promise<string | void | null>
 }
 
 const redeemCode = async (code: string): Promise<Authorization | null | void> => {
+  console.log('redeeming code', code);
   try {
+    console.log('redeeming code in try block', code);
     return await exchangeForTokens({
       ...EXCHANGE_CONSTANTS,
       code,
