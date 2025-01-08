@@ -46,7 +46,7 @@ must have database up and running
 
 npx prisma db push (creates schema)
 
-npx prisma db seed (adds data)
+npm run seed (adds data)
 
 Example Association Mapping Request Body
 
