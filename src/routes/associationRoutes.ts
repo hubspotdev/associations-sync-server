@@ -248,19 +248,54 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
  *           schema:
  *             type: object
  *             required:
- *               - fromObjectId
+ *               - objectType
+ *               - objectId
+ *               - toObjectType
  *               - toObjectId
+ *               - associationLabel
  *               - associationTypeId
+ *               - associationCategory
+ *               - customerId
+ *               - cardinality
  *             properties:
- *               fromObjectId:
+ *               objectType:
+ *                 type: string
+ *                 description: The type of the source object (e.g., contact, company, deal)
+ *                 example: "contact"
+ *               objectId:
  *                 type: string
  *                 description: ID of the source object
+ *                 example: "123456"
+ *               toObjectType:
+ *                 type: string
+ *                 description: The type of the target object (e.g., contact, company, deal)
+ *                 example: "company"
  *               toObjectId:
  *                 type: string
  *                 description: ID of the target object
- *               associationTypeId:
+ *                 example: "789012"
+ *               associationLabel:
  *                 type: string
+ *                 description: Human-readable name for the association type
+ *                 example: "Primary Contact"
+ *               associationTypeId:
+ *                 type: integer
  *                 description: Type of association
+ *                 example: 1
+ *               associationCategory:
+ *                 type: string
+ *                 enum: [HUBSPOT_DEFINED, INTEGRATOR_DEFINED, USER_DEFINED]
+ *                 description: Indicates who defined the association type
+ *                 example: "USER_DEFINED"
+ *               customerId:
+ *                 type: string
+ *                 description: Unique identifier of the customer who owns this association
+ *                 example: "cust_123"
+ *               cardinality:
+ *                 type: string
+ *                 enum: [ONE_TO_ONE, ONE_TO_MANY, MANY_TO_ONE, MANY_TO_MANY]
+ *                 description: Defines the relationship multiplicity between associated objects
+ *                 example: "ONE_TO_MANY"
  *     responses:
  *       200:
  *         description: Association created successfully
@@ -311,6 +346,14 @@ router.post('/', async (req: Request, res: Response) => {
 
   try {
     const prismaResponse = await saveDBAssociation(req.body);
+
+    if (!prismaResponse || !prismaResponse.id) {
+      return res.status(500).json({
+        success: false,
+        data: 'Association creation failed - no data returned',
+      });
+    }
+
     return res.json({
       success: true,
       data: prismaResponse,
