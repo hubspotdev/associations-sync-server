@@ -8,8 +8,8 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
   let schoolStudentAssoc;
   const existingSchoolStudentDef = await prisma.associationDefinition.findFirst({
     where: {
-      fromObjectType: 'School',
-      toObjectType: 'Student',
+      fromObjectType: 'Company',
+      toObjectType: 'Contact',
       associationLabel: 'school_student',
       customerId: '1'
     }
@@ -18,8 +18,8 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
   if (!existingSchoolStudentDef) {
     schoolStudentAssoc = await prisma.associationDefinition.create({
       data: {
-        fromObjectType: 'School',
-        toObjectType: 'Student',
+        fromObjectType: 'Company',
+        toObjectType: 'Contact',
         associationLabel: 'school_student',
         name: 'School to Student',
         inverseLabel: 'student_school',
@@ -177,8 +177,8 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
   // Check and update Prisma association definition with HubSpot typeId
   const existingAssocDef = await prisma.associationDefinition.findFirst({
     where: {
-      fromObjectType: 'School',
-      toObjectType: 'Student',
+      fromObjectType: 'Company',
+      toObjectType: 'Contact',
       associationLabel: 'school_student',
       associationTypeId: associationDefinition.results[0].typeId
     }
@@ -249,10 +249,10 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
           nativeAssociationId: schoolStudentAssociation.id,
           nativeObjectId: school.id,
           toNativeObjectId: student.id,
-          fromObjectType: 'School',
-          toObjectType: 'Student',
+          fromObjectType: 'Company',
+          toObjectType: 'Contact',
           nativeAssociationLabel: 'school_student',
-          hubSpotAssociationLabel: 'company_to_contact',
+          hubSpotAssociationLabel: 'school_student',
           fromHubSpotObjectId: hubspotSchool.id,
           toHubSpotObjectId: hubspotStudent.id,
           customerId: '1',

@@ -9,8 +9,8 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
   let doctorPatientAssoc;
   const existingDoctorPatientDef = await prisma.associationDefinition.findFirst({
     where: {
-      fromObjectType: 'Doctor',
-      toObjectType: 'Patient',
+      fromObjectType: 'Contact',
+      toObjectType: 'Contact',
       associationLabel: 'doctor_patient',
       customerId: 'HEALTHCARE_1'
     }
@@ -19,8 +19,8 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
   if (!existingDoctorPatientDef) {
     doctorPatientAssoc = await prisma.associationDefinition.create({
       data: {
-        fromObjectType: 'Doctor',
-        toObjectType: 'Patient',
+        fromObjectType: 'Contact',
+        toObjectType: 'Contact',
         associationLabel: 'doctor_patient',
         name: 'Doctor to Patient',
         inverseLabel: 'patient_doctor',
@@ -305,10 +305,10 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           nativeAssociationId: doctorPatientAssociation.id,
           nativeObjectId: doctor.id,
           toNativeObjectId: patient.id,
-          fromObjectType: 'Doctor',
-          toObjectType: 'Patient',
+          fromObjectType: 'Contact',
+          toObjectType: 'Contact',
           nativeAssociationLabel: 'doctor_patient',
-          hubSpotAssociationLabel: 'contact_to_contact',
+          hubSpotAssociationLabel: 'doctor_patient',
           fromHubSpotObjectId: hubspotDoctor.id,
           toHubSpotObjectId: hubspotPatient.id,
           customerId: '1',

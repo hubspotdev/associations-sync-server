@@ -9,9 +9,9 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
   let supplierProductAssoc;
   const existingSupplierProductDef = await prisma.associationDefinition.findFirst({
     where: {
-      fromObjectType: 'Supplier',
-      toObjectType: 'Product',
-      associationLabel: 'supplier_product',
+      fromObjectType: 'Company',
+      toObjectType: 'Company',
+      associationLabel: 'supplier_buyer',
       customerId: '1'
     }
   });
@@ -19,11 +19,11 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
   if (!existingSupplierProductDef) {
     supplierProductAssoc = await prisma.associationDefinition.create({
       data: {
-        fromObjectType: 'Supplier',
-        toObjectType: 'Product',
-        associationLabel: 'supplier_product',
-        name: 'Supplier to Product',
-        inverseLabel: 'product_supplier',
+        fromObjectType: 'Company',
+        toObjectType: 'Company',
+        associationLabel: 'supplier_buyer',
+        name: 'Supplier to buyer',
+        inverseLabel: 'buyer_supplier',
         customerId: '1',
         cardinality: Cardinality.ONE_TO_MANY,
         associationCategory: AssociationCategory.USER_DEFINED
@@ -89,15 +89,15 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
   }
 
   // Check for existing product in Prisma
-  let product;
-  const existingProduct = await prisma.company.findFirst({
+  let buyer;
+  const existingBuyer = await prisma.company.findFirst({
     where: {
       domain: 'techmanufacturing.com'
     }
   });
 
-  if (!existingProduct) {
-    product = await prisma.company.create({
+  if (!existingBuyer) {
+    buyer = await prisma.company.create({
       data: {
         createdate: new Date(),
         domain: 'techmanufacturing.com',
@@ -105,14 +105,14 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         archived: false
       }
     })
-    console.log('✅ Created product in Prisma:', product.name)
+    console.log('✅ Created product in Prisma:', buyer.name)
   } else {
-    product = existingProduct;
-    console.log('ℹ️ Product already exists in Prisma:', product.name)
+    buyer = existingBuyer;
+    console.log('ℹ️ Buyer already exists in Prisma:', buyer.name)
   }
 
   // Check for existing product in HubSpot
-  let hubspotProduct;
+  let hubspotBuyer;
   try {
     const searchResults = await hubspotClient.crm.companies.searchApi.doSearch({
       filterGroups: [{
@@ -125,16 +125,16 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
     });
 
     if (searchResults.results.length > 0) {
-      hubspotProduct = searchResults.results[0];
-      console.log('ℹ️ Product already exists in HubSpot:', hubspotProduct.properties.name);
+      hubspotBuyer = searchResults.results[0];
+      console.log('ℹ️ Buyer already exists in HubSpot:', hubspotBuyer.properties.name);
     } else {
-      hubspotProduct = await hubspotClient.crm.companies.basicApi.create({
+      hubspotBuyer = await hubspotClient.crm.companies.basicApi.create({
         properties: {
           name: 'Circuit Board X1000',
           domain: 'techmanufacturing.com',
         }
       });
-      console.log('✅ Created product in HubSpot:', hubspotProduct.properties.name)
+      console.log('✅ Created product in HubSpot:', hubspotBuyer.properties.name)
     }
   } catch (error) {
     console.error('Error while checking/creating product in HubSpot:', error);
@@ -159,7 +159,7 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'companies',
-        'companies',
+        'products',
         {
           label: 'Supplier to Buyer',
           name: 'supplier_buyer',
@@ -176,7 +176,7 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
   // Check and update Prisma association definition with HubSpot typeId
   const existingAssocDef = await prisma.associationDefinition.findFirst({
     where: {
-      fromObjectType: 'Supplier',
+      fromObjectType: 'Company',
       toObjectType: 'Product',
       associationLabel: 'supplier_product',
       associationTypeId: associationDefinition.results[0].typeId
@@ -200,43 +200,43 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
     where: {
       customerId_toObjectId_objectId_associationLabel_associationTypeId: {
         customerId: '1',
-        toObjectId: product.id,
+        toObjectId: buyer.id,
         objectId: supplier.id,
-        associationLabel: 'supplier_product',
+        associationLabel: 'supplier_buyer',
         associationTypeId: associationDefinition.results[0].typeId
       }
     }
   });
 
-  let supplierProductAssociation;
+  let supplierBuyerAssociation;
   if (!existingAssociation) {
-    supplierProductAssociation = await prisma.association.create({
+    supplierBuyerAssociation = await prisma.association.create({
       data: {
-        objectType: 'Supplier',
+        objectType: 'Company',
         objectId: supplier.id,
-        toObjectType: 'Product',
-        toObjectId: product.id,
-        associationLabel: 'supplier_product',
+        toObjectType: 'Company',
+        toObjectId: buyer.id,
+        associationLabel: 'supplier_buyer',
         associationTypeId: associationDefinition.results[0].typeId,
         customerId: '1',
         cardinality: Cardinality.ONE_TO_MANY,
         associationCategory: AssociationCategory.USER_DEFINED
       }
     });
-    console.log('✅ Created association in Prisma between supplier and product')
+    console.log('✅ Created association in Prisma between supplier and buyer')
   } else {
-    supplierProductAssociation = existingAssociation;
-    console.log('ℹ️ Association already exists in Prisma between supplier and product')
+    supplierBuyerAssociation = existingAssociation;
+    console.log('ℹ️ Association already exists in Prisma between supplier and buyer')
   }
 
   // Create association mapping if association was created
-  if (supplierProductAssociation) {
+  if (supplierBuyerAssociation) {
     const existingMapping = await prisma.associationMapping.findUnique({
       where: {
         customerId_fromHubSpotObjectId_toHubSpotObjectId_associationTypeId: {
           customerId: '1',
           fromHubSpotObjectId: hubspotSupplier.id,
-          toHubSpotObjectId: hubspotProduct.id,
+          toHubSpotObjectId: hubspotBuyer.id,
           associationTypeId: associationDefinition.results[0].typeId
         }
       }
@@ -245,15 +245,15 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
     if (!existingMapping) {
       await prisma.associationMapping.create({
         data: {
-          nativeAssociationId: supplierProductAssociation.id,
+          nativeAssociationId: supplierBuyerAssociation.id,
           nativeObjectId: supplier.id,
-          toNativeObjectId: product.id,
-          fromObjectType: 'Supplier',
-          toObjectType: 'Product',
-          nativeAssociationLabel: 'supplier_product',
+          toNativeObjectId: buyer.id,
+          fromObjectType: 'Company',
+          toObjectType: 'Company',
+          nativeAssociationLabel: 'supplier_buyer',
           hubSpotAssociationLabel: 'company_to_company',
           fromHubSpotObjectId: hubspotSupplier.id,
-          toHubSpotObjectId: hubspotProduct.id,
+          toHubSpotObjectId: hubspotBuyer.id,
           customerId: '1',
           associationTypeId: associationDefinition.results[0].typeId,
           associationCategory: AssociationCategory.USER_DEFINED,
