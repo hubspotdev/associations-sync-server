@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="82" failures="15" errors="0" time="1.742">
+  <testsuite name="Definition Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="0.594" tests="12">
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" name="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" time="0.009">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" time="0.02">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" name="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" time="0.003">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" name="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" name="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" name="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" name="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" name="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="0.603" tests="1">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="0.641" tests="1">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.033">
+    </testcase>
+  </testsuite>
+  <testsuite name="Single Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="0.688" tests="8">
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" name="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" time="0.012">
+    </testcase>
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" name="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" time="0.018">
+    </testcase>
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" name="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" name="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should successfully upsert an association" name="Single Associations Database Client saveDBAssociation should successfully upsert an association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should handle upsert errors" name="Single Associations Database Client saveDBAssociation should handle upsert errors" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should successfully delete an association" name="Single Associations Database Client deleteDBAssociation should successfully delete an association" time="0.003">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should handle deletion errors" name="Single Associations Database Client deleteDBAssociation should handle deletion errors" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Association Routes" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="1.045" tests="11">
+    <testcase classname="Association Routes GET /:associationId should successfully return an association" name="Association Routes GET /:associationId should successfully return an association" time="0.047">
+    </testcase>
+    <testcase classname="Association Routes GET /:associationId should return 404 when association is not found" name="Association Routes GET /:associationId should return 404 when association is not found" time="0.017">
+    </testcase>
+    <testcase classname="Association Routes GET /:associationId should handle database errors appropriately" name="Association Routes GET /:associationId should handle database errors appropriately" time="0.014">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should successfully delete an association" name="Association Routes DELETE /:associationId should successfully delete an association" time="0.013">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" name="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" time="0.013">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should handle deletion errors appropriately" name="Association Routes DELETE /:associationId should handle deletion errors appropriately" time="0.008">
+    </testcase>
+    <testcase classname="Association Routes POST / should successfully create a new association" name="Association Routes POST / should successfully create a new association" time="0.025">
+    </testcase>
+    <testcase classname="Association Routes POST / should return 400 when request body is empty" name="Association Routes POST / should return 400 when request body is empty" time="0.007">
+    </testcase>
+    <testcase classname="Association Routes POST / should return 500 when creation fails with no data" name="Association Routes POST / should return 500 when creation fails with no data" time="0.01">
+    </testcase>
+    <testcase classname="Association Routes POST / should handle creation errors appropriately" name="Association Routes POST / should handle creation errors appropriately" time="0.009">
+    </testcase>
+    <testcase classname="Association Routes POST / should validate required fields in the request body" name="Association Routes POST / should validate required fields in the request body" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="Single Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="1.379" tests="4">
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" name="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" time="0.004">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" time="0.008">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Batch Associations HubSpot Client" errors="0" failures="4" skipped="0" timestamp="2025-01-16T20:44:42" time="1.401" tests="7">
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" time="0.003">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle missing access token" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle missing access token" time="0">
+      <failure>Error: expect(jest.fn()).not.toHaveBeenCalled()
+
+Expected number of calls: 0
+Received number of calls: 1
+
+1: null
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/batchAssociations.test.ts:89:48)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" time="0.004">
+      <failure>Error: expect(received).resolves.not.toThrow()
+
+Received promise rejected instead of resolved
+Rejected to value: [Error: API Error]
+    at expect (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:113:15)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/batchAssociations.test.ts:97:13)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" time="0">
+      <failure>Error: expect(jest.fn()).not.toHaveBeenCalled()
+
+Expected number of calls: 0
+Received number of calls: 1
+
+1: null
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/batchAssociations.test.ts:127:48)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle partial success with some failures" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle partial success with some failures" time="0">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalled()
+
+Expected number of calls: &gt;= 1
+Received number of calls:    0
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/batchAssociations.test.ts:153:29)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Associations HubSpot Client" errors="0" failures="9" skipped="0" timestamp="2025-01-16T20:44:42" time="1.437" tests="10">
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" name="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" time="0.003">
+      <failure>TypeError: Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[51]++) , formattedData)&apos; as it is undefined.
+    at fromObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:109:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:74:22)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" name="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" time="0.01">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;API Error&quot;
+Received message:   &quot;Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[51]++) , formattedData)&apos; as it is undefined.&quot;
+
+      107 |   hubspotClient.setAccessToken(accessToken);
+      108 |
+    &gt; 109 |   const { fromObject, toObject, requestInfo } = formattedData;
+          |           ^
+      110 |   try {
+      111 |     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
+      112 |     if (data.fromCardinality || data.toCardinality) {
+
+      at fromObject (src/hubspot-client/definitionAssociations.ts:109:11)
+      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:87:7)
+    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:87:71)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" name="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" time="0.001">
+      <failure>TypeError: Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[65]++) , formattedData)&apos; as it is undefined.
+    at fromObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:129:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:97:22)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" name="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" time="0.004">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;Update failed&quot;
+Received message:   &quot;Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[65]++) , formattedData)&apos; as it is undefined.&quot;
+
+      127 |   hubspotClient.setAccessToken(accessToken);
+      128 |
+    &gt; 129 |   const { fromObject, toObject, requestInfo } = formattedData;
+          |           ^
+      130 |
+      131 |   try {
+      132 |     await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, requestInfo);
+
+      at fromObject (src/hubspot-client/definitionAssociations.ts:129:11)
+      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:110:7)
+    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:110:73)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" name="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" time="0.009">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: {&quot;success&quot;: true}
+Received: undefined
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:127:22)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should handle errors" name="Definition Associations HubSpot Client archiveAssociationDefinition should handle errors" time="0.004">
+      <failure>Error: expect(received).rejects.toThrow()
+
+Received promise resolved instead of rejected
+Resolved to value: undefined
+    at expect (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:113:15)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:144:13)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getHubSpotAssociationDefinitionsByType should successfully fetch definitions by type" name="Definition Associations HubSpot Client getHubSpotAssociationDefinitionsByType should successfully fetch definitions by type" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getHubSpotAssociationDefinitionsByType should handle errors" name="Definition Associations HubSpot Client getHubSpotAssociationDefinitionsByType should handle errors" time="0.001">
+      <failure>Error: expect(received).rejects.toThrow()
+
+Received promise resolved instead of rejected
+Resolved to value: undefined
+    at expect (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:113:15)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:169:13)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitions should successfully fetch all definitions" name="Definition Associations HubSpot Client getAllAssociationDefinitions should successfully fetch all definitions" time="0.001">
+      <failure>TypeError: Cannot destructure property &apos;toObject&apos; of &apos;((cov_8x65i4cya(...).s[82]++) , data)&apos; as it is undefined.
+    at toObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:162:11)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:182:56)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitions should handle errors" name="Definition Associations HubSpot Client getAllAssociationDefinitions should handle errors" time="0.001">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;Fetch failed&quot;
+Received message:   &quot;Cannot destructure property &apos;toObject&apos; of &apos;((cov_8x65i4cya(...).s[82]++) , data)&apos; as it is undefined.&quot;
+
+      160 |
+      161 | async function getAllAssociationDefinitions(data: { toObject:string, fromObject:string }) {
+    &gt; 162 |   const { toObject, fromObject } = data;
+          |           ^
+      163 |   const customerId = getCustomerId();
+      164 |   const accessToken: string | void | null = await getAccessToken(customerId);
+      165 |   checkAccessToken(accessToken);
+
+      at toObject (src/hubspot-client/definitionAssociations.ts:162:11)
+      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:194:48)
+    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:194:60)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Mocks" errors="0" failures="2" skipped="0" timestamp="2025-01-16T20:44:42" time="1.473" tests="12">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.003">
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" name="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" time="0.034">
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return 400 if parameters are missing" name="Definition Routes GET /:fromObject/:toObject should return 400 if parameters are missing" time="0.035">
+      <failure>Error: expected 400 &quot;Bad Request&quot;, got 404 &quot;Not Found&quot;
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/routes/definitionRoutes.test.ts:53:10)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)
+----
+    at Test._assertStatus (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:252:14)
+    at /Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:308:13
+    at Test._assertFunction (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:285:13)
+    at Test.assert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:164:23)
+    at Server.localAssert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:120:14)
+    at Object.onceWrapper (node:events:634:28)
+    at Server.emit (node:events:520:28)
+    at emitCloseNT (node:net:2338:8)
+    at processTicksAndRejections (node:internal/process/task_queues:89:21)</failure>
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" name="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" time="0.011">
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should successfully delete a definition" name="Definition Routes DELETE /:associationId should successfully delete a definition" time="0.021">
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should return 400 if associationId is missing" name="Definition Routes DELETE /:associationId should return 400 if associationId is missing" time="0.013">
+      <failure>Error: expected 400 &quot;Bad Request&quot;, got 404 &quot;Not Found&quot;
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/routes/definitionRoutes.test.ts:94:10)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)
+----
+    at Test._assertStatus (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:252:14)
+    at /Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:308:13
+    at Test._assertFunction (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:285:13)
+    at Test.assert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:164:23)
+    at Server.localAssert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:120:14)
+    at Object.onceWrapper (node:events:634:28)
+    at Server.emit (node:events:520:28)
+    at emitCloseNT (node:net:2338:8)
+    at processTicksAndRejections (node:internal/process/task_queues:89:21)</failure>
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should handle errors appropriately" name="Definition Routes DELETE /:associationId should handle errors appropriately" time="0.008">
+    </testcase>
+    <testcase classname="Definition Routes POST / should successfully create a new definition" name="Definition Routes POST / should successfully create a new definition" time="0.012">
+    </testcase>
+    <testcase classname="Definition Routes POST / should return 400 if request body is empty" name="Definition Routes POST / should return 400 if request body is empty" time="0.012">
+    </testcase>
+    <testcase classname="Definition Routes POST / should return 422 if HubSpot response is invalid" name="Definition Routes POST / should return 422 if HubSpot response is invalid" time="0.018">
+    </testcase>
+    <testcase classname="Definition Routes PUT /:id should successfully update a definition" name="Definition Routes PUT /:id should successfully update a definition" time="0.012">
+    </testcase>
+    <testcase classname="Definition Routes PUT /:id should handle errors appropriately" name="Definition Routes PUT /:id should handle errors appropriately" time="0.013">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-16T20:44:42" time="1.494" tests="16">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.003">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should successfully create a single mapping" name="Mapping Routes POST / should successfully create a single mapping" time="0.057">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should return 400 if request body is empty" name="Mapping Routes POST / should return 400 if request body is empty" time="0.012">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should handle errors appropriately" name="Mapping Routes POST / should handle errors appropriately" time="0.008">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should successfully create batch mappings" name="Mapping Routes POST /batch should successfully create batch mappings" time="0.02">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should return 400 if mappings array is empty" name="Mapping Routes POST /batch should return 400 if mappings array is empty" time="0.011">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should handle errors appropriately" name="Mapping Routes POST /batch should handle errors appropriately" time="0.015">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should successfully delete batch mappings" name="Mapping Routes DELETE /batch should successfully delete batch mappings" time="0.015">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" name="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" time="0.007">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" name="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" time="0.018">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" name="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" time="0.008">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" time="0.006">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" name="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" time="0.007">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" time="0.006">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should successfully get all mappings" name="Mapping Routes GET /all should successfully get all mappings" time="0.007">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should handle errors appropriately" name="Mapping Routes GET /all should handle errors appropriately" time="0.006">
+    </testcase>
+  </testsuite>
+</testsuites>

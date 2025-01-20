@@ -1,5 +1,5 @@
 import { Association } from '@prisma/client';
-import prisma from './prisma-initalization';
+import prisma from './prisma-initialization';
 import handleError from '../utils/error';
 
 async function getDBAssociationsByCustomerId(customerId: string): Promise<Association[]> {
@@ -75,6 +75,10 @@ const saveDBAssociation = async (maybeAssociation: Association): Promise<Associa
 };
 
 async function getDBSingleAssociation(id: string): Promise<Association | null> {
+  if (!id || !id.trim()) {
+    throw new Error('Association ID cannot be empty');
+  }
+
   try {
     const association = await prisma.association.findUnique({
       where: { id },

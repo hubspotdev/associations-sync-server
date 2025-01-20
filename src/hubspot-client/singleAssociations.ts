@@ -1,16 +1,17 @@
 import { AssociationMapping } from '@prisma/client';
 import { hubspotClient, getAccessToken } from '../auth';
 import handleError from '../utils/error';
-import { formatSingleRequestData, getCustomerId } from '../utils/utils';
+import { formatSingleRequestData, getCustomerId, checkAccessToken } from '../utils/utils';
 
 async function saveSingleHubspotAssociation(data: AssociationMapping) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   const {
     objectId, objectType, toObjectId, toObjectType, associationType,
   } = formatSingleRequestData(data);
-
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
     if (associationType[0].associationCategory) {
@@ -54,11 +55,12 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
 async function archiveSingleHubspotAssociation(data: AssociationMapping) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   const {
     objectId, objectType, toObjectId, toObjectType,
   } = formatSingleRequestData(data);
-
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
     await hubspotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, toObjectId);

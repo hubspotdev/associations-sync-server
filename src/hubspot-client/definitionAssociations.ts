@@ -11,6 +11,7 @@ import {
   formaCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
   getCustomerId,
+  checkAccessToken,
 } from '../utils/utils';
 
 async function saveAssociationDefinitionConfiguration(
@@ -21,6 +22,10 @@ async function saveAssociationDefinitionConfiguration(
 ) {
   const inputs = formaCreateCardinalityRequest(response, data);
   console.log('Here are the formatted association definition inputs for cardinality', inputs, fromObject, toObject);
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
 
   try {
     const definitionWithConfig = await hubspotClient.apiRequest({
@@ -44,23 +49,17 @@ async function saveAssociationDefinitionConfiguration(
   }
 }
 
-async function getHubSpotAssociationDefinitionsByType(data: AssociationDefinitionUpdateRequest) {
-  const { fromObject, toObject } = data;
-  try {
-    const results = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(fromObject, toObject);
-    return results;
-  } catch (error:unknown) {
-    handleError(error, 'There was an issue getting the HubSpot association definition');
-  }
-}
-
+// This function makes two requests to HubSpot in case of a bidirectional association
 async function updateAssociationDefinitionConfiguration(
   data: AssociationDefinition,
   fromObject: string,
   toObject: string,
 ) {
   const inputs = formatUpdateCardinalityRequest(data);
-  console.log('Here are the formatted association definition inputs for cardinality', inputs, fromObject, toObject);
+  const customerId = getCustomerId();
+  const accessToken: string | void | null = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
 
   try {
     const definitionWithConfig = await hubspotClient.apiRequest({
@@ -88,7 +87,9 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionPostRequest(data);
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
@@ -106,9 +107,10 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionUpdateRequest(data);
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
-  const { fromObject, toObject, requestInfo } = formattedData;
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
 
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
+  const { fromObject, toObject, requestInfo } = formattedData;
 
   try {
     await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, requestInfo);
@@ -123,9 +125,10 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
 async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRequest) {
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   const { fromObjectType, toObjectType, associationTypeId } = data;
-  console.log('data in archive association definition', data);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.archive(
@@ -134,16 +137,19 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
       associationTypeId,
     );
     console.log('Archived HubSpot association definition', response);
+    return response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue archiving the association definition in HubSpot');
   }
 }
 
-async function getAllAssociationDefinitions(data: { toObject:string, fromObject:string }) {
+async function getAllAssociationDefinitionsByType(data: { toObject:string, fromObject:string }) {
   const { toObject, fromObject } = data;
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(toObject, fromObject);
     return response;
@@ -153,9 +159,8 @@ async function getAllAssociationDefinitions(data: { toObject:string, fromObject:
 }
 
 export {
-  getAllAssociationDefinitions,
+  getAllAssociationDefinitionsByType,
   saveAssociationDefinition,
   archiveAssociationDefinition,
   updateAssociationDefinition,
-  getHubSpotAssociationDefinitionsByType,
 };

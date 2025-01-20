@@ -26,7 +26,7 @@ export function formatSingleRequestData(data: any): AssociationRequest {
   };
 }
 
-export function formatDefinitionPostRequest(def: any): AssociationDefinitionCreateRequest {
+export function formatDefinitionPostRequest(def: AssociationDefinition): AssociationDefinitionCreateRequest {
   return {
     fromObject: def.fromObjectType,
     toObject: def.toObjectType,
@@ -38,7 +38,7 @@ export function formatDefinitionPostRequest(def: any): AssociationDefinitionCrea
   };
 }
 
-export function formatDefinitionUpdateRequest(def: any) {
+export function formatDefinitionUpdateRequest(def: AssociationDefinition) {
   return {
     fromObject: def.fromObjectType,
     toObject: def.toObjectType,
@@ -133,6 +133,20 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   }
 
   return { inputs };
+}
+
+export function checkAccessToken(accessToken: string | null | undefined | void): asserts accessToken is string {
+  if (accessToken === null) {
+    throw new Error('Access token is null');
+  } else if (accessToken === 'undefined') {
+    throw new Error('Access token is undefined');
+  } else if (!accessToken) {
+    throw new Error('Access token is not defined');
+  } else if (typeof accessToken !== 'string') {
+    throw new Error('Access token is not a string');
+  } else if (accessToken.length === 0) {
+    throw new Error('Access token is empty');
+  }
 }
 
 export { PORT, getCustomerId };

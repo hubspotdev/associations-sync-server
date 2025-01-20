@@ -1,14 +1,17 @@
 import { AssociationMapping } from '@prisma/client';
 import { hubspotClient, getAccessToken } from '../auth';
 import handleError from '../utils/error';
-import { formatBatchArchiveRequest, formatBatchRequestData, getCustomerId } from '../utils/utils';
+import {
+  formatBatchArchiveRequest, formatBatchRequestData, getCustomerId, checkAccessToken,
+} from '../utils/utils';
 
 async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
-  const formattedRequest = formatBatchRequestData(data);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
 
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
+  const formattedRequest = formatBatchRequestData(data);
 
   try {
     const response = await hubspotClient.crm.associations.v4.batchApi.create(
@@ -17,16 +20,20 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]) {
       { inputs: formattedRequest.inputs },
     );
     console.log('response from hubspot', response);
+    return response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue saving these associations in HubSpot');
+    throw error;
   }
 }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
   const customerId = getCustomerId();
   const accessToken = await getAccessToken(customerId);
+  checkAccessToken(accessToken);
+  hubspotClient.setAccessToken(accessToken);
+
   const formattedData = formatBatchArchiveRequest(data);
-  if (accessToken) hubspotClient.setAccessToken(accessToken);
 
   try {
     if (formattedData) {

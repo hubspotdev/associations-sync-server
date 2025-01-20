@@ -4,7 +4,7 @@ import * as hubspot from '@hubspot/api-client';
 import { Authorization } from '@prisma/client';
 import { PORT, getCustomerId } from './utils/utils';
 import handleError from './utils/error';
-import prisma from './prisma-client/prisma-initalization';
+import prisma from './prisma-client/prisma-initialization';
 
 interface ExchangeProof {
   grant_type: string;

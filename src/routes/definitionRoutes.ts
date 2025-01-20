@@ -9,7 +9,7 @@ import {
   saveAssociationDefinition,
   updateAssociationDefinition,
   archiveAssociationDefinition,
-  getAllAssociationDefinitions,
+  getAllAssociationDefinitionsByType,
 } from '../hubspot-client/definitionAssociations';
 import handleError from '../utils/error';
 
@@ -179,7 +179,7 @@ router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
   try {
     const [dbAssociations, hubspotAssociations] = await Promise.all([
       getDBAssociationDefinitionsByType({ fromObject, toObject }),
-      getAllAssociationDefinitions({ fromObject, toObject }),
+      getAllAssociationDefinitionsByType({ fromObject, toObject }),
     ]);
 
     return res.json({

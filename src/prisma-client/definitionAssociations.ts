@@ -1,17 +1,28 @@
 import { AssociationDefinition } from '@prisma/client';
 import handleError from '../utils/error';
-import prisma from './prisma-initalization';
+import prisma from './prisma-initialization';
 
-async function getDBAssociationDefinitionsByType(data: any): Promise<AssociationDefinition[]> {
+async function getDBAssociationDefinitionsByType(data: {
+  fromObject: string;
+  toObject: string;
+}): Promise<AssociationDefinition[]> {
+  if (!data
+      || typeof data.fromObject !== 'string'
+      || typeof data.toObject !== 'string'
+      || !data.fromObject.trim()
+      || !data.toObject.trim()) {
+    throw new Error('Invalid input parameters');
+  }
+
   const fromObjectType = data.fromObject;
   const toObjectType = data.toObject;
-  console.log('from object and to object in getDB', fromObjectType, toObjectType);
+
   try {
     const associations = await prisma.associationDefinition.findMany({
       where: {
         fromObjectType: {
           equals: fromObjectType,
-          mode: 'insensitive', // Add this if you want case-insensitive matching
+          mode: 'insensitive',
         },
         toObjectType: {
           equals: toObjectType,
@@ -19,7 +30,6 @@ async function getDBAssociationDefinitionsByType(data: any): Promise<Association
         },
       },
     });
-    console.log('associations in getDB', associations);
 
     return associations;
   } catch (error:unknown) {
@@ -29,6 +39,10 @@ async function getDBAssociationDefinitionsByType(data: any): Promise<Association
 }
 
 async function saveDBAssociationDefinition(data: AssociationDefinition) {
+  if (data.fromCardinality && data.toCardinality && (data.fromCardinality < 0 || data.toCardinality < 0)) {
+    throw new Error('Invalid cardinality values');
+  }
+
   try {
     const result = await prisma.associationDefinition.create({ data });
     console.log('Successfully saved association definition in Prisma', result);
@@ -60,7 +74,12 @@ async function deleteDBAssociationDefinition(id: string) {
     });
     console.log('Successfully deleted association definition in Prisma', result);
     return result;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
+    if (error instanceof Error
+        && 'code' in error
+        && error.code === 'P2003') {
+      throw new Error('Cannot delete definition due to existing references');
+    }
     handleError(error, 'There was an issue archiving the association definition in Prisma');
     throw error;
   }

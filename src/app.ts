@@ -19,12 +19,15 @@ app.use('/api/associations/mappings', mappingRouter);
 app.use('/api/associations/definitions', definitionsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-const server = app.listen(PORT, () => {
-  console.log(`App is listening on port ${PORT}!`);
-});
+// Move this to only run in non-test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}!`);
+  });
+}
 // process.on('SIGTERM', () => {
 //   console.info('SIGTERM signal received.');
 //   shutdown();
 // });
 
-export default server;
+export default app;

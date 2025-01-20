@@ -22,11 +22,19 @@ class Logger {
 
   private static formatLogMessage(logObject: LogObject, timestamp: string): string {
     const {
-      type = 'Unknown', context, logMessage, level,
+      type = 'Unknown', context, logMessage, level = 'Unknown',
     } = logObject;
+
+    const normalizedLogMessage = logMessage instanceof Error
+      ? {
+        message: logMessage.message,
+        stack: logMessage.stack,
+      }
+      : (logMessage || {});
+
     const {
       code, statusCode, correlationId, details, data, stack, message,
-    } = logMessage;
+    } = normalizedLogMessage;
 
     const outputLines: string[] = [
       `${type} ${level} at ${timestamp}`,
@@ -46,17 +54,17 @@ class Logger {
 
   public static info(message: LogObject): void {
     const level = 'Info';
-    Logger.log(message, level);
+    Logger.log({ ...message, level }, level);
   }
 
   public static warn(message: LogObject): void {
     const level = 'Warning';
-    Logger.log(message, level);
+    Logger.log({ ...message, level }, level);
   }
 
   public static error(message: LogObject): void {
     const level = 'Error';
-    Logger.log(message, level);
+    Logger.log({ ...message, level }, level);
   }
 }
 
