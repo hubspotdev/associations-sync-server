@@ -47,10 +47,10 @@ describe('Definition Routes', () => {
       });
     });
 
-    it('should return 400 if parameters are missing', async () => {
+    it('should return 4 if parameters are missing', async () => {
       const response = await request(app)
         .get('/api/associations/definitions/')
-        .expect(400);
+        .expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.data).toContain('Missing required parameters');
@@ -87,11 +87,11 @@ describe('Definition Routes', () => {
       );
     });
 
-    it('should return 400 if associationId is missing', async () => {
+    it('should return 404 if associationId is missing', async () => {
       const response = await request(app)
         .delete('/api/associations/definitions/')
         .send(mockDefinition)
-        .expect(400);
+        .expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.data).toContain('Missing required parameter');

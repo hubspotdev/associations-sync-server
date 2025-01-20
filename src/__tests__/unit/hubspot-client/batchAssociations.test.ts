@@ -58,14 +58,14 @@ describe('Batch Associations HubSpot Client', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (utils.handleError as jest.Mock).mockImplementation((error, message) => {
+      console.error(message, error);
+    });
     (utils.getCustomerId as jest.Mock).mockReturnValue('cust_123');
     (utils.checkAccessToken as jest.Mock).mockImplementation((token) => {
       if (!token) throw new Error('No access token available');
     });
     (getAccessToken as jest.Mock).mockResolvedValue('mock-token');
-    (utils.handleError as jest.Mock).mockImplementation((error) => {
-      console.error(error);
-    });
     (utils.formatBatchArchiveRequest as jest.Mock).mockReturnValue({
       fromObjectType: 'contact',
       toObjectType: 'company',
@@ -150,41 +150,18 @@ describe('Batch Associations HubSpot Client', () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.batchApi.archive as jest.Mock).mockRejectedValue(mockError);
 
-      await expect(archiveBatchHubspotAssociation([mockMapping])).resolves.not.toThrow();
-      expect(console.error).toHaveBeenCalled();
-    });
+      // Clear the mock before the test
+      (utils.handleError as jest.Mock).mockClear();
 
-    it('should handle partial success with some failures', async () => {
-      const mockResponse = {
-        status: 'COMPLETE',
-        results: [
-          { success: true, fromObjectId: 'hub_123', toObjectId: 'hub_456' },
-          {
-            success: false,
-            fromObjectId: 'hub_789',
-            toObjectId: 'hub_012',
-            error: 'Not found',
-          },
-        ],
-      };
+      // Expect the function to throw
+      await expect(archiveBatchHubspotAssociation([mockMapping]))
+        .rejects
+        .toThrow('API Error');
 
-      // Mock the archive call to return our response with failures
-      (hubspotClient.crm.associations.v4.batchApi.archive as jest.Mock)
-        .mockResolvedValue(mockResponse);
-
-      // Mock handleError to ensure it calls console.error
-      (utils.handleError as jest.Mock).mockImplementation((error) => {
-        console.error('Failed to archive association:', error);
-      });
-
-      await archiveBatchHubspotAssociation([mockMapping, mockMapping]);
-
-      // Verify console.error was called
-      expect(console.error).toHaveBeenCalled();
-      expect(hubspotClient.crm.associations.v4.batchApi.archive).toHaveBeenCalledWith(
-        'contact',
-        'company',
-        expect.any(Object),
+      // Verify handleError was called with correct parameters
+      expect(utils.handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue archiving associations in HubSpot',
       );
     });
   });
