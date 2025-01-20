@@ -80,7 +80,7 @@ describe('Single Associations HubSpot Client', () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.basicApi.create as jest.Mock).mockRejectedValue(mockError);
 
-      await saveSingleHubspotAssociation(mockMapping);
+      await expect(saveSingleHubspotAssociation(mockMapping)).rejects.toThrow('API Error');
 
       expect(hubspotClient.crm.associations.v4.basicApi.create).toHaveBeenCalled();
     });
@@ -103,7 +103,7 @@ describe('Single Associations HubSpot Client', () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.basicApi.archive as jest.Mock).mockRejectedValue(mockError);
 
-      await archiveSingleHubspotAssociation(mockMapping);
+      await expect(archiveSingleHubspotAssociation(mockMapping)).rejects.toThrow('API Error');
 
       expect(hubspotClient.crm.associations.v4.basicApi.archive).toHaveBeenCalled();
     });
