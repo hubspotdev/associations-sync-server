@@ -13,7 +13,7 @@ async function getDBMappings(nativeAssociationIds: string[]) {
     });
     return mappings;
   } catch (error:unknown) {
-    console.error('Error fetching mappings:', error);
+    handleError(error, 'Error fetching mappings');
     throw error;
   }
 }
@@ -125,11 +125,10 @@ async function getSingleDBAssociationMapping(nativeAssociationId: string) {
     throw error;
   }
 }
+
 async function getAllDBMappings() {
-  console.log('in getallDB');
   try {
     const mappings = await prisma.associationMapping.findMany();
-    console.log('all mappings', mappings);
     return mappings;
   } catch (error:unknown) {
     handleError(error, 'Error fetching all association mappings');

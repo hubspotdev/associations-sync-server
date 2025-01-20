@@ -166,15 +166,13 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
+router.get('/', async (req: Request, res: Response) => res.status(404).json({
+  success: false,
+  data: 'Missing required parameters: fromObject and toObject',
+}));
+
 router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
   const { fromObject, toObject } = req.params;
-
-  if (!fromObject || !toObject) {
-    return res.status(400).json({
-      success: false,
-      data: 'Missing required parameters: fromObject and toObject',
-    });
-  }
 
   try {
     const [dbAssociations, hubspotAssociations] = await Promise.all([
@@ -241,15 +239,13 @@ router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
+router.delete('/', async (req: Request, res: Response) => res.status(404).json({
+  success: false,
+  data: 'Missing required parameter: associationId',
+}));
+
 router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
-
-  if (!associationId) {
-    return res.status(400).json({
-      success: false,
-      data: 'Missing required parameter: associationId',
-    });
-  }
 
   try {
     await deleteDBAssociationDefinition(associationId);
@@ -259,6 +255,13 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error: unknown) {
+    if (error instanceof Error && error.message.includes('Record to delete does not exist')) {
+      return res.status(404).json({
+        success: false,
+        data: `Association definition with id ${associationId} not found`,
+      });
+    }
+
     handleError(error, 'Failed to archive association definition');
     return res.status(500).json({
       success: false,

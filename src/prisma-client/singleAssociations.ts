@@ -8,8 +8,8 @@ async function getDBAssociationsByCustomerId(customerId: string): Promise<Associ
       where: { customerId },
     });
     return associations;
-  } catch (error:unknown) {
-    console.error('Error fetching associations:', error);
+  } catch (error: unknown) {
+    handleError(error, 'Error fetching associations');
     throw error;
   }
 }
@@ -26,7 +26,7 @@ async function getSingleDBAssociationById(id: string): Promise<Association | nul
   }
 }
 
-const saveDBAssociation = async (maybeAssociation: Association): Promise<Association | null> => {
+const saveDBAssociation = async (maybeAssociation: Association): Promise<Association> => {
   const {
     objectType,
     objectId,
@@ -68,9 +68,9 @@ const saveDBAssociation = async (maybeAssociation: Association): Promise<Associa
     });
 
     return associationResult;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     handleError(error, 'There was an issue while attempting to save the association');
-    return null;
+    throw error;
   }
 };
 
@@ -90,15 +90,16 @@ async function getDBSingleAssociation(id: string): Promise<Association | null> {
   }
 }
 
-async function deleteDBAssociation(id: string): Promise<void | Association> {
+async function deleteDBAssociation(id: string): Promise<Association> {
   try {
     const deletedAssociation = await prisma.association.delete({
       where: { id },
     });
     console.log('Deleted association:', deletedAssociation);
     return deletedAssociation;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     handleError(error, 'There was an issue deleting this association');
+    throw error;
   }
 }
 

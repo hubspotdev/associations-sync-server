@@ -1,10 +1,7 @@
 import { AssociationDefinition } from '@prisma/client';
 import { hubspotClient, getAccessToken } from '../auth';
 import handleError from '../utils/error';
-import {
-  AssociationDefinitionArchiveRequest,
-  AssociationDefinitionUpdateRequest,
-} from '../../types/common';
+import { AssociationDefinitionArchiveRequest } from '../../types/common';
 import {
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,

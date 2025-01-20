@@ -33,7 +33,7 @@ async function getDBAssociationDefinitionsByType(data: {
 
     return associations;
   } catch (error:unknown) {
-    console.error('Error fetching associations:', error);
+    handleError(error, 'Error fetching association definitions');
     throw error;
   }
 }
@@ -78,9 +78,11 @@ async function deleteDBAssociationDefinition(id: string) {
     if (error instanceof Error
         && 'code' in error
         && error.code === 'P2003') {
-      throw new Error('Cannot delete definition due to existing references');
+      const customError = new Error('Cannot delete definition due to existing references');
+      handleError(customError, 'Cannot delete definition due to existing references');
+      throw customError;
     }
-    handleError(error, 'There was an issue archiving the association definition in Prisma');
+    handleError(error, 'There was an issue deleting the association definition in Prisma');
     throw error;
   }
 }

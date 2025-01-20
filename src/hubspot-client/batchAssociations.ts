@@ -35,17 +35,20 @@ async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
 
   const formattedData = formatBatchArchiveRequest(data);
 
+  if (!formattedData) {
+    throw new Error('Invalid data format for batch archive');
+  }
+
   try {
-    if (formattedData) {
-      const response = await hubspotClient.crm.associations.v4.batchApi.archive(
-        formattedData.fromObjectType,
-        formattedData.toObjectType,
-        { inputs: formattedData.inputs },
-      );
-      console.log('response', response);
-    }
+    const response = await hubspotClient.crm.associations.v4.batchApi.archive(
+      formattedData.fromObjectType,
+      formattedData.toObjectType,
+      { inputs: formattedData.inputs },
+    );
+    return response;
   } catch (error: unknown) {
-    handleError(error, 'There was an issue saving this association in HubSpot');
+    handleError(error, 'There was an issue archiving associations in HubSpot');
+    throw error;
   }
 }
 
