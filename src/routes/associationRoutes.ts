@@ -177,14 +177,7 @@ router.get('/:associationId', async (req: Request, res: Response) => {
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       description: The association ID
- *                     message:
- *                       type: string
- *                       description: The message associated with the deletion
+ *                   $ref: '#/components/schemas/Association'
  *       404:
  *         description: Association not found
  *         content:
@@ -224,7 +217,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
     }
     return res.json({
       success: true,
-      data: `Successfully deleted ${associationId}`,
+      data: result,
     });
   } catch (error: unknown) {
     handleError(error, 'Failed to delete association');

@@ -54,7 +54,6 @@ const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
     });
 
     const mappingResults = await prisma.$transaction(operations);
-    console.log('results from prisma', mappingResults);
     return mappingResults;
   } catch (error:unknown) {
     handleError(error, 'There was an issue while attempting to save the association mappings');
@@ -62,7 +61,7 @@ const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
   }
 };
 
-async function deleteBatchDBMappings(mappingIds: string[]): Promise<string | undefined> {
+async function deleteBatchDBMappings(mappingIds: string[]): Promise<string> {
   try {
     await prisma.$transaction(
       mappingIds.map((id) => prisma.associationMapping.delete({
@@ -71,7 +70,7 @@ async function deleteBatchDBMappings(mappingIds: string[]): Promise<string | und
     );
     return `Mappings with IDs ${mappingIds.join(', ')} were deleted successfully.`;
   } catch (error:unknown) {
-    handleError(error, 'There was an issue while deleting the association mappings.');
+    handleError(error, 'There was an issue while deleting the association mappings');
     throw error;
   }
 }
@@ -83,7 +82,6 @@ async function getBatchDBAssociationMappings(mappingIds: string[]) {
     });
 
     if (!mappings || mappings.length <= 0) {
-      console.log('Mappings not found with these IDs');
       return [];
     }
 
