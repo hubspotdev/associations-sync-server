@@ -9,6 +9,7 @@ import {
   updateDBAssociationDefinition,
   deleteDBAssociationDefinition,
 } from '../../../prisma-client/definitionAssociations';
+import handleError from '../../../utils/error';
 
 // Mock the Prisma client
 jest.mock('../../../prisma-client/prisma-initialization', () => ({
@@ -107,13 +108,33 @@ describe('Definition Associations Database Client', () => {
     });
 
     it('should handle database errors', async () => {
-      const mockError = new Error('Database error');
+      const mockError = Object.create(Error.prototype, {
+        name: {
+          value: 'PrismaClientKnownRequestError',
+          enumerable: true,
+        },
+        message: {
+          value: 'Database error',
+          enumerable: true,
+        },
+        code: {
+          value: 'P2000',
+          enumerable: true,
+        },
+      });
+
       (prisma.associationDefinition.findMany as jest.Mock).mockRejectedValue(mockError);
 
       await expect(getDBAssociationDefinitionsByType({
         fromObject: 'contact',
         toObject: 'company',
-      })).rejects.toThrow('Database error');
+      })).rejects.toThrow();
+
+      // Verify error was handled
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        expect.any(String),
+      );
     });
   });
 
@@ -130,15 +151,31 @@ describe('Definition Associations Database Client', () => {
     });
 
     it('should handle unique constraint violations', async () => {
-      const uniqueError = new Error('Unique constraint violation');
-      uniqueError.name = 'PrismaClientKnownRequestError';
-      uniqueError.code = 'P2002';
+      // Create proper Prisma error structure
+      const uniqueError = Object.create(Error.prototype, {
+        name: {
+          value: 'PrismaClientKnownRequestError',
+          enumerable: true,
+        },
+        code: {
+          value: 'P2002',
+          enumerable: true,
+        },
+        message: {
+          value: 'Unique constraint failed',
+          enumerable: true,
+        },
+        meta: {
+          value: { target: ['associationLabel'] },
+          enumerable: true,
+        },
+      });
 
       (prisma.associationDefinition.create as jest.Mock).mockRejectedValue(uniqueError);
 
       await expect(saveDBAssociationDefinition(mockDefinition))
         .rejects
-        .toThrow();
+        .toThrow('Unique constraint failed');
     });
   });
 

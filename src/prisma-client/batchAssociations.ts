@@ -2,7 +2,7 @@ import { AssociationMapping } from '@prisma/client';
 import handleError from '../utils/error';
 import prisma from './prisma-initialization';
 
-const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]) => {
+const saveBatchDBMapping = async (maybeMappings: AssociationMapping[]): Promise<AssociationMapping[]> => {
   try {
     const operations = maybeMappings.map((maybeMapping) => {
       const {

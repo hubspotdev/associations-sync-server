@@ -1,11 +1,16 @@
 import { AssociationMapping, AssociationDefinition } from '@prisma/client';
+import { AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec';
 import {
   formatSingleRequestData,
   formatBatchRequestData,
   formatBatchArchiveRequest,
-  checkAccessToken,
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,
+  formaCreateCardinalityRequest,
+  formatUpdateCardinalityRequest,
+  checkAccessToken,
+  PORT,
+  getCustomerId,
 } from '../../../utils/utils';
 
 describe('Utils Functions', () => {
@@ -35,21 +40,149 @@ describe('Utils Functions', () => {
     });
   });
 
-  describe('formatBatchArchiveRequest', () => {
-    it('should return null for empty array', () => {
-      const result = formatBatchArchiveRequest([]);
-      expect(result).toBeNull();
+  describe('formatDefinitionPostRequest', () => {
+    it('should format definition post request correctly', () => {
+      const definition: AssociationDefinition = {
+        id: 'def_123',
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        associationLabel: 'Primary Contact',
+        name: 'primary_contact',
+        inverseLabel: 'Primary Company',
+        fromTypeId: 1,
+        toTypeId: 2,
+        customerId: 'cust_123',
+        cardinality: 'ONE_TO_ONE',
+        fromCardinality: 1,
+        toCardinality: 1,
+        associationCategory: 'USER_DEFINED',
+        associationTypeId: 1,
+      };
+
+      const result = formatDefinitionPostRequest(definition);
+
+      expect(result).toEqual({
+        fromObject: 'contact',
+        toObject: 'company',
+        requestInfo: {
+          label: 'Primary Contact',
+          name: 'primary_contact',
+          inverseLabel: 'Primary Company',
+        },
+      });
     });
 
-    it('should format batch archive request correctly', () => {
-      const mockDefinitions = [{
+    it('should handle missing optional fields', () => {
+      const definition = {
+        id: 'def_123',
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        name: 'primary_contact',
+      } as AssociationDefinition;
+
+      const result = formatDefinitionPostRequest(definition);
+
+      expect(result).toEqual({
+        fromObject: 'contact',
+        toObject: 'company',
+        requestInfo: {
+          label: '',
+          name: 'primary_contact',
+          inverseLabel: undefined,
+        },
+      });
+    });
+  });
+
+  describe('formatDefinitionUpdateRequest', () => {
+    it('should format definition update request correctly', () => {
+      const definition: AssociationDefinition = {
+        id: 'def_123',
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        associationLabel: 'Primary Contact',
+        name: 'primary_contact',
+        inverseLabel: 'Primary Company',
+        fromTypeId: 1,
+        toTypeId: 2,
+        customerId: 'cust_123',
+        cardinality: 'ONE_TO_ONE',
+        fromCardinality: 1,
+        toCardinality: 1,
+        associationCategory: 'USER_DEFINED',
+        associationTypeId: 1,
+      };
+
+      const result = formatDefinitionUpdateRequest(definition);
+
+      expect(result).toEqual({
+        fromObject: 'contact',
+        toObject: 'company',
+        requestInfo: {
+          label: 'Primary Contact',
+          associationTypeId: 2,
+          inverseLabel: 'Primary Company',
+        },
+      });
+    });
+  });
+
+  describe('formatBatchRequestData', () => {
+    it('should format batch request data correctly', () => {
+      const mappings: AssociationMapping[] = [{
+        id: 'map_123',
         fromObjectType: 'contact',
         toObjectType: 'company',
         fromHubSpotObjectId: '123',
         toHubSpotObjectId: '456',
-      }] as AssociationMapping[];
+        associationCategory: 'USER_DEFINED',
+        associationTypeId: 1,
+        nativeAssociationId: 'nat_123',
+        hubSpotAssociationLabel: 'Primary Contact',
+        nativeObjectId: 'nat_obj_123',
+        toNativeObjectId: 'nat_obj_456',
+        nativeAssociationLabel: 'Primary Contact',
+        customerId: 'cust_123',
+        cardinality: 'ONE_TO_ONE',
+      }];
 
-      const result = formatBatchArchiveRequest(mockDefinitions);
+      const result = formatBatchRequestData(mappings);
+
+      expect(result).toEqual({
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        inputs: [{
+          _from: { id: '123' },
+          to: { id: '456' },
+          types: [{
+            associationCategory: AssociationSpecAssociationCategoryEnum.UserDefined,
+            associationTypeId: 1,
+          }],
+        }],
+      });
+    });
+  });
+
+  describe('formatBatchArchiveRequest', () => {
+    it('should format batch archive request correctly', () => {
+      const mappings: AssociationMapping[] = [{
+        id: 'map_123',
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        fromHubSpotObjectId: '123',
+        toHubSpotObjectId: '456',
+        associationCategory: 'USER_DEFINED',
+        associationTypeId: 1,
+        nativeAssociationId: 'nat_123',
+        hubSpotAssociationLabel: 'Primary Contact',
+        nativeObjectId: 'nat_obj_123',
+        toNativeObjectId: 'nat_obj_456',
+        nativeAssociationLabel: 'Primary Contact',
+        customerId: 'cust_123',
+        cardinality: 'ONE_TO_ONE',
+      }];
+
+      const result = formatBatchArchiveRequest(mappings);
 
       expect(result).toEqual({
         fromObjectType: 'contact',
@@ -59,6 +192,99 @@ describe('Utils Functions', () => {
           to: [{ id: '456' }],
         }],
       });
+    });
+
+    it('should return null for empty array', () => {
+      const result = formatBatchArchiveRequest([]);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('formaCreateCardinalityRequest', () => {
+    it('should format create cardinality request correctly', () => {
+      const response = {
+        results: [
+          { typeId: 1, category: 'USER_DEFINED' },
+          { typeId: 2, category: 'USER_DEFINED' },
+        ],
+      };
+
+      const definition: AssociationDefinition = {
+        id: 'def_123',
+        fromObjectType: 'contact',
+        toObjectType: 'company',
+        fromCardinality: 1,
+        toCardinality: 1,
+      } as AssociationDefinition;
+
+      const result = formaCreateCardinalityRequest(response, definition);
+
+      expect(result).toEqual({
+        inputs: [
+          {
+            typeId: 1,
+            category: 'USER_DEFINED',
+            maxToObjectIds: 1,
+          },
+          {
+            typeId: 2,
+            category: 'USER_DEFINED',
+            maxToObjectIds: 1,
+          },
+        ],
+      });
+    });
+
+    it('should handle missing cardinality values', () => {
+      const response = {
+        results: [
+          { typeId: 1, category: 'USER_DEFINED' },
+          { typeId: 2, category: 'USER_DEFINED' },
+        ],
+      };
+
+      const definition = {} as AssociationDefinition;
+
+      const result = formaCreateCardinalityRequest(response, definition);
+
+      expect(result).toEqual({ inputs: [] });
+    });
+  });
+
+  describe('formatUpdateCardinalityRequest', () => {
+    it('should format update cardinality request correctly', () => {
+      const definition: AssociationDefinition = {
+        fromTypeId: 1,
+        toTypeId: 2,
+        fromCardinality: 1,
+        toCardinality: 1,
+        associationCategory: 'USER_DEFINED',
+      } as AssociationDefinition;
+
+      const result = formatUpdateCardinalityRequest(definition);
+
+      expect(result).toEqual({
+        inputs: [
+          {
+            typeId: 2,
+            category: 'USER_DEFINED',
+            maxToObjectIds: 1,
+          },
+          {
+            typeId: 1,
+            category: 'USER_DEFINED',
+            maxToObjectIds: 1,
+          },
+        ],
+      });
+    });
+
+    it('should handle missing cardinality values', () => {
+      const definition = {} as AssociationDefinition;
+
+      const result = formatUpdateCardinalityRequest(definition);
+
+      expect(result).toEqual({ inputs: [] });
     });
   });
 
@@ -81,6 +307,16 @@ describe('Utils Functions', () => {
 
     it('should not throw for valid token', () => {
       expect(() => checkAccessToken('valid-token')).not.toThrow();
+    });
+  });
+
+  describe('Constants and Simple Functions', () => {
+    it('should export correct PORT value', () => {
+      expect(PORT).toBe(3001);
+    });
+
+    it('should get customer ID', () => {
+      expect(getCustomerId()).toBe('1');
     });
   });
 });

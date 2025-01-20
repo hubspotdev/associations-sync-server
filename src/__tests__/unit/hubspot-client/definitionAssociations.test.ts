@@ -7,6 +7,7 @@ import {
   getAllAssociationDefinitionsByType,
 } from '../../../hubspot-client/definitionAssociations';
 import * as utils from '../../../utils/utils';
+import handleError from '../../../utils/error';
 
 jest.mock('../../../auth', () => ({
   hubspotClient: {
@@ -39,6 +40,8 @@ jest.mock('../../../utils/utils', () => ({
   checkAccessToken: jest.fn(),
 }));
 
+jest.mock('../../../utils/error');
+
 describe('Definition Associations HubSpot Client', () => {
   const mockDefinition: AssociationDefinition = {
     id: 'def_123',
@@ -56,6 +59,22 @@ describe('Definition Associations HubSpot Client', () => {
     toCardinality: 1,
     associationCategory: 'USER_DEFINED',
   };
+
+  // Mock console methods before all tests
+  const originalConsole = { ...console };
+
+  beforeAll(() => {
+    console.log = jest.fn();
+    console.error = jest.fn();
+    console.warn = jest.fn();
+  });
+
+  // Restore console methods after all tests
+  afterAll(() => {
+    console.log = originalConsole.log;
+    console.error = originalConsole.error;
+    console.warn = originalConsole.warn;
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -156,7 +175,7 @@ describe('Definition Associations HubSpot Client', () => {
       });
     });
 
-    it('should handle errors', async () => {
+    it('should handle API errors', async () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.schema.definitionsApi.create as jest.Mock)
         .mockRejectedValue(mockError);
@@ -164,6 +183,11 @@ describe('Definition Associations HubSpot Client', () => {
       await expect(saveAssociationDefinition(mockDefinition))
         .rejects
         .toThrow('API Error');
+
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue saving the association definition in HubSpot',
+      );
     });
   });
 
@@ -210,7 +234,7 @@ describe('Definition Associations HubSpot Client', () => {
         .toHaveBeenCalledWith('contact', 'company', 1);
     });
 
-    it('should handle errors', async () => {
+    it('should handle archive errors', async () => {
       const mockError = new Error('Archive failed');
       (hubspotClient.crm.associations.v4.schema.definitionsApi.archive as jest.Mock)
         .mockRejectedValue(mockError);
@@ -221,7 +245,14 @@ describe('Definition Associations HubSpot Client', () => {
         associationTypeId: 1,
       };
 
-      await expect(archiveAssociationDefinition(archiveRequest)).rejects.toThrow('Archive failed');
+      await expect(archiveAssociationDefinition(archiveRequest))
+        .rejects
+        .toThrow('Archive failed');
+
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue archiving the association definition in HubSpot',
+      );
     });
   });
 
@@ -241,7 +272,7 @@ describe('Definition Associations HubSpot Client', () => {
       expect(hubspotClient.crm.associations.v4.schema.definitionsApi.getAll).toHaveBeenCalled();
     });
 
-    it('should handle errors', async () => {
+    it('should handle fetch errors', async () => {
       const mockError = new Error('Fetch failed');
       (hubspotClient.crm.associations.v4.schema.definitionsApi.getAll as jest.Mock)
         .mockRejectedValue(mockError);
@@ -250,6 +281,11 @@ describe('Definition Associations HubSpot Client', () => {
         fromObject: 'contact',
         toObject: 'company',
       })).rejects.toThrow('Fetch failed');
+
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an error getting all association definitions',
+      );
     });
   });
 });
