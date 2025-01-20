@@ -99,7 +99,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
     return response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue saving the association definition in HubSpot');
-    return undefined;
+    throw error;
   }
 }
 
@@ -111,14 +111,19 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
   hubspotClient.setAccessToken(accessToken);
 
   const { fromObject, toObject, requestInfo } = formattedData;
-
   try {
-    await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, requestInfo);
+    if (requestInfo.associationTypeId !== null) {
+      await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
+        ...requestInfo,
+        associationTypeId: requestInfo.associationTypeId,
+      });
+    }
     if (data.fromCardinality || data.toCardinality) {
       await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
     }
   } catch (error: unknown) {
     handleError(error, 'There was an issue updating the association definition in HubSpot');
+    throw error;
   }
 }
 
@@ -140,6 +145,7 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
     return response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue archiving the association definition in HubSpot');
+    throw error;
   }
 }
 
@@ -155,6 +161,7 @@ async function getAllAssociationDefinitionsByType(data: { toObject:string, fromO
     return response;
   } catch (error:unknown) {
     handleError(error, 'There was an error getting all association definitions');
+    throw error;
   }
 }
 

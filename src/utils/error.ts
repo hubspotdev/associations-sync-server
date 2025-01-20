@@ -6,9 +6,14 @@ import server from '../app';
 async function shutdown(): Promise<void> {
   try {
     console.log('Initiating graceful shutdown...');
-
     const closeServerPromise = new Promise<void>((resolve, reject) => {
-      server.close((err) => {
+      if (!server.listen) {
+        resolve();
+        return;
+      }
+
+      const httpServer = server.listen();
+      httpServer.close((err: unknown) => {
         console.log('Server close callback called.');
         if (err) {
           console.error('Error closing the server:', err);
