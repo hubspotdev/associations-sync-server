@@ -106,13 +106,39 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/MappingResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/AssociationMapping'
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Request body is required"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to save association mapping: Database error"
  */
 router.post('/', async (req: Request, res: Response) => {
   if (!req.body || Object.keys(req.body).length === 0) {
@@ -151,7 +177,6 @@ router.post('/', async (req: Request, res: Response) => {
  * /api/associations/mappings/batch:
  *   post:
  *     summary: Create batch association mappings
- *     description: Create multiple association mappings in both database and HubSpot
  *     tags: [Mappings]
  *     requestBody:
  *       required: true
@@ -164,10 +189,49 @@ router.post('/', async (req: Request, res: Response) => {
  *     responses:
  *       201:
  *         description: Successfully created mappings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     hubspotResponse:
+ *                       type: object
+ *                     dbResponse:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AssociationMapping'
  *       400:
  *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Invalid request: mappings must be a non-empty array"
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Error saving mapping"
  */
 router.post('/batch', async (req: Request, res: Response) => {
   try {
@@ -210,7 +274,6 @@ router.post('/batch', async (req: Request, res: Response) => {
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Array of mapping IDs to delete
  *     responses:
  *       200:
  *         description: Successfully deleted mappings
@@ -237,19 +300,40 @@ router.post('/batch', async (req: Request, res: Response) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Invalid or empty mappingIds array"
  *       404:
  *         description: No mappings found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "No mappings were deleted"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to delete mappings: Database error"
  */
 router.delete('/batch', async (req: Request, res: Response) => {
   const { mappingIds } = req.body;
@@ -449,6 +533,7 @@ router.get('/basic/:mappingId', async (req: Request, res: Response) => {
  *     tags: [Mappings]
  *     responses:
  *       200:
+ *         description: Successfully retrieved mappings
  *         content:
  *           application/json:
  *             schema:
@@ -456,10 +541,24 @@ router.get('/basic/:mappingId', async (req: Request, res: Response) => {
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/AssociationMapping'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Error fetching mappings: Database error"
  */
 router.get('/all', async (req: Request, res: Response) => {
   try {

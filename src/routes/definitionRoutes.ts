@@ -152,19 +152,48 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/DefinitionsResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     dbAssociations:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AssociationDefinition'
+ *                     hubspotAssociations:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AssociationDefinition'
  *       400:
  *         description: Missing parameters
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Missing required parameters: fromObject and toObject"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to fetch association definitions: Database error"
  */
 router.get('/', async (req: Request, res: Response) => res.status(404).json({
   success: false,
@@ -226,12 +255,7 @@ router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
  *                   example: true
  *                 data:
  *                   type: object
- *       400:
- *         description: Missing parameters
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *                   description: Response from HubSpot API
  *       404:
  *         description: Association definition not found
  *         content:
@@ -250,7 +274,14 @@ router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to archive association definition: Database error"
  */
 router.delete('/', async (req: Request, res: Response) => res.status(404).json({
   success: false,
@@ -309,24 +340,46 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
  *                   example: true
  *                 data:
  *                   type: object
+ *                   description: Response from HubSpot API including typeIds
  *       400:
  *         description: Missing or invalid request body
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Request body is required"
  *       422:
  *         description: Invalid response from HubSpot
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Invalid response from Hubspot"
  *       500:
  *         description: Server error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Failed to save association definition: Database error"
  */
 router.post('/', async (req: Request, res: Response) => {
   if (!req.body || Object.keys(req.body).length === 0) {

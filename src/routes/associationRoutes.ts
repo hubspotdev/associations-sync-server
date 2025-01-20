@@ -91,7 +91,7 @@ const router = express.Router();
  *           type: string
  *         description: The association ID
  *     responses:
- *       '200':
+ *       200:
  *         description: Successfully retrieved association
  *         content:
  *           application/json:
@@ -103,7 +103,7 @@ const router = express.Router();
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Association'
- *       '404':
+ *       404:
  *         description: Association not found
  *         content:
  *           application/json:
@@ -116,7 +116,7 @@ const router = express.Router();
  *                 data:
  *                   type: string
  *                   example: "Association not found"
- *       '500':
+ *       500:
  *         description: Server error
  *         content:
  *           application/json:
@@ -203,7 +203,7 @@ router.get('/:associationId', async (req: Request, res: Response) => {
  *                   example: false
  *                 data:
  *                   type: string
- *                   example: "Failed to delete association: Database connection error"
+ *                   example: "Failed to delete association clh1234abcdef: Database connection error"
  */
 router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
@@ -223,7 +223,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
     handleError(error, 'Failed to delete association');
     return res.status(500).json({
       success: false,
-      data: `Failed to delete association: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      data: `Failed to delete association ${associationId}: ${error instanceof Error ? error.message : 'Unknown error'}`,
     });
   }
 });
@@ -239,56 +239,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - objectType
- *               - objectId
- *               - toObjectType
- *               - toObjectId
- *               - associationLabel
- *               - associationTypeId
- *               - associationCategory
- *               - customerId
- *               - cardinality
- *             properties:
- *               objectType:
- *                 type: string
- *                 description: The type of the source object (e.g., contact, company, deal)
- *                 example: "contact"
- *               objectId:
- *                 type: string
- *                 description: ID of the source object
- *                 example: "123456"
- *               toObjectType:
- *                 type: string
- *                 description: The type of the target object (e.g., contact, company, deal)
- *                 example: "company"
- *               toObjectId:
- *                 type: string
- *                 description: ID of the target object
- *                 example: "789012"
- *               associationLabel:
- *                 type: string
- *                 description: Human-readable name for the association type
- *                 example: "Primary Contact"
- *               associationTypeId:
- *                 type: integer
- *                 description: Type of association
- *                 example: 1
- *               associationCategory:
- *                 type: string
- *                 enum: [HUBSPOT_DEFINED, INTEGRATOR_DEFINED, USER_DEFINED]
- *                 description: Indicates who defined the association type
- *                 example: "USER_DEFINED"
- *               customerId:
- *                 type: string
- *                 description: Unique identifier of the customer who owns this association
- *                 example: "cust_123"
- *               cardinality:
- *                 type: string
- *                 enum: [ONE_TO_ONE, ONE_TO_MANY, MANY_TO_ONE, MANY_TO_MANY]
- *                 description: Defines the relationship multiplicity between associated objects
- *                 example: "ONE_TO_MANY"
+ *             $ref: '#/components/schemas/Association'
  *     responses:
  *       200:
  *         description: Association created successfully
