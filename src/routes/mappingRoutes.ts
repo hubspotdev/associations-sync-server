@@ -217,7 +217,21 @@ router.post('/batch', async (req: Request, res: Response) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/BatchDeleteResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     deletedCount:
+ *                       type: number
+ *                       example: 5
+ *                     deletedRecords:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/AssociationMapping'
  *       400:
  *         description: Invalid request
  *         content:
@@ -255,7 +269,10 @@ router.delete('/batch', async (req: Request, res: Response) => {
       await archiveBatchHubspotAssociation(associationMappings);
       return res.json({
         success: true,
-        data: `Deleted ${mappingIds.length} mappings`,
+        data: {
+          deletedCount: mappingIds.length,
+          deletedRecords: associationMappings,
+        },
       });
     }
 
@@ -411,7 +428,10 @@ router.get('/basic/:mappingId', async (req: Request, res: Response) => {
       });
     }
 
-    return res.json(associationMapping);
+    return res.json({
+      success: true,
+      data: associationMapping,
+    });
   } catch (error:unknown) {
     handleError(error, 'Error getting association mapping');
     return res.status(500).json({
@@ -429,19 +449,17 @@ router.get('/basic/:mappingId', async (req: Request, res: Response) => {
  *     tags: [Mappings]
  *     responses:
  *       200:
- *         description: Successfully retrieved all mappings
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/AssociationMapping'
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/AssociationMapping'
  */
 router.get('/all', async (req: Request, res: Response) => {
   try {

@@ -232,6 +232,19 @@ router.get('/:fromObject/:toObject', async (req: Request, res: Response) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Association definition not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Association definition with id {associationId} not found"
  *       500:
  *         description: Server error
  *         content:
