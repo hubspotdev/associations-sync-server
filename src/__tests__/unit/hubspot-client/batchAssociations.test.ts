@@ -2,6 +2,7 @@ import { AssociationMapping } from '@prisma/client';
 import { hubspotClient, getAccessToken } from '../../../auth';
 import { saveBatchHubspotAssociation, archiveBatchHubspotAssociation } from '../../../hubspot-client/batchAssociations';
 import * as utils from '../../../utils/utils';
+import handleError from '../../../utils/error';
 
 jest.mock('../../../auth', () => ({
   hubspotClient: {
@@ -21,11 +22,16 @@ jest.mock('../../../auth', () => ({
 }));
 
 jest.mock('../../../utils/utils', () => ({
+  __esModule: true,
   formatBatchRequestData: jest.fn(),
   formatBatchArchiveRequest: jest.fn(),
   getCustomerId: jest.fn(),
   checkAccessToken: jest.fn(),
-  handleError: jest.fn(),
+}));
+
+jest.mock('../../../utils/error', () => ({
+  __esModule: true,
+  default: jest.fn(),
 }));
 
 describe('Batch Associations HubSpot Client', () => {
@@ -46,31 +52,13 @@ describe('Batch Associations HubSpot Client', () => {
     cardinality: 'ONE_TO_ONE',
   };
 
-  beforeAll(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  afterAll(() => {
-    (console.log as jest.Mock).mockRestore();
-    (console.error as jest.Mock).mockRestore();
-  });
-
   beforeEach(() => {
     jest.clearAllMocks();
-    (utils.handleError as jest.Mock).mockImplementation((error, message) => {
-      console.error(message, error);
-    });
     (utils.getCustomerId as jest.Mock).mockReturnValue('cust_123');
     (utils.checkAccessToken as jest.Mock).mockImplementation((token) => {
       if (!token) throw new Error('No access token available');
     });
     (getAccessToken as jest.Mock).mockResolvedValue('mock-token');
-    (utils.formatBatchArchiveRequest as jest.Mock).mockReturnValue({
-      fromObjectType: 'contact',
-      toObjectType: 'company',
-      inputs: [{ fromObjectId: 'hub_123', toObjectId: 'hub_456' }],
-    });
   });
 
   describe('saveBatchHubspotAssociation', () => {
@@ -111,7 +99,11 @@ describe('Batch Associations HubSpot Client', () => {
       await expect(saveBatchHubspotAssociation([mockMapping]))
         .rejects
         .toThrow('API Error');
-      expect(console.error).toHaveBeenCalled();
+
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue saving these associations in HubSpot',
+      );
     });
   });
 
@@ -150,16 +142,11 @@ describe('Batch Associations HubSpot Client', () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.batchApi.archive as jest.Mock).mockRejectedValue(mockError);
 
-      // Clear the mock before the test
-      (utils.handleError as jest.Mock).mockClear();
-
-      // Expect the function to throw
       await expect(archiveBatchHubspotAssociation([mockMapping]))
         .rejects
         .toThrow('API Error');
 
-      // Verify handleError was called with correct parameters
-      expect(utils.handleError).toHaveBeenCalledWith(
+      expect(handleError).toHaveBeenCalledWith(
         mockError,
         'There was an issue archiving associations in HubSpot',
       );

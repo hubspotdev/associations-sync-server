@@ -209,7 +209,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
   try {
     const result = await deleteDBAssociation(associationId);
-    if (result === undefined) {
+    if (!result) {
       return res.status(404).json({
         success: false,
         data: 'Association not found',

@@ -47,21 +47,13 @@ describe('Definition Routes', () => {
       });
     });
 
-<<<<<<< HEAD
-    // This is looking for 404 because express is not able to route to the route without parameters
     it('should return 404 if parameters are missing', async () => {
-      const response = await request(app)
-        .get('/api/associations/definitions/')
-        .expect(404);
-=======
-    it('should return 4 if parameters are missing', async () => {
       const response = await request(app)
         .get('/api/associations/definitions/')
         .expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.data).toContain('Missing required parameters');
->>>>>>> errorPropagation
     });
 
     it('should handle errors appropriately', async () => {
@@ -100,12 +92,9 @@ describe('Definition Routes', () => {
         .delete('/api/associations/definitions/')
         .send(mockDefinition)
         .expect(404);
-<<<<<<< HEAD
-=======
 
       expect(response.body.success).toBe(false);
       expect(response.body.data).toContain('Missing required parameter');
->>>>>>> errorPropagation
     });
 
     it('should handle errors appropriately', async () => {

@@ -121,7 +121,7 @@ describe('Mapping Routes', () => {
   describe('DELETE /batch', () => {
     it('should successfully delete batch mappings', async () => {
       const mappingIds = ['map_123', 'map_124'];
-      (batchDbClient.getBatchDBAssociationMappings).mockResolvedValue([mockMapping]);
+      (batchDbClient.getBatchDBAssociationMappings).mockResolvedValue([mockMapping, mockMapping]);
       (batchDbClient.deleteBatchDBMappings).mockResolvedValue(true);
       (batchHubspotClient.archiveBatchHubspotAssociation).mockResolvedValue([]);
 
@@ -132,8 +132,15 @@ describe('Mapping Routes', () => {
 
       expect(response.body).toEqual({
         success: true,
-        data: 'Deleted 2 mappings',
+        data: {
+          deletedCount: 2,
+          deletedRecords: [mockMapping, mockMapping],
+        },
       });
+
+      expect(batchDbClient.getBatchDBAssociationMappings).toHaveBeenCalledWith(mappingIds);
+      expect(batchDbClient.deleteBatchDBMappings).toHaveBeenCalledWith(mappingIds);
+      expect(batchHubspotClient.archiveBatchHubspotAssociation).toHaveBeenCalledWith([mockMapping, mockMapping]);
     });
 
     it('should return 400 if mappingIds array is empty', async () => {
@@ -194,7 +201,10 @@ describe('Mapping Routes', () => {
         .get('/api/associations/mappings/basic/map_123')
         .expect(200);
 
-      expect(response.body).toEqual(mockMapping);
+      expect(response.body).toEqual({
+        success: true,
+        data: mockMapping,
+      });
     });
 
     it('should return 404 if mapping not found', async () => {

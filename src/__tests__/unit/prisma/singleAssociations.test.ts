@@ -7,9 +7,9 @@ import {
   getDBAssociationsByCustomerId,
   getSingleDBAssociationById,
   saveDBAssociation,
-  getDBSingleAssociation,
   deleteDBAssociation,
 } from '../../../prisma-client/singleAssociations';
+import handleError from '../../../utils/error';
 
 // Mock the Prisma client
 jest.mock('../../../prisma-client/prisma-initialization', () => ({
@@ -123,33 +123,37 @@ describe('Single Associations Database Client', () => {
       });
     });
 
-    it('should handle upsert errors', async () => {
+    it('should throw error when upsert fails', async () => {
       const mockError = new Error('Upsert failed');
       (prisma.association.upsert as jest.Mock).mockRejectedValue(mockError);
 
-      const result = await saveDBAssociation(mockAssociation);
-      expect(result).toBeNull();
+      await expect(saveDBAssociation(mockAssociation)).rejects.toThrow('Upsert failed');
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue while attempting to save the association',
+      );
     });
   });
 
   describe('deleteDBAssociation', () => {
     it('should successfully delete an association', async () => {
-      (prisma.association.delete as jest.Mock).mockResolvedValue(mockAssociation);
+      const mockDeletedAssociation = { id: 'assoc_123' /* other fields */ };
+      (prisma.association.delete as jest.Mock).mockResolvedValue(mockDeletedAssociation);
 
       const result = await deleteDBAssociation('assoc_123');
-
-      expect(result).toEqual(mockAssociation);
-      expect(prisma.association.delete).toHaveBeenCalledWith({
-        where: { id: 'assoc_123' },
-      });
+      expect(result).toEqual(mockDeletedAssociation);
     });
 
     it('should handle deletion errors', async () => {
       const mockError = new Error('Deletion failed');
       (prisma.association.delete as jest.Mock).mockRejectedValue(mockError);
 
-      const result = await deleteDBAssociation('assoc_123');
-      expect(result).toBeUndefined();
+      await expect(deleteDBAssociation('assoc_123')).rejects.toThrow('Deletion failed');
+
+      expect(handleError).toHaveBeenCalledWith(
+        mockError,
+        'There was an issue deleting this association',
+      );
     });
   });
 });

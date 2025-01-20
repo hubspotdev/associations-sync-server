@@ -75,6 +75,10 @@ describe('Utils Functions', () => {
       expect(() => checkAccessToken('')).toThrow('Access token is empty');
     });
 
+    it('should throw error for non-string token', () => {
+      expect(() => checkAccessToken(123 as any)).toThrow('Access token is not a string');
+    });
+
     it('should not throw for valid token', () => {
       expect(() => checkAccessToken('valid-token')).not.toThrow();
     });

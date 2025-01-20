@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.55% </span>
+                <span class="strong">81.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/36</span>
+                <span class='fraction'>30/37</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.55% </span>
+                <span class="strong">81.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/36</span>
+                <span class='fraction'>30/37</span>
             </div>
         
             
@@ -174,9 +174,10 @@
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -202,7 +203,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -275,15 +276,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Association } from '@prisma/client';
 import prisma from './prisma-initialization';
@@ -295,8 +297,8 @@ async function getDBAssociationsByCustomerId(customerId: string): Promise&lt;Ass
       where: { customerId },
     });
     return associations;
-  } catch (error:unknown) {
-    console.error('Error fetching associations:', error);
+  } catch (error: unknown) {
+    handleError(error, 'Error fetching associations');
     throw error;
   }
 }
@@ -313,7 +315,7 @@ async function getSingleDBAssociationById(id: string): Promise&lt;Association | 
   }
 }
 &nbsp;
-const saveDBAssociation = async (maybeAssociation: Association): Promise&lt;Association | null&gt; =&gt; {
+const saveDBAssociation = async (maybeAssociation: Association): Promise&lt;Association&gt; =&gt; {
   const {
     objectType,
     objectId,
@@ -355,9 +357,9 @@ const saveDBAssociation = async (maybeAssociation: Association): Promise&lt;Asso
     });
 &nbsp;
     return associationResult;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     handleError(error, 'There was an issue while attempting to save the association');
-    return null;
+    throw error;
   }
 };
 &nbsp;
@@ -377,15 +379,16 @@ async function <span class="fstat-no" title="function not covered" >getDBSingleA
   }
 }
 &nbsp;
-async function deleteDBAssociation(id: string): Promise&lt;void | Association&gt; {
+async function deleteDBAssociation(id: string): Promise&lt;Association&gt; {
   try {
     const deletedAssociation = await prisma.association.delete({
       where: { id },
     });
     console.log('Deleted association:', deletedAssociation);
     return deletedAssociation;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     handleError(error, 'There was an issue deleting this association');
+    throw error;
   }
 }
 &nbsp;
@@ -403,7 +406,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-20T19:10:45.299Z
+                at 2025-01-20T21:09:43.274Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

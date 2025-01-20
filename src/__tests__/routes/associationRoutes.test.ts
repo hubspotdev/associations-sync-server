@@ -87,7 +87,8 @@ describe('Association Routes', () => {
 
   describe('DELETE /:associationId', () => {
     it('should successfully delete an association', async () => {
-      (dbClient.deleteDBAssociation).mockResolvedValue({ id: 'clh1234abcdef' });
+      const deletedAssociation = { id: 'clh1234abcdef' };
+      (dbClient.deleteDBAssociation).mockResolvedValue(deletedAssociation);
 
       const response = await request(app)
         .delete('/api/associations/clh1234abcdef')
@@ -95,7 +96,7 @@ describe('Association Routes', () => {
 
       expect(response.body).toEqual({
         success: true,
-        data: 'Successfully deleted clh1234abcdef',
+        data: deletedAssociation,
       });
       expect(dbClient.deleteDBAssociation).toHaveBeenCalledWith('clh1234abcdef');
     });

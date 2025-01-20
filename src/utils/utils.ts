@@ -138,10 +138,10 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
 export function checkAccessToken(accessToken: string | null | undefined | void): asserts accessToken is string {
   if (accessToken === null) {
     throw new Error('Access token is null');
-  } else if (accessToken === 'undefined') {
-    throw new Error('Access token is undefined');
-  } else if (!accessToken) {
+  } else if (accessToken === undefined) {
     throw new Error('Access token is not defined');
+  } else if (!accessToken) {
+    throw new Error('Access token is empty');
   } else if (typeof accessToken !== 'string') {
     throw new Error('Access token is not a string');
   } else if (accessToken.length === 0) {

@@ -1,25 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="80" failures="6" errors="0" time="1.425">
-  <testsuite name="Definition Mocks" errors="0" failures="2" skipped="0" timestamp="2025-01-20T19:10:43" time="0.476" tests="12">
-    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0">
+<testsuites name="jest tests" tests="89" failures="3" errors="0" time="2.509">
+  <testsuite name="Single Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="0.573" tests="8">
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" name="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" time="0.009">
     </testcase>
-    <testcase classname="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" name="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" time="0.029">
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" name="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" time="0.007">
     </testcase>
-    <testcase classname="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" name="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" time="0.021">
-      <failure>Error: expect(received).toBe(expected) // Object.is equality
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" name="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" time="0.003">
+    </testcase>
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" name="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should successfully upsert an association" name="Single Associations Database Client saveDBAssociation should successfully upsert an association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should throw error when upsert fails" name="Single Associations Database Client saveDBAssociation should throw error when upsert fails" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should successfully delete an association" name="Single Associations Database Client deleteDBAssociation should successfully delete an association" time="0.006">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should handle deletion errors" name="Single Associations Database Client deleteDBAssociation should handle deletion errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Logger" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="0.578" tests="2">
+    <testcase classname="Logger should log info messages correctly" name="Logger should log info messages correctly" time="0.011">
+    </testcase>
+    <testcase classname="Logger should log error messages with stack traces" name="Logger should log error messages with stack traces" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="0.625" tests="12">
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" name="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" time="0.007">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" time="0.007">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" name="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" time="0.008">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" name="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" name="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" name="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" name="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" name="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="Batch Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="0.627" tests="6">
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" time="0.016">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" time="0.008">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" time="0.004">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:41" time="0.063" tests="1">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:41" time="0.063" tests="1">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Utils Functions" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="0.836" tests="8">
+    <testcase classname="Utils Functions formatSingleRequestData should format single request data correctly" name="Utils Functions formatSingleRequestData should format single request data correctly" time="0.004">
+    </testcase>
+    <testcase classname="Utils Functions formatBatchArchiveRequest should return null for empty array" name="Utils Functions formatBatchArchiveRequest should return null for empty array" time="0">
+    </testcase>
+    <testcase classname="Utils Functions formatBatchArchiveRequest should format batch archive request correctly" name="Utils Functions formatBatchArchiveRequest should format batch archive request correctly" time="0">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for null token" name="Utils Functions checkAccessToken should throw error for null token" time="0.01">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for undefined token" name="Utils Functions checkAccessToken should throw error for undefined token" time="0">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for empty string token" name="Utils Functions checkAccessToken should throw error for empty string token" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for non-string token" name="Utils Functions checkAccessToken should throw error for non-string token" time="0">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should not throw for valid token" name="Utils Functions checkAccessToken should not throw for valid token" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Associations HubSpot Client" errors="0" failures="3" skipped="0" timestamp="2025-01-20T21:09:40" time="1.151" tests="8">
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" name="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" time="0.005">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
 
-Expected: false
-Received: undefined
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/routes/definitionRoutes.test.ts:56:37)
+Expected number of calls: 2
+Received number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:130:40)
     at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
     </testcase>
-    <testcase classname="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" name="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" time="0.013">
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" name="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" time="0.005">
     </testcase>
-    <testcase classname="Definition Routes DELETE /:associationId should successfully delete a definition" name="Definition Routes DELETE /:associationId should successfully delete a definition" time="0.012">
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" name="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" time="0.001">
+      <failure>TypeError: Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.
+    at fromObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:110:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:176:22)</failure>
     </testcase>
-    <testcase classname="Definition Routes DELETE /:associationId should return 400 if associationId is missing" name="Definition Routes DELETE /:associationId should return 400 if associationId is missing" time="0.008">
-      <failure>Error: expected 400 &quot;Bad Request&quot;, got 404 &quot;Not Found&quot;
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/routes/definitionRoutes.test.ts:95:10)
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" name="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" time="0.009">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;Cannot destructure property &apos;fromObject&apos; of &apos;formattedData&apos; as it is undefined.&quot;
+Received message:   &quot;Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.&quot;
+
+      108 |   hubspotClient.setAccessToken(accessToken);
+      109 |
+    &gt; 110 |   const { fromObject, toObject, requestInfo } = formattedData;
+          |           ^
+      111 |   try {
+      112 |     if (requestInfo.associationTypeId !== null) {
+      113 |       await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
+
+      at fromObject (src/hubspot-client/definitionAssociations.ts:110:11)
+      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:189:7)
+    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:190:18)
     at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
     at new Promise (&lt;anonymous&gt;)
     at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
@@ -34,225 +139,109 @@ Received: undefined
     at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
     at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
     at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
-----
-    at Test._assertStatus (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:252:14)
-    at /Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:308:13
-    at Test._assertFunction (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:285:13)
-    at Test.assert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:164:23)
-    at Server.localAssert (/Users/zradford/src/associations-server/node_modules/supertest/lib/test.js:120:14)
-    at Object.onceWrapper (node:events:634:28)
-    at Server.emit (node:events:520:28)
-    at emitCloseNT (node:net:2338:8)
-    at processTicksAndRejections (node:internal/process/task_queues:89:21)</failure>
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="Definition Routes DELETE /:associationId should handle errors appropriately" name="Definition Routes DELETE /:associationId should handle errors appropriately" time="0.008">
-    </testcase>
-    <testcase classname="Definition Routes POST / should successfully create a new definition" name="Definition Routes POST / should successfully create a new definition" time="0.008">
-    </testcase>
-    <testcase classname="Definition Routes POST / should return 400 if request body is empty" name="Definition Routes POST / should return 400 if request body is empty" time="0.008">
-    </testcase>
-    <testcase classname="Definition Routes POST / should return 422 if HubSpot response is invalid" name="Definition Routes POST / should return 422 if HubSpot response is invalid" time="0.008">
-    </testcase>
-    <testcase classname="Definition Routes PUT /:id should successfully update a definition" name="Definition Routes PUT /:id should successfully update a definition" time="0.007">
-    </testcase>
-    <testcase classname="Definition Routes PUT /:id should handle errors appropriately" name="Definition Routes PUT /:id should handle errors appropriately" time="0.007">
-    </testcase>
-  </testsuite>
-  <testsuite name="Definition Associations HubSpot Client" errors="0" failures="3" skipped="0" timestamp="2025-01-20T19:10:44" time="0.15" tests="8">
-    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" name="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" time="0.002">
-      <failure>Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
-
-Expected number of calls: 2
-Received number of calls: 1
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:130:40)</failure>
-    </testcase>
-    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" name="Definition Associations HubSpot Client saveAssociationDefinition should handle errors" time="0.002">
-    </testcase>
-    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" name="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" time="0.001">
-      <failure>TypeError: Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.
-    at fromObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:113:11)
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:176:22)</failure>
-    </testcase>
-    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" name="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" time="0.001">
-      <failure>Error: expect(received).rejects.toThrow(expected)
-
-Expected substring: &quot;Cannot destructure property &apos;fromObject&apos; of &apos;formattedData&apos; as it is undefined.&quot;
-Received message:   &quot;Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.&quot;
-
-      111 |   hubspotClient.setAccessToken(accessToken);
-      112 |
-    &gt; 113 |   const { fromObject, toObject, requestInfo } = formattedData;
-          |           ^
-      114 |
-      115 |   try {
-      116 |     await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, requestInfo);
-
-      at fromObject (src/hubspot-client/definitionAssociations.ts:113:11)
-      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:189:7)
-    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:190:18)
-    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
-    at new Promise (&lt;anonymous&gt;)
-    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
-    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
-    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
-    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
-    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
-    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
-    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
-    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
-    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
-    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
-    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)</failure>
-    </testcase>
-    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" name="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" time="0">
+    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" name="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" time="0.001">
     </testcase>
     <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should handle errors" name="Definition Associations HubSpot Client archiveAssociationDefinition should handle errors" time="0.001">
     </testcase>
     <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should successfully fetch all definitions" name="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should successfully fetch all definitions" time="0">
     </testcase>
-    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle errors" name="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle errors" time="0">
+    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle errors" name="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle errors" time="0.001">
     </testcase>
   </testsuite>
-  <testsuite name="Batch Associations HubSpot Client" errors="0" failures="1" skipped="0" timestamp="2025-01-20T19:10:44" time="0.095" tests="7">
-    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" time="0">
+  <testsuite name="Single Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="1.148" tests="4">
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" name="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" time="0.006">
     </testcase>
-    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" time="0.004">
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" time="0.013">
     </testcase>
-    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" time="0.001">
-    </testcase>
-    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" time="0">
-    </testcase>
-    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" time="0">
-    </testcase>
-    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" time="0">
-    </testcase>
-    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle partial success with some failures" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle partial success with some failures" time="0">
-      <failure>Error: expect(jest.fn()).toHaveBeenCalled()
-
-Expected number of calls: &gt;= 1
-Received number of calls:    0
-    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/batchAssociations.test.ts:183:29)</failure>
-    </testcase>
-  </testsuite>
-  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:44" time="0.249" tests="16">
-    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0">
-    </testcase>
-    <testcase classname="Mapping Routes POST / should successfully create a single mapping" name="Mapping Routes POST / should successfully create a single mapping" time="0.024">
-    </testcase>
-    <testcase classname="Mapping Routes POST / should return 400 if request body is empty" name="Mapping Routes POST / should return 400 if request body is empty" time="0.016">
-    </testcase>
-    <testcase classname="Mapping Routes POST / should handle errors appropriately" name="Mapping Routes POST / should handle errors appropriately" time="0.012">
-    </testcase>
-    <testcase classname="Mapping Routes POST /batch should successfully create batch mappings" name="Mapping Routes POST /batch should successfully create batch mappings" time="0.009">
-    </testcase>
-    <testcase classname="Mapping Routes POST /batch should return 400 if mappings array is empty" name="Mapping Routes POST /batch should return 400 if mappings array is empty" time="0.008">
-    </testcase>
-    <testcase classname="Mapping Routes POST /batch should handle errors appropriately" name="Mapping Routes POST /batch should handle errors appropriately" time="0.008">
-    </testcase>
-    <testcase classname="Mapping Routes DELETE /batch should successfully delete batch mappings" name="Mapping Routes DELETE /batch should successfully delete batch mappings" time="0.007">
-    </testcase>
-    <testcase classname="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" name="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" time="0.007">
-    </testcase>
-    <testcase classname="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" name="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" time="0.008">
-    </testcase>
-    <testcase classname="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" name="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" time="0.007">
-    </testcase>
-    <testcase classname="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" time="0.007">
-    </testcase>
-    <testcase classname="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" name="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" time="0.007">
-    </testcase>
-    <testcase classname="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" time="0.009">
-    </testcase>
-    <testcase classname="Mapping Routes GET /all should successfully get all mappings" name="Mapping Routes GET /all should successfully get all mappings" time="0.009">
-    </testcase>
-    <testcase classname="Mapping Routes GET /all should handle errors appropriately" name="Mapping Routes GET /all should handle errors appropriately" time="0.008">
-    </testcase>
-  </testsuite>
-  <testsuite name="Single Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:44" time="0.094" tests="4">
-    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" name="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" time="0">
-    </testcase>
-    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" time="0.003">
-    </testcase>
-    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" time="0.001">
+    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" time="0">
     </testcase>
     <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="Association Routes" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:44" time="0.163" tests="11">
-    <testcase classname="Association Routes GET /:associationId should successfully return an association" name="Association Routes GET /:associationId should successfully return an association" time="0.028">
+  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="1.226" tests="12">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.003">
     </testcase>
-    <testcase classname="Association Routes GET /:associationId should return 404 when association is not found" name="Association Routes GET /:associationId should return 404 when association is not found" time="0.018">
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" name="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" time="0.042">
     </testcase>
-    <testcase classname="Association Routes GET /:associationId should handle database errors appropriately" name="Association Routes GET /:associationId should handle database errors appropriately" time="0.008">
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" name="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" time="0.045">
     </testcase>
-    <testcase classname="Association Routes DELETE /:associationId should successfully delete an association" name="Association Routes DELETE /:associationId should successfully delete an association" time="0.007">
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" name="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" time="0.035">
     </testcase>
-    <testcase classname="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" name="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" time="0.006">
+    <testcase classname="Definition Routes DELETE /:associationId should successfully delete a definition" name="Definition Routes DELETE /:associationId should successfully delete a definition" time="0.026">
     </testcase>
-    <testcase classname="Association Routes DELETE /:associationId should handle deletion errors appropriately" name="Association Routes DELETE /:associationId should handle deletion errors appropriately" time="0.007">
+    <testcase classname="Definition Routes DELETE /:associationId should return 404 if associationId is missing" name="Definition Routes DELETE /:associationId should return 404 if associationId is missing" time="0.017">
     </testcase>
-    <testcase classname="Association Routes POST / should successfully create a new association" name="Association Routes POST / should successfully create a new association" time="0.012">
+    <testcase classname="Definition Routes DELETE /:associationId should handle errors appropriately" name="Definition Routes DELETE /:associationId should handle errors appropriately" time="0.018">
     </testcase>
-    <testcase classname="Association Routes POST / should return 400 when request body is empty" name="Association Routes POST / should return 400 when request body is empty" time="0.009">
+    <testcase classname="Definition Routes POST / should successfully create a new definition" name="Definition Routes POST / should successfully create a new definition" time="0.02">
     </testcase>
-    <testcase classname="Association Routes POST / should return 500 when creation fails with no data" name="Association Routes POST / should return 500 when creation fails with no data" time="0.007">
+    <testcase classname="Definition Routes POST / should return 400 if request body is empty" name="Definition Routes POST / should return 400 if request body is empty" time="0.021">
     </testcase>
-    <testcase classname="Association Routes POST / should handle creation errors appropriately" name="Association Routes POST / should handle creation errors appropriately" time="0.009">
+    <testcase classname="Definition Routes POST / should return 422 if HubSpot response is invalid" name="Definition Routes POST / should return 422 if HubSpot response is invalid" time="0.025">
     </testcase>
-    <testcase classname="Association Routes POST / should validate required fields in the request body" name="Association Routes POST / should validate required fields in the request body" time="0.01">
+    <testcase classname="Definition Routes PUT /:id should successfully update a definition" name="Definition Routes PUT /:id should successfully update a definition" time="0.019">
     </testcase>
-  </testsuite>
-  <testsuite name="Single Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:45" time="0.035" tests="8">
-    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" name="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" time="0">
-    </testcase>
-    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" name="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" time="0.004">
-    </testcase>
-    <testcase classname="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" name="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" time="0">
-    </testcase>
-    <testcase classname="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" name="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" time="0.001">
-    </testcase>
-    <testcase classname="Single Associations Database Client saveDBAssociation should successfully upsert an association" name="Single Associations Database Client saveDBAssociation should successfully upsert an association" time="0">
-    </testcase>
-    <testcase classname="Single Associations Database Client saveDBAssociation should handle upsert errors" name="Single Associations Database Client saveDBAssociation should handle upsert errors" time="0">
-    </testcase>
-    <testcase classname="Single Associations Database Client deleteDBAssociation should successfully delete an association" name="Single Associations Database Client deleteDBAssociation should successfully delete an association" time="0.001">
-    </testcase>
-    <testcase classname="Single Associations Database Client deleteDBAssociation should handle deletion errors" name="Single Associations Database Client deleteDBAssociation should handle deletion errors" time="0">
+    <testcase classname="Definition Routes PUT /:id should handle errors appropriately" name="Definition Routes PUT /:id should handle errors appropriately" time="0.012">
     </testcase>
   </testsuite>
-  <testsuite name="Definition Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:45" time="0.032" tests="12">
-    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" name="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" time="0.001">
+  <testsuite name="Association Routes" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="1.239" tests="11">
+    <testcase classname="Association Routes GET /:associationId should successfully return an association" name="Association Routes GET /:associationId should successfully return an association" time="0.048">
     </testcase>
-    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" time="0">
+    <testcase classname="Association Routes GET /:associationId should return 404 when association is not found" name="Association Routes GET /:associationId should return 404 when association is not found" time="0.01">
     </testcase>
-    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" time="0">
+    <testcase classname="Association Routes GET /:associationId should handle database errors appropriately" name="Association Routes GET /:associationId should handle database errors appropriately" time="0.017">
     </testcase>
-    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" time="0.005">
+    <testcase classname="Association Routes DELETE /:associationId should successfully delete an association" name="Association Routes DELETE /:associationId should successfully delete an association" time="0.018">
     </testcase>
-    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" name="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" time="0">
+    <testcase classname="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" name="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" time="0.019">
     </testcase>
-    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" name="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" time="0">
+    <testcase classname="Association Routes DELETE /:associationId should handle deletion errors appropriately" name="Association Routes DELETE /:associationId should handle deletion errors appropriately" time="0.021">
     </testcase>
-    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" name="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" time="0">
+    <testcase classname="Association Routes POST / should successfully create a new association" name="Association Routes POST / should successfully create a new association" time="0.021">
     </testcase>
-    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" time="0">
+    <testcase classname="Association Routes POST / should return 400 when request body is empty" name="Association Routes POST / should return 400 when request body is empty" time="0.011">
     </testcase>
-    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" name="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" time="0.001">
+    <testcase classname="Association Routes POST / should return 500 when creation fails with no data" name="Association Routes POST / should return 500 when creation fails with no data" time="0.021">
     </testcase>
-    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" name="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" time="0">
+    <testcase classname="Association Routes POST / should handle creation errors appropriately" name="Association Routes POST / should handle creation errors appropriately" time="0.015">
     </testcase>
-    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" time="0">
-    </testcase>
-    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" name="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" time="0.001">
+    <testcase classname="Association Routes POST / should validate required fields in the request body" name="Association Routes POST / should validate required fields in the request body" time="0.009">
     </testcase>
   </testsuite>
-  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:45" time="0.022" tests="1">
-    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0">
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T21:09:40" time="1.257" tests="16">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.003">
     </testcase>
-  </testsuite>
-  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T19:10:45" time="0.02" tests="1">
-    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0">
+    <testcase classname="Mapping Routes POST / should successfully create a single mapping" name="Mapping Routes POST / should successfully create a single mapping" time="0.044">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should return 400 if request body is empty" name="Mapping Routes POST / should return 400 if request body is empty" time="0.022">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should handle errors appropriately" name="Mapping Routes POST / should handle errors appropriately" time="0.037">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should successfully create batch mappings" name="Mapping Routes POST /batch should successfully create batch mappings" time="0.018">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should return 400 if mappings array is empty" name="Mapping Routes POST /batch should return 400 if mappings array is empty" time="0.012">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should handle errors appropriately" name="Mapping Routes POST /batch should handle errors appropriately" time="0.018">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should successfully delete batch mappings" name="Mapping Routes DELETE /batch should successfully delete batch mappings" time="0.02">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" name="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" time="0.014">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" name="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" time="0.027">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" name="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" time="0.017">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" time="0.006">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" name="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" time="0.014">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" time="0.016">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should successfully get all mappings" name="Mapping Routes GET /all should successfully get all mappings" time="0.01">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should handle errors appropriately" name="Mapping Routes GET /all should handle errors appropriately" time="0.006">
     </testcase>
   </testsuite>
 </testsuites>
