@@ -38,7 +38,7 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]): Promise<
       // Handle each error individually
       response.errors.forEach((error) => handleError(error, 'There was an issue saving these associations in HubSpot'));
       // Still throw the first error to stop execution
-      throw response.errors[0];
+      throw new Error(response.errors[0].message);
     } else {
       return response as BatchResponseLabelsBetweenObjectPair;
     }

@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-// import { PrismaClient } from '@prisma/client';
 import {
   saveDBAssociation,
   getSingleDBAssociationById,
@@ -12,7 +11,6 @@ import {
 import handleError from '../utils/error';
 
 const router = express.Router();
-// const prisma = new PrismaClient();
 
 /**
  * @swagger
