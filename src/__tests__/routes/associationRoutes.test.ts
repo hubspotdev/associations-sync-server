@@ -96,7 +96,10 @@ describe('Association Routes', () => {
 
       expect(response.body).toEqual({
         success: true,
-        data: deletedAssociation,
+        data: {
+          deletedAssociation,
+          deletedMappingsCount: 0,
+        },
       });
       expect(dbClient.deleteDBAssociation).toHaveBeenCalledWith('clh1234abcdef');
     });

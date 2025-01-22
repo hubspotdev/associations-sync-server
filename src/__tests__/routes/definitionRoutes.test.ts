@@ -5,6 +5,7 @@ import {
 } from '@jest/globals';
 import definitionRoutes from '../../routes/definitionRoutes';
 import * as dbClient from '../../prisma-client/definitionAssociations';
+import * as batchClient from '../../prisma-client/batchAssociations';
 import * as hubspotClient from '../../hubspot-client/definitionAssociations';
 import { mockDefinition, mockHubspotResponse } from '../__mocks__/definitionMocks';
 
@@ -16,6 +17,7 @@ app.use('/api/associations/definitions', definitionRoutes);
 // Mock all database and HubSpot client functions
 jest.mock('../../prisma-client/definitionAssociations');
 jest.mock('../../hubspot-client/definitionAssociations');
+jest.mock('../../prisma-client/batchAssociations');
 jest.mock('../../utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
@@ -70,8 +72,15 @@ describe('Definition Routes', () => {
 
   describe('DELETE /:associationId', () => {
     it('should successfully delete a definition', async () => {
-      (dbClient.deleteDBAssociationDefinition).mockResolvedValue(true);
+      // Mock the DB response to include associationTypeId
+      const mockDeleteResponse = {
+        ...mockDefinition,
+        associationTypeId: 1, // Ensure this is set for single direction case
+      };
+
+      (dbClient.deleteDBAssociationDefinition).mockResolvedValue(mockDeleteResponse);
       (hubspotClient.archiveAssociationDefinition).mockResolvedValue({ success: true });
+      (batchClient.getBatchDBAssociationMappingsByAssociationId).mockResolvedValue([]);
 
       const response = await request(app)
         .delete('/api/associations/definitions/123')
@@ -79,12 +88,57 @@ describe('Definition Routes', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
+        message: 'Successfully deleted association definition 123',
+        deletedMappingsCount: 0,
+      });
+
       expect(dbClient.deleteDBAssociationDefinition).toHaveBeenCalledWith('123');
-      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenCalledWith(
-        expect.objectContaining({
-          ...mockDefinition,
-        }),
-      );
+      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenCalledWith({
+        fromObjectType: mockDefinition.fromObjectType,
+        toObjectType: mockDefinition.toObjectType,
+        associationTypeId: mockDefinition.associationTypeId,
+      });
+    });
+
+    // Add a new test for bidirectional case
+    it('should successfully delete a bidirectional definition', async () => {
+      const mockBidirectionalResponse = {
+        ...mockDefinition,
+        fromTypeId: 1,
+        toTypeId: 2,
+        associationTypeId: null, // This triggers bidirectional case
+      };
+
+      (dbClient.deleteDBAssociationDefinition).mockResolvedValue(mockBidirectionalResponse);
+      (hubspotClient.archiveAssociationDefinition).mockResolvedValue({ success: true });
+      (batchClient.getBatchDBAssociationMappingsByAssociationId).mockResolvedValue([]);
+
+      const response = await request(app)
+        .delete('/api/associations/definitions/123')
+        .send(mockDefinition)
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toEqual({
+        message: 'Successfully deleted association definition 123',
+        deletedMappingsCount: 0,
+      });
+
+      // Should make two calls to archive - one for each direction
+      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenCalledTimes(2);
+      // First call - original direction with toTypeId
+      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenNthCalledWith(1, {
+        fromObjectType: mockDefinition.fromObjectType,
+        toObjectType: mockDefinition.toObjectType,
+        associationTypeId: mockBidirectionalResponse.toTypeId,
+      });
+      // Second call - inverse direction with fromTypeId
+      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenNthCalledWith(2, {
+        fromObjectType: mockDefinition.toObjectType,
+        toObjectType: mockDefinition.fromObjectType,
+        associationTypeId: mockBidirectionalResponse.fromTypeId,
+      });
     });
 
     it('should return 404 if associationId is missing', async () => {
@@ -106,7 +160,7 @@ describe('Definition Routes', () => {
         .expect(500);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain('Failed to archive association definition');
+      expect(response.body.data).toContain('Failed to archive association definition');
     });
   });
 

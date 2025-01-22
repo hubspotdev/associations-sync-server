@@ -17,7 +17,7 @@ jest.mock('../../../prisma-client/prisma-initialization', () => ({
     delete: jest.fn(() => Promise.resolve({})),
     findMany: jest.fn(),
   },
-  $transaction: jest.fn((operations) => Promise.resolve(operations.map((op) => op()))),
+  $transaction: jest.fn((operations: Array<() => unknown>) => Promise.resolve(operations.map((op) => op()))),
 }));
 
 // Mock error handler
@@ -101,23 +101,37 @@ describe('Batch Associations Database Client', () => {
 
     it('should create correct upsert operations for each mapping', async () => {
       const mappings = [mockMapping];
-      (prisma.$transaction as jest.Mock).mockResolvedValue(mappings);
 
-      await saveBatchDBMapping(mappings);
-
-      expect(prisma.$transaction).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            where: { nativeAssociationId: mockMapping.nativeAssociationId },
-            update: expect.objectContaining({
-              hubSpotAssociationLabel: mockMapping.hubSpotAssociationLabel,
-              fromHubSpotObjectId: mockMapping.fromHubSpotObjectId,
-              toHubSpotObjectId: mockMapping.toHubSpotObjectId,
-            }),
-            create: expect.objectContaining(mockMapping),
-          }),
-        ]),
+      // Mock the upsert operation to return the input mapping
+      (prisma.associationMapping.upsert as jest.Mock).mockImplementation(
+        (args:any) => Promise.resolve({ ...args.create }),
       );
+      // Mock transaction to return array of results
+      (prisma.$transaction as jest.Mock).mockResolvedValue([mockMapping]);
+
+      const result = await saveBatchDBMapping(mappings);
+
+      expect(result).toEqual([mockMapping]); // Verify the return value
+
+      // Get the actual upsert operation passed to transaction
+      const transactionCall = (prisma.$transaction as jest.Mock).mock.calls[0][0];
+      const upsertOperation = transactionCall[0];
+
+      // Verify the upsert operation structure
+      expect(upsertOperation).toEqual({
+        where: { nativeAssociationId: mockMapping.nativeAssociationId },
+        update: {
+          hubSpotAssociationLabel: mockMapping.hubSpotAssociationLabel,
+          fromHubSpotObjectId: mockMapping.fromHubSpotObjectId,
+          toHubSpotObjectId: mockMapping.toHubSpotObjectId,
+          associationTypeId: mockMapping.associationTypeId,
+          fromObjectType: mockMapping.fromObjectType,
+          toObjectType: mockMapping.toObjectType,
+          associationCategory: mockMapping.associationCategory,
+          cardinality: mockMapping.cardinality,
+        },
+        create: mockMapping,
+      });
     });
   });
 
