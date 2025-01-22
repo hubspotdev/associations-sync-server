@@ -1,3 +1,4 @@
+import { StandardError } from '@hubspot/api-client/lib/codegen/crm/associations';
 import Logger from './logger';
 import { LogObject } from '../../types/common';
 import disconnectPrisma from '../../prisma/disconnect';
@@ -47,20 +48,21 @@ async function shutdown(): Promise<void> {
   }
 }
 
-function isHubSpotApiError(error: any) {
-  return Boolean(error?.message?.includes('hubapi'));
+function isHubSpotApiError(error: unknown): error is StandardError {
+  return error instanceof StandardError;
 }
+
 function isGeneralPrismaError(error: any): boolean {
   return error?.stack?.includes('@prisma/client') || error?.message?.includes('prisma');
 }
 
-function formatError(logMessage: any, context: string = ''): any {
-  const error: LogObject = { logMessage, context };
-  if (context) error.context = context;
-  if (isGeneralPrismaError(error)) {
-    error.type = 'Prisma';
-  } else if (isHubSpotApiError(error)) {
+function formatError(logMessage: any, context: string = ''): LogObject {
+  const error: LogObject = { logMessage, context, type: '' };
+
+  if (isHubSpotApiError(logMessage)) {
     error.type = 'Hubspot API';
+  } else if (isGeneralPrismaError(logMessage)) {
+    error.type = 'Prisma';
   } else if (logMessage instanceof Error) {
     error.type = 'General';
   } else {
