@@ -305,37 +305,37 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
       await deleteBatchDBMappings(mappingIds);
     }
 
-    // Then delete the definition and archive in HubSpot
     const response = await deleteDBAssociationDefinition(associationId);
     console.log('response after delete', response);
+    // Code below will delete the association definition in HubSpot as well
 
-    let formattedResponses: AssociationDefinitionArchiveRequest[] = [];
+    // let formattedResponses: AssociationDefinitionArchiveRequest[] = [];
 
-    if (response.associationTypeId) {
-      // Single association type case
-      formattedResponses.push({
-        fromObjectType: response.fromObjectType,
-        toObjectType: response.toObjectType,
-        associationTypeId: response.associationTypeId,
-      });
-    } else if (response.fromTypeId && response.toTypeId) {
-      // Bidirectional association case - need to delete both directions
-      formattedResponses = [
-        {
-          fromObjectType: response.fromObjectType,
-          toObjectType: response.toObjectType,
-          associationTypeId: response.toTypeId,
-        },
-        {
-          fromObjectType: response.toObjectType,
-          toObjectType: response.fromObjectType,
-          associationTypeId: response.fromTypeId,
-        },
-      ];
-    }
+    // if (response.associationTypeId) {
+    //   // Single association type case
+    //   formattedResponses.push({
+    //     fromObjectType: response.fromObjectType,
+    //     toObjectType: response.toObjectType,
+    //     associationTypeId: response.associationTypeId,
+    //   });
+    // } else if (response.fromTypeId && response.toTypeId) {
+    //   // Bidirectional association case - need to delete both directions
+    //   formattedResponses = [
+    //     {
+    //       fromObjectType: response.fromObjectType,
+    //       toObjectType: response.toObjectType,
+    //       associationTypeId: response.toTypeId,
+    //     },
+    //     {
+    //       fromObjectType: response.toObjectType,
+    //       toObjectType: response.fromObjectType,
+    //       associationTypeId: response.fromTypeId,
+    //     },
+    //   ];
+    // }
 
-    // Archive all association definitions in HubSpot
-    await Promise.all(formattedResponses.map((formattedResponse) => archiveAssociationDefinition(formattedResponse)));
+    // // Archive all association definitions in HubSpot
+    // await Promise.all(formattedResponses.map((formattedResponse) => archiveAssociationDefinition(formattedResponse)));
 
     return res.json({
       success: true,

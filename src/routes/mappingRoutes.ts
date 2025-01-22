@@ -350,11 +350,12 @@ router.delete('/batch', async (req: Request, res: Response) => {
     const response = await deleteBatchDBMappings(mappingIds);
 
     if (response) {
-      await archiveBatchHubspotAssociation(associationMappings);
+      // Code below will delete the associations in HubSpot
+      // await archiveBatchHubspotAssociation(associationMappings);
       return res.json({
         success: true,
         data: {
-          deletedCount: mappingIds.length,
+          deletedCount: associationMappings.length,
           deletedRecords: associationMappings,
         },
       });
