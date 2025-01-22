@@ -369,7 +369,6 @@ router.delete('/batch', async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       error: `Failed to delete mappings: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      details: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });

@@ -5,7 +5,7 @@ import { seedManufacturingData } from './manufacturing'
 import { seedPRMData } from './partnership'
 import { hubspotClient, getAccessToken } from '../../src/auth'
 import { getCustomerId } from '../../src/utils/utils';
-import prisma from '../../src/prisma-client/prisma-initalization';
+import prisma from '../../src/prisma-client/prisma-initialization';
 
 async function main() {
   const customerId = getCustomerId()

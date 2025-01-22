@@ -92,8 +92,25 @@ async function getBatchDBAssociationMappings(mappingIds: string[]) {
   }
 }
 
+async function getBatchDBAssociationMappingsByAssociationId(
+  associationId: string,
+): Promise<AssociationMapping[]> {
+  try {
+    const mappings = await prisma.associationMapping.findMany({
+      where: {
+        nativeAssociationId: associationId,
+      },
+    });
+    return mappings;
+  } catch (error: unknown) {
+    handleError(error, 'Error finding association mappings');
+    throw error;
+  }
+}
+
 export {
   saveBatchDBMapping,
   deleteBatchDBMappings,
   getBatchDBAssociationMappings,
+  getBatchDBAssociationMappingsByAssociationId,
 };

@@ -1,12 +1,18 @@
 import express, { Request, Response } from 'express';
+// import { PrismaClient } from '@prisma/client';
 import {
   saveDBAssociation,
   getSingleDBAssociationById,
   deleteDBAssociation,
 } from '../prisma-client/singleAssociations';
+import {
+  getBatchDBAssociationMappingsByAssociationId,
+  deleteBatchDBMappings,
+} from '../prisma-client/batchAssociations';
 import handleError from '../utils/error';
 
 const router = express.Router();
+// const prisma = new PrismaClient();
 
 /**
  * @swagger
@@ -208,6 +214,15 @@ router.get('/:associationId', async (req: Request, res: Response) => {
 router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
   try {
+    // Use the dedicated function to find related mappings
+    const relatedMappings = await getBatchDBAssociationMappingsByAssociationId(associationId);
+
+    if (relatedMappings.length > 0) {
+      const mappingIds = relatedMappings.map((mapping) => mapping.id);
+      await deleteBatchDBMappings(mappingIds);
+    }
+
+    // Then delete the association definition
     const result = await deleteDBAssociation(associationId);
     if (!result) {
       return res.status(404).json({
@@ -215,9 +230,13 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
         data: 'Association not found',
       });
     }
+
     return res.json({
       success: true,
-      data: result,
+      data: {
+        deletedAssociation: result,
+        deletedMappingsCount: relatedMappings.length,
+      },
     });
   } catch (error: unknown) {
     handleError(error, 'Failed to delete association');

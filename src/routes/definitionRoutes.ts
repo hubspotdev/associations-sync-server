@@ -12,6 +12,11 @@ import {
   getAllAssociationDefinitionsByType,
 } from '../hubspot-client/definitionAssociations';
 import handleError from '../utils/error';
+import {
+  getBatchDBAssociationMappingsByAssociationId,
+  deleteBatchDBMappings,
+} from '../prisma-client/batchAssociations';
+import { AssociationDefinitionArchiveRequest } from '../../types/common';
 
 const router = express.Router();
 
@@ -292,11 +297,52 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
   const { associationId } = req.params;
 
   try {
-    await deleteDBAssociationDefinition(associationId);
-    const response = await archiveAssociationDefinition(req.body);
+    // First find and delete all related mappings
+    const relatedMappings = await getBatchDBAssociationMappingsByAssociationId(associationId);
+
+    if (relatedMappings.length > 0) {
+      const mappingIds = relatedMappings.map((mapping) => mapping.id);
+      await deleteBatchDBMappings(mappingIds);
+    }
+
+    // Then delete the definition and archive in HubSpot
+    const response = await deleteDBAssociationDefinition(associationId);
+    console.log('response after delete', response);
+
+    let formattedResponses: AssociationDefinitionArchiveRequest[] = [];
+
+    if (response.associationTypeId) {
+      // Single association type case
+      formattedResponses.push({
+        fromObjectType: response.fromObjectType,
+        toObjectType: response.toObjectType,
+        associationTypeId: response.associationTypeId,
+      });
+    } else if (response.fromTypeId && response.toTypeId) {
+      // Bidirectional association case - need to delete both directions
+      formattedResponses = [
+        {
+          fromObjectType: response.fromObjectType,
+          toObjectType: response.toObjectType,
+          associationTypeId: response.toTypeId,
+        },
+        {
+          fromObjectType: response.toObjectType,
+          toObjectType: response.fromObjectType,
+          associationTypeId: response.fromTypeId,
+        },
+      ];
+    }
+
+    // Archive all association definitions in HubSpot
+    await Promise.all(formattedResponses.map((formattedResponse) => archiveAssociationDefinition(formattedResponse)));
+
     return res.json({
       success: true,
-      data: response,
+      data: {
+        message: `Successfully deleted association definition ${associationId}`,
+        deletedMappingsCount: relatedMappings.length,
+      },
     });
   } catch (error: unknown) {
     if (error instanceof Error && error.message.includes('Record to delete does not exist')) {
@@ -309,7 +355,7 @@ router.delete('/:associationId', async (req: Request, res: Response) => {
     handleError(error, 'Failed to archive association definition');
     return res.status(500).json({
       success: false,
-      error: `Failed to archive association definition: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      data: `Failed to archive association definition: ${error instanceof Error ? error.message : 'Unknown error'}`,
     });
   }
 });
