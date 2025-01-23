@@ -8,7 +8,7 @@ import {
 import {
   saveAssociationDefinition,
   updateAssociationDefinition,
-  archiveAssociationDefinition,
+  // archiveAssociationDefinition,
   getAllAssociationDefinitionsByType,
 } from '../hubspot-client/definitionAssociations';
 import handleError from '../utils/error';
@@ -16,7 +16,7 @@ import {
   getBatchDBAssociationMappingsByAssociationId,
   deleteBatchDBMappings,
 } from '../prisma-client/batchAssociations';
-import { AssociationDefinitionArchiveRequest } from '../../types/common';
+// import { AssociationDefinitionArchiveRequest } from '../../types/common';
 
 const router = express.Router();
 
@@ -437,16 +437,16 @@ router.post('/', async (req: Request, res: Response) => {
 
   try {
     const response = await saveAssociationDefinition(req.body);
-    if (!response?.results?.[0]?.typeId || !response?.results?.[1]?.typeId) {
-      return res.status(422).json({
-        success: false,
-        data: 'Invalid response from Hubspot',
-      });
-    }
-
-    const toTypeId = response.results[1].typeId;
-    const fromTypeId = response.results[0].typeId;
-    await saveDBAssociationDefinition({ ...req.body, toTypeId, fromTypeId });
+    // if (!response?.config1?.typeId || !response?.config2?.typeId) {
+    //   return res.status(422).json({
+    //     success: false,
+    //     data: 'Invalid response from Hubspot',
+    //   });
+    // }
+    console.log('Here is the response from the saveAssociationDefinition', response);
+    // const toTypeId = response.results[1].typeId;
+    // const fromTypeId = response.results[0].typeId;
+    // await saveDBAssociationDefinition({ ...req.body, toTypeId, fromTypeId });
 
     return res.json({
       success: true,

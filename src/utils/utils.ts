@@ -44,7 +44,7 @@ export function formatDefinitionUpdateRequest(def: AssociationDefinition) {
     toObject: def.toObjectType,
     requestInfo: {
       label: def.associationLabel || '',
-      associationTypeId: def.toTypeId,
+      associationTypeId: def.associationTypeId,
       inverseLabel: def.inverseLabel || undefined,
     },
   };
@@ -118,17 +118,17 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   const inputs: any[] = [];
   if (data.fromCardinality) {
     inputs.push({
-      typeId: data.toTypeId,
+      typeId: data.fromTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.fromCardinality,
     });
   }
 
   if (data.toCardinality) {
     inputs.push({
-      typeId: data.fromTypeId,
+      typeId: data.toTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.toCardinality,
     });
   }
 

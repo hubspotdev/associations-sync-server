@@ -15,7 +15,7 @@ import {
   archiveSingleHubspotAssociation,
 } from '../hubspot-client/singleAssociations';
 import {
-  archiveBatchHubspotAssociation,
+  // archiveBatchHubspotAssociation,
   saveBatchHubspotAssociation,
 } from '../hubspot-client/batchAssociations';
 import handleError from '../utils/error';
