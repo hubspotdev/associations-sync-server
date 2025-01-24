@@ -4,17 +4,6 @@ import {
 } from '../prisma-client/definitionAssociations';
 import {
   updateAssociationDefinition,
-<<<<<<< HEAD
-  // archiveAssociationDefinition,
-  getAllAssociationDefinitionsByType,
-} from '../hubspot-client/definitionAssociations';
-import handleError from '../utils/error';
-import {
-  getBatchDBAssociationMappingsByAssociationId,
-  deleteBatchDBMappings,
-} from '../prisma-client/batchAssociations';
-// import { AssociationDefinitionArchiveRequest } from '../../types/common';
-=======
 } from '../hubspot-client/definitionAssociations';
 import handleError from '../utils/error';
 import {
@@ -22,7 +11,6 @@ import {
   deleteDefinitionAndRelatedMappings,
   createAssociationDefinition,
 } from '../services/definitionService';
->>>>>>> testing-chatGPT-extension
 
 const router = express.Router();
 
@@ -96,21 +84,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 
   try {
-<<<<<<< HEAD
-    const response = await saveAssociationDefinition(req.body);
-    // if (!response?.config1?.typeId || !response?.config2?.typeId) {
-    //   return res.status(422).json({
-    //     success: false,
-    //     data: 'Invalid response from Hubspot',
-    //   });
-    // }
-    console.log('Here is the response from the saveAssociationDefinition', response);
-    // const toTypeId = response.results[1].typeId;
-    // const fromTypeId = response.results[0].typeId;
-    // await saveDBAssociationDefinition({ ...req.body, toTypeId, fromTypeId });
-=======
     const result = await createAssociationDefinition(req.body);
->>>>>>> testing-chatGPT-extension
 
     return res.json({
       success: true,

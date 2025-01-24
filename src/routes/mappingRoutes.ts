@@ -2,18 +2,8 @@ import express, { Request, Response } from 'express';
 import {
   getSingleDBAssociationMappingFromId,
   getAllDBMappings,
+  deleteDBMapping,
 } from '../prisma-client/mappedAssociations';
-<<<<<<< HEAD
-import {
-  saveSingleHubspotAssociation,
-  archiveSingleHubspotAssociation,
-} from '../hubspot-client/singleAssociations';
-import {
-  // archiveBatchHubspotAssociation,
-  saveBatchHubspotAssociation,
-} from '../hubspot-client/batchAssociations';
-=======
->>>>>>> testing-chatGPT-extension
 import handleError from '../utils/error';
 import { createMapping, createBatchMappings, deleteBatchMappings } from '../services/mappingService';
 
@@ -102,6 +92,39 @@ router.delete('/batch', async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       data: `Failed to delete mappings: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    });
+  }
+});
+
+router.delete('/basic/:mappingId', async (req: Request, res: Response) => {
+  try {
+    const { mappingId } = req.params;
+    if (!mappingId) {
+      return res.status(400).json({
+        success: false,
+        data: 'Missing mappingId parameter',
+      });
+    }
+
+    const [associationMapping, deleteResponse] = await Promise.all([
+      getSingleDBAssociationMappingFromId(mappingId),
+      deleteDBMapping(mappingId),
+    ]);
+
+    if (!deleteResponse) {
+      return res.status(404).json({ error: 'Mapping not found' });
+    }
+    // TODO: Uncomment this when to have the ability to archive associations in HubSpot
+    // if (associationMapping) {
+    //   await archiveSingleHubspotAssociation(associationMapping);
+    // }
+
+    return res.json({ success: true, deletedId: mappingId });
+  } catch (error:unknown) {
+    handleError(error, 'There was an issue while attempting to delete the mapping');
+    return res.status(500).json({
+      success: false,
+      data: `Failed to delete mapping: ${error instanceof Error ? error.message : 'Unknown error'}`,
     });
   }
 });

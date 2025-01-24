@@ -103,6 +103,19 @@ async function deleteDBAssociation(id: string): Promise<Association> {
   }
 }
 
+export async function getAllDBAssociations() {
+  try {
+    return await prisma.association.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  } catch (error: unknown) {
+    handleError(error, 'There was an issue while fetching all associations');
+    throw error;
+  }
+}
+
 export {
   getDBAssociationsByCustomerId,
   getSingleDBAssociationById,

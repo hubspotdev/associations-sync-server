@@ -50,12 +50,17 @@ export async function deleteDefinitionAndRelatedMappings(associationId: string) 
 export async function createAssociationDefinition(definitionData: AssociationDefinition) {
   const hubspotResponse = await saveAssociationDefinition(definitionData);
 
-  if (!hubspotResponse?.results?.[0]?.typeId || !hubspotResponse?.results?.[1]?.typeId) {
+  // Handle both possible response types
+  const results = 'response' in hubspotResponse
+    ? hubspotResponse.response.results
+    : hubspotResponse.results;
+
+  if (!results?.[0]?.typeId || !results?.[1]?.typeId) {
     throw new Error('Invalid response from Hubspot');
   }
 
-  const toTypeId = hubspotResponse.results[1].typeId;
-  const fromTypeId = hubspotResponse.results[0].typeId;
+  const toTypeId = results[1].typeId;
+  const fromTypeId = results[0].typeId;
 
   const dbResponse = await saveDBAssociationDefinition({
     ...definitionData,

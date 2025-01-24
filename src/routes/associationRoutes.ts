@@ -2,16 +2,34 @@ import express, { Request, Response } from 'express';
 import {
   saveDBAssociation,
   getSingleDBAssociationById,
+  getAllDBAssociations,
 } from '../prisma-client/singleAssociations';
 import handleError from '../utils/error';
 import { Association } from '../../types/common';
-import { deleteAssociationAndRelatedMappings } from '../services/associationService';
+import deleteAssociationAndRelatedMappings from '../services/associationService';
 
 interface AssociationRequest extends Request {
   body: Association;
 }
 
 const router = express.Router();
+
+router.get('/all', async (_req: Request, res: Response) => {
+  try {
+    const associations = await getAllDBAssociations();
+
+    return res.json({
+      success: true,
+      data: associations,
+    });
+  } catch (error: unknown) {
+    handleError(error, 'Error getting all associations');
+    return res.status(500).json({
+      success: false,
+      data: `There was an issue getting all associations: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    });
+  }
+});
 
 router.get('/:associationId', async (req: Request, res: Response) => {
   try {

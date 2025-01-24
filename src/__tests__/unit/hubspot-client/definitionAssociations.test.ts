@@ -85,54 +85,78 @@ describe('Definition Associations HubSpot Client', () => {
   describe('saveAssociationDefinition', () => {
     it('should successfully create definition with cardinality', async () => {
       const mockCreateResponse = {
-        id: 'def_123',
-        typeId: 1,
-        associationTypeId: 1,
-        label: 'Primary Contact',
-        name: 'primary_contact',
-        fromObjectTypeId: 'contact',
-        toObjectTypeId: 'company',
+        configResponse: {
+          config1: {
+            size: 0,
+            timeout: 0,
+          },
+          config2: {
+            size: 0,
+            timeout: 0,
+          },
+        },
+        response: {
+          results: [
+            {
+              typeId: 138,
+              label: 'something of',
+              category: 'USER_DEFINED',
+            },
+            {
+              typeId: 137,
+              label: 'somethingelse Of',
+              category: 'USER_DEFINED',
+            },
+          ],
+        },
       };
 
       (utils.formatDefinitionPostRequest as jest.Mock).mockReturnValue({
         fromObject: 'contact',
         toObject: 'company',
         requestInfo: {
-          label: 'Primary Contact',
-          name: 'primary_contact',
-          inverseLabel: 'Primary Company',
+          label: 'something of',
+          name: 'something_of',
+          inverseLabel: 'somethingelse Of',
           category: 'USER_DEFINED',
         },
       });
 
       (utils.formaCreateCardinalityRequest as jest.Mock).mockReturnValue({
         inputs: [{
-          associationTypeId: 1,
+          associationTypeId: 138,
           cardinality: {
-            from: { maxCardinality: 1 },
-            to: { maxCardinality: 1 },
+            from: { maxCardinality: 10 },
+            to: { maxCardinality: 9 },
           },
         }],
       });
 
       (hubspotClient.crm.associations.v4.schema.definitionsApi.create as jest.Mock)
-        .mockResolvedValue(mockCreateResponse);
-
-      (hubspotClient.apiRequest as jest.Mock).mockImplementation(({ path }) => {
-        const mockConfigResponse = {
-          results: [{
-            associationTypeId: 1,
-            cardinality: {
-              from: { maxCardinality: 1 },
-              to: { maxCardinality: 1 },
+        .mockResolvedValue({
+          results: [
+            {
+              typeId: 138,
+              label: 'something of',
+              category: 'USER_DEFINED',
             },
-            success: true,
-          }],
-        };
-        return Promise.resolve(mockConfigResponse);
-      });
+            {
+              typeId: 137,
+              label: 'somethingelse Of',
+              category: 'USER_DEFINED',
+            },
+          ],
+        });
+
+      const configResponse = { size: 0, timeout: 0 };
+      (hubspotClient.apiRequest as jest.Mock)
+        .mockResolvedValueOnce(configResponse)
+        .mockResolvedValueOnce(configResponse);
 
       const result = await saveAssociationDefinition(mockDefinition);
+
+      console.log('Expected:', JSON.stringify(mockCreateResponse, null, 2));
+      console.log('Received:', JSON.stringify(result, null, 2));
 
       expect(result).toEqual(mockCreateResponse);
       expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
@@ -140,9 +164,9 @@ describe('Definition Associations HubSpot Client', () => {
         'contact',
         'company',
         {
-          label: 'Primary Contact',
-          name: 'primary_contact',
-          inverseLabel: 'Primary Company',
+          label: 'something of',
+          name: 'something_of',
+          inverseLabel: 'somethingelse Of',
           category: 'USER_DEFINED',
         },
       );
@@ -152,7 +176,7 @@ describe('Definition Associations HubSpot Client', () => {
         path: '/crm/v4/associations/definitions/configurations/contact/company/batch/create',
         body: {
           inputs: [{
-            associationTypeId: 1,
+            associationTypeId: 138,
             cardinality: {
               from: { maxCardinality: 1 },
               to: { maxCardinality: 1 },
@@ -165,7 +189,7 @@ describe('Definition Associations HubSpot Client', () => {
         path: '/crm/v4/associations/definitions/configurations/company/contact/batch/create',
         body: {
           inputs: [{
-            associationTypeId: 1,
+            associationTypeId: 138,
             cardinality: {
               from: { maxCardinality: 1 },
               to: { maxCardinality: 1 },
