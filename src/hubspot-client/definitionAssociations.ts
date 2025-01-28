@@ -122,6 +122,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
     let configResponse;
+    console.log('Here is the response from the create request', response);
     if (data.fromCardinality || data.toCardinality) {
       configResponse = await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
@@ -140,17 +141,22 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
   hubspotClient.setAccessToken(accessToken);
 
   const { fromObject, toObject, requestInfo } = formattedData;
-  console.log('Here is the request info', requestInfo);
-  console.log('Here is the formatted data', formattedData);
   try {
-    if (requestInfo.associationTypeId !== null) {
+    if (requestInfo.associationTypeId) {
       await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
         ...requestInfo,
         associationTypeId: requestInfo.associationTypeId,
       });
     }
+    if (data.toTypeId && requestInfo.label) {
+      await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
+        associationTypeId: data.toTypeId,
+        label: requestInfo.label,
+        inverseLabel: requestInfo.inverseLabel,
+      });
+    }
+
     if (data.fromCardinality || data.toCardinality) {
-      console.log('Here is the data cardinality', data);
       await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
     }
   } catch (error: unknown) {

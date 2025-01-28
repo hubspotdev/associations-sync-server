@@ -55,12 +55,14 @@ export async function createAssociationDefinition(definitionData: AssociationDef
     ? hubspotResponse.response.results
     : hubspotResponse.results;
 
-  if (!results?.[0]?.typeId || !results?.[1]?.typeId) {
-    throw new Error('Invalid response from Hubspot');
+  if (!results?.[0]?.typeId) {
+    throw new Error('Invalid response from Hubspot: Missing primary typeId');
   }
 
-  const toTypeId = results[1].typeId;
+  // Initialize IDs
   const fromTypeId = results[0].typeId;
+  // Only set toTypeId if second result exists
+  const toTypeId = results[1]?.typeId || null;
 
   const dbResponse = await saveDBAssociationDefinition({
     ...definitionData,

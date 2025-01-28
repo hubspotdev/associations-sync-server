@@ -95,19 +95,19 @@ export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
 export function formaCreateCardinalityRequest(response: any, data: AssociationDefinition) {
   const inputs: any[] = [];
 
-  if (data.fromCardinality) {
+  if (data.toCardinality) {
     inputs.push({
       typeId: response.results[0].typeId,
       category: response.results[0].category,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.toCardinality,
     });
   }
 
-  if (data.toCardinality) {
+  if (data.fromCardinality) {
     inputs.push({
       typeId: response.results[1].typeId,
       category: response.results[1].category,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.fromCardinality,
     });
   }
 

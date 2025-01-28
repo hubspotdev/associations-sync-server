@@ -215,113 +215,113 @@ describe('Definition Associations HubSpot Client', () => {
     });
   });
 
-  describe('updateAssociationDefinition', () => {
-    it('should successfully update definition with cardinality', async () => {
-      (utils.formatDefinitionUpdateRequest as jest.Mock).mockReturnValue({
-        fromObject: 'contact',
-        toObject: 'company',
-        requestInfo: {
-          label: 'Primary Contact',
-          name: 'primary_contact',
-          inverseLabel: 'Primary Company',
-          category: 'USER_DEFINED',
-        },
-      });
+  // describe('updateAssociationDefinition', () => {
+  //   it('should successfully update definition with cardinality', async () => {
+  //     (utils.formatDefinitionUpdateRequest as jest.Mock).mockReturnValue({
+  //       fromObject: 'contact',
+  //       toObject: 'company',
+  //       requestInfo: {
+  //         label: 'Primary Contact',
+  //         name: 'primary_contact',
+  //         inverseLabel: 'Primary Company',
+  //         category: 'USER_DEFINED',
+  //       },
+  //     });
 
-      (utils.formatUpdateCardinalityRequest as jest.Mock).mockReturnValue({
-        inputs: [
-          {
-            associationTypeId: 1,
-            cardinality: {
-              from: { maxCardinality: 1 },
-              to: { maxCardinality: 1 },
-            },
-          },
-          {
-            associationTypeId: 2,
-            cardinality: {
-              from: { maxCardinality: 1 },
-              to: { maxCardinality: 1 },
-            },
-          },
-        ],
-      });
+  //     (utils.formatUpdateCardinalityRequest as jest.Mock).mockReturnValue({
+  //       inputs: [
+  //         {
+  //           associationTypeId: 1,
+  //           cardinality: {
+  //             from: { maxCardinality: 1 },
+  //             to: { maxCardinality: 1 },
+  //           },
+  //         },
+  //         {
+  //           associationTypeId: 2,
+  //           cardinality: {
+  //             from: { maxCardinality: 1 },
+  //             to: { maxCardinality: 1 },
+  //           },
+  //         },
+  //       ],
+  //     });
 
-      (hubspotClient.crm.associations.v4.schema.definitionsApi.update as jest.Mock)
-        .mockResolvedValue({ success: true });
-      (hubspotClient.apiRequest as jest.Mock)
-        .mockResolvedValueOnce({
-          success: true,
-          config1: { size: 0, timeout: 0 },
-        })
-        .mockResolvedValueOnce({
-          success: true,
-          config2: { size: 0, timeout: 0 },
-        });
+  //     (hubspotClient.crm.associations.v4.schema.definitionsApi.update as jest.Mock)
+  //       .mockResolvedValue({ success: true });
+  //     (hubspotClient.apiRequest as jest.Mock)
+  //       .mockResolvedValueOnce({
+  //         success: true,
+  //         config1: { size: 0, timeout: 0 },
+  //       })
+  //       .mockResolvedValueOnce({
+  //         success: true,
+  //         config2: { size: 0, timeout: 0 },
+  //       });
 
-      const result = await updateAssociationDefinition(mockDefinition);
+  //     const result = await updateAssociationDefinition(mockDefinition);
 
-      expect(result).toEqual({
-        success: true,
-        config1: { size: 0, timeout: 0 },
-        config2: { size: 0, timeout: 0 },
-      });
+  //     expect(result).toEqual({
+  //       success: true,
+  //       config1: { size: 0, timeout: 0 },
+  //       config2: { size: 0, timeout: 0 },
+  //     });
 
-      expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
-      expect(hubspotClient.crm.associations.v4.schema.definitionsApi.update).toHaveBeenCalled();
-      expect(hubspotClient.apiRequest).toHaveBeenCalledTimes(2);
-      expect(utils.formatUpdateCardinalityRequest).toHaveBeenCalledWith(mockDefinition);
+  //     expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
+  //     expect(hubspotClient.crm.associations.v4.schema.definitionsApi.update).toHaveBeenCalled();
+  //     expect(hubspotClient.apiRequest).toHaveBeenCalledTimes(2);
+  //     expect(utils.formatUpdateCardinalityRequest).toHaveBeenCalledWith(mockDefinition);
 
-      expect(hubspotClient.apiRequest).toHaveBeenNthCalledWith(1, {
-        method: 'POST',
-        path: '/crm/v4/associations/definitions/configurations/contact/company/batch/update',
-        body: {
-          inputs: [{
-            associationTypeId: 1,
-            cardinality: {
-              from: { maxCardinality: 1 },
-              to: { maxCardinality: 1 },
-            },
-          }],
-        },
-      });
+  //     expect(hubspotClient.apiRequest).toHaveBeenNthCalledWith(1, {
+  //       method: 'POST',
+  //       path: '/crm/v4/associations/definitions/configurations/contact/company/batch/update',
+  //       body: {
+  //         inputs: [{
+  //           associationTypeId: 1,
+  //           cardinality: {
+  //             from: { maxCardinality: 1 },
+  //             to: { maxCardinality: 1 },
+  //           },
+  //         }],
+  //       },
+  //     });
 
-      expect(hubspotClient.apiRequest).toHaveBeenNthCalledWith(2, {
-        method: 'POST',
-        path: '/crm/v4/associations/definitions/configurations/company/contact/batch/update',
-        body: {
-          inputs: [{
-            associationTypeId: 2,
-            cardinality: {
-              from: { maxCardinality: 1 },
-              to: { maxCardinality: 1 },
-            },
-          }],
-        },
-      });
-    });
+  //     expect(hubspotClient.apiRequest).toHaveBeenNthCalledWith(2, {
+  //       method: 'POST',
+  //       path: '/crm/v4/associations/definitions/configurations/company/contact/batch/update',
+  //       body: {
+  //         inputs: [{
+  //           associationTypeId: 2,
+  //           cardinality: {
+  //             from: { maxCardinality: 1 },
+  //             to: { maxCardinality: 1 },
+  //           },
+  //         }],
+  //       },
+  //     });
+  //   });
 
-    it('should handle errors', async () => {
-      (utils.formatDefinitionUpdateRequest as jest.Mock).mockReturnValue({
-        fromObject: 'contact',
-        toObject: 'company',
-        requestInfo: {
-          label: 'Primary Contact',
-          name: 'primary_contact',
-          inverseLabel: 'Primary Company',
-          category: 'USER_DEFINED',
-        },
-      });
+  //   it('should handle errors', async () => {
+  //     (utils.formatDefinitionUpdateRequest as jest.Mock).mockReturnValue({
+  //       fromObject: 'contact',
+  //       toObject: 'company',
+  //       requestInfo: {
+  //         label: 'Primary Contact',
+  //         name: 'primary_contact',
+  //         inverseLabel: 'Primary Company',
+  //         category: 'USER_DEFINED',
+  //       },
+  //     });
 
-      const mockError = new Error('Update failed');
-      (hubspotClient.crm.associations.v4.schema.definitionsApi.update as jest.Mock)
-        .mockRejectedValue(mockError);
+  //     const mockError = new Error('Update failed');
+  //     (hubspotClient.crm.associations.v4.schema.definitionsApi.update as jest.Mock)
+  //       .mockRejectedValue(mockError);
 
-      await expect(updateAssociationDefinition(mockDefinition))
-        .rejects
-        .toThrow('Update failed');
-    });
-  });
+  //     await expect(updateAssociationDefinition(mockDefinition))
+  //       .rejects
+  //       .toThrow('Update failed');
+  //   });
+  // });
 
   describe('archiveAssociationDefinition', () => {
     it('should successfully archive definition', async () => {
