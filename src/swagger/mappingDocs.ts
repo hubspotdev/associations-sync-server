@@ -183,7 +183,7 @@ export const mappingPaths = {
   },
   '/api/associations/mappings/batch': {
     post: {
-      summary: 'Create batch association mappings',
+      summary: 'Creates multiple association mappings',
       description: 'Create multiple association mappings in both HubSpot and database',
       tags: ['Mappings'],
       requestBody: {
@@ -191,9 +191,14 @@ export const mappingPaths = {
         content: {
           'application/json': {
             schema: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/AssociationMapping',
+              type: 'object',
+              properties: {
+                mappings: {
+                  type: 'array',
+                  items: {
+                    $ref: '#/components/schemas/AssociationMapping',
+                  },
+                },
               },
             },
           },
@@ -216,6 +221,46 @@ export const mappingPaths = {
                     properties: {
                       hubspotResponse: {
                         type: 'object',
+                        properties: {
+                          completedAt: {
+                            type: 'string',
+                            format: 'date-time',
+                          },
+                          startedAt: {
+                            type: 'string',
+                            format: 'date-time',
+                          },
+                          results: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                fromObjectTypeId: {
+                                  type: 'string',
+                                },
+                                toObjectId: {
+                                  type: 'number',
+                                },
+                                toObjectTypeId: {
+                                  type: 'string',
+                                },
+                                fromObjectId: {
+                                  type: 'number',
+                                },
+                                labels: {
+                                  type: 'array',
+                                  items: {
+                                    type: 'string',
+                                  },
+                                },
+                              },
+                            },
+                          },
+                          status: {
+                            type: 'string',
+                            enum: ['COMPLETE'],
+                          },
+                        },
                       },
                       dbResponse: {
                         type: 'array',
@@ -231,40 +276,10 @@ export const mappingPaths = {
           },
         },
         400: {
-          description: 'Invalid request',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  error: {
-                    type: 'string',
-                    example: 'Invalid request: mappings must be a non-empty array',
-                  },
-                },
-              },
-            },
-          },
+          description: 'Invalid request body',
         },
         500: {
           description: 'Server error',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  success: {
-                    type: 'boolean',
-                    example: false,
-                  },
-                  data: {
-                    type: 'string',
-                    example: 'Error saving mapping',
-                  },
-                },
-              },
-            },
-          },
         },
       },
     },

@@ -59,7 +59,8 @@ async function updateAssociationDefinitionConfiguration(
   const accessToken: string | void | null = await getAccessToken(customerId);
   checkAccessToken(accessToken);
   hubspotClient.setAccessToken(accessToken);
-  console.log('Here is the inputs', inputs);
+
+  console.log('Here is the inputs', { inputs: [inputs.inputs[0]] });
   try {
     if (Array.isArray(inputs.inputs)) {
       const definitionWithConfig = await hubspotClient.apiRequest({
@@ -67,21 +68,46 @@ async function updateAssociationDefinitionConfiguration(
         path: `/crm/v4/associations/definitions/configurations/${fromObject}/${toObject}/batch/update`,
         body: { inputs: [inputs.inputs[0]] },
       });
+
+      // Check first response
+      if (definitionWithConfig.status === 400) {
+        const errorBody = await definitionWithConfig.json();
+        throw new Error(`Failed to update ${fromObject} to ${toObject} configuration: ${JSON.stringify(errorBody)}`);
+      }
+
+      let secondDefinitionWithConfig;
       if (inputs.inputs.length === 2) {
-        const secondDefinitionWithConfig = await hubspotClient.apiRequest({
+        secondDefinitionWithConfig = await hubspotClient.apiRequest({
           method: 'POST',
           path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/update`,
           body: { inputs: [inputs.inputs[1]] },
         });
-        console.log('attempting second post', secondDefinitionWithConfig);
+
+        // Check second response
+        if (secondDefinitionWithConfig.status === 400) {
+          const errorBody = await secondDefinitionWithConfig.json();
+          throw new Error(`Failed to update ${toObject} to ${fromObject} configuration: ${JSON.stringify(errorBody)}`);
+        }
       }
 
-      console.log('Configured definition response:', definitionWithConfig);
-      return definitionWithConfig;
+      // If both requests were successful, return the combined response
+      return {
+        firstConfig: await definitionWithConfig.json(),
+        secondConfig: secondDefinitionWithConfig ? await secondDefinitionWithConfig.json() : undefined,
+      };
     }
-  } catch (error:unknown) {
-    handleError(error, 'There was an issue configuring the association definition');
-    throw error;
+
+    throw new Error('Invalid inputs format: inputs array is missing or empty');
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(error, 'There was an issue configuring the association definition');
+      throw error;
+    }
+    // Handle non-Error objects
+    const errorMessage = error instanceof Object ? JSON.stringify(error) : 'Unknown error occurred';
+    const wrappedError = new Error(`Configuration update failed: ${errorMessage}`);
+    handleError(wrappedError, 'There was an issue configuring the association definition');
+    throw wrappedError;
   }
 }
 

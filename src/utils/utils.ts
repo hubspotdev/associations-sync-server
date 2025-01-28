@@ -116,9 +116,10 @@ export function formaCreateCardinalityRequest(response: any, data: AssociationDe
 
 export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   const inputs: any[] = [];
+
   if (data.fromCardinality) {
     inputs.push({
-      typeId: data.fromTypeId,
+      typeId: data.fromTypeId || data.associationTypeId,
       category: data.associationCategory,
       maxToObjectIds: data.fromCardinality,
     });
@@ -126,11 +127,30 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
 
   if (data.toCardinality) {
     inputs.push({
-      typeId: data.toTypeId,
+      typeId: data.toTypeId || data.associationTypeId,
       category: data.associationCategory,
       maxToObjectIds: data.toCardinality,
     });
   }
+  console.log('Here is the formatted inputs', inputs);
+
+  // // If no inputs were added but we have an associationTypeId and cardinality
+  // if (inputs.length === 0 && data.associationTypeId && (data.fromCardinality || data.toCardinality)) {
+  //   if (data.fromCardinality) {
+  //     inputs.push({
+  //       typeId: data.associationTypeId,
+  //       category: data.associationCategory,
+  //       maxFromObjectIds: data.fromCardinality,
+  //     });
+  //   }
+  //   if (data.toCardinality) {
+  //     inputs.push({
+  //       typeId: data.associationTypeId,
+  //       category: data.associationCategory,
+  //       maxToObjectIds: data.toCardinality,
+  //     });
+  //   }
+  // }
 
   return { inputs };
 }

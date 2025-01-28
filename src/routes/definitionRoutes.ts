@@ -46,23 +46,23 @@ router.delete('/', async (req: Request, res: Response) => res.status(404).json({
   data: 'Missing required parameter: associationId',
 }));
 
-router.delete('/:associationId', async (req: Request, res: Response) => {
-  const { associationId } = req.params;
+router.delete('/:associationDefinitionId', async (req: Request, res: Response) => {
+  const { associationDefinitionId } = req.params;
 
   try {
-    const result = await deleteDefinitionAndRelatedMappings(associationId);
+    const result = await deleteDefinitionAndRelatedMappings(associationDefinitionId);
 
     if (!result.deletedDefinition) {
       return res.status(404).json({
         success: false,
-        data: `Association definition with id ${associationId} not found`,
+        data: `Association definition with id ${associationDefinitionId} not found`,
       });
     }
 
     return res.json({
       success: true,
       data: {
-        message: `Successfully deleted association definition ${associationId}`,
+        message: `Successfully deleted association definition ${associationDefinitionId}`,
         deletedMappingsCount: result.deletedMappingsCount,
       },
     });
