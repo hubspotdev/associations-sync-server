@@ -61,9 +61,24 @@ export async function createAssociationDefinition(definitionData: AssociationDef
 
   // Initialize IDs
   const fromTypeId = results[0].typeId;
-  // Only set toTypeId if second result exists
-  const toTypeId = results[1]?.typeId || null;
 
+  // For one-way associations (no inverseLabel), use typeId as associationTypeId
+  if (results.length === 1 && !definitionData.inverseLabel) {
+    const dbResponse = await saveDBAssociationDefinition({
+      ...definitionData,
+      fromTypeId,
+      associationTypeId: fromTypeId,
+      toTypeId: null,
+    });
+
+    return {
+      hubspotResponse,
+      dbResponse,
+    };
+  }
+
+  // For two-way associations, handle as before
+  const toTypeId = results[1]?.typeId || null;
   const dbResponse = await saveDBAssociationDefinition({
     ...definitionData,
     toTypeId,

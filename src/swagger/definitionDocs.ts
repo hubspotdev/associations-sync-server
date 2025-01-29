@@ -11,11 +11,11 @@ export const definitionSchemas = {
       'associationCategory',
     ],
     properties: {
-      id: {
-        type: 'string',
-        description: 'Auto-generated CUID identifier for the association definition',
-        example: 'clh7890abcdef',
-      },
+      // id: {
+      //   type: 'string',
+      //   description: 'Auto-generated CUID identifier for the association definition',
+      //   example: 'clh7890abcdef',
+      // },
       fromTypeId: {
         type: 'integer',
         description: "HubSpot's internal ID for the source object type",
@@ -46,13 +46,13 @@ export const definitionSchemas = {
       name: {
         type: 'string',
         description: 'The label that describes the relationship from source to target',
-        example: 'contact_to_company',
+        example: 'primary_company',
       },
       inverseLabel: {
         type: 'string',
         description: 'Optional label for the reverse relationship (target to source)',
         nullable: true,
-        example: 'company_to_contact',
+        example: 'Employee of',
       },
       associationTypeId: {
         type: 'integer',
@@ -71,13 +71,13 @@ export const definitionSchemas = {
         enum: ['ONE_TO_ONE', 'ONE_TO_MANY', 'MANY_TO_ONE', 'MANY_TO_MANY'],
         example: 'ONE_TO_MANY',
       },
-      fromCardinality: {
+      fromMaxObjects: {
         type: 'integer',
         description: 'Maximum number of associations allowed from the source object',
         nullable: true,
         example: 1,
       },
-      toCardinality: {
+      toMaxObjects: {
         type: 'integer',
         description: 'Maximum number of associations allowed to the target object',
         nullable: true,
@@ -329,18 +329,67 @@ export const definitionPaths = {
                   data: {
                     type: 'object',
                     properties: {
-                      results: {
-                        type: 'array',
-                        items: {
-                          type: 'object',
-                          properties: {
-                            typeId: {
-                              type: 'number',
-                              example: 123,
+                      configResponse: {
+                        type: 'object',
+                        description: 'Optional configuration response',
+                        properties: {
+                          config1: {
+                            type: 'object',
+                            properties: {
+                              size: { type: 'number' },
+                              timeout: { type: 'number' },
+                            },
+                          },
+                          config2: {
+                            type: 'object',
+                            properties: {
+                              size: { type: 'number' },
+                              timeout: { type: 'number' },
                             },
                           },
                         },
+                        nullable: true,
                       },
+                      response: {
+                        type: 'object',
+                        description: 'Optional wrapped response',
+                        properties: {
+                          results: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                typeId: { type: 'number' },
+                                label: { type: 'string' },
+                                category: { type: 'string' },
+                              },
+                            },
+                          },
+                        },
+                        nullable: true,
+                      },
+                      results: {
+                        type: 'array',
+                        description: 'Direct results array when no wrapper is present',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            typeId: { type: 'number' },
+                            label: { type: 'string' },
+                            category: { type: 'string' },
+                          },
+                        },
+                        nullable: true,
+                      },
+                    },
+                    example: {
+                      results: [
+                        {
+                          typeId: 156,
+                          label: 'tester17 Of',
+                          category: 'USER_DEFINED',
+                        },
+                      ],
                     },
                   },
                 },

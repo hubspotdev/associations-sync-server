@@ -39,7 +39,7 @@ async function getDBAssociationDefinitionsByType(data: {
 }
 
 async function saveDBAssociationDefinition(data: AssociationDefinition) {
-  if (data.fromCardinality && data.toCardinality && (data.fromCardinality < 0 || data.toCardinality < 0)) {
+  if (data.fromMaxObjects && data.toMaxObjects && (data.fromMaxObjects < 0 || data.toMaxObjects < 0)) {
     throw new Error('Invalid cardinality values');
   }
 

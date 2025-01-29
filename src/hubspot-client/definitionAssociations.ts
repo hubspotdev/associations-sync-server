@@ -123,7 +123,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
     let configResponse;
     console.log('Here is the response from the create request', response);
-    if (data.fromCardinality || data.toCardinality) {
+    if (data.fromMaxObjects || data.toMaxObjects) {
       configResponse = await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
     return configResponse ? { configResponse, response } : response;
@@ -156,9 +156,11 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
       });
     }
 
-    if (data.fromCardinality || data.toCardinality) {
-      await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
+    let cardinalityRepsonse;
+    if (data.fromMaxObjects || data.toMaxObjects) {
+      cardinalityRepsonse = await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
     }
+    return cardinalityRepsonse || null;
   } catch (error: unknown) {
     handleError(error, 'There was an issue updating the association definition in HubSpot');
     throw error;

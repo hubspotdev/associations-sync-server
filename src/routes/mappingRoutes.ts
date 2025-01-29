@@ -114,7 +114,7 @@ router.delete('/basic/:mappingId', async (req: Request, res: Response) => {
     if (!deleteResponse) {
       return res.status(404).json({ error: 'Mapping not found' });
     }
-    // TODO: Uncomment this when to have the ability to archive associations in HubSpot
+    // Uncomment this to have the ability to archive associations in HubSpot
     // if (associationMapping) {
     //   await archiveSingleHubspotAssociation(associationMapping);
     // }

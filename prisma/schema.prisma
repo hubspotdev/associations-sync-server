@@ -19,8 +19,8 @@ model AssociationDefinition {
   associationTypeId          Int?
   customerId                 String          @db.VarChar(255)
   cardinality                Cardinality
-  fromCardinality            Int?
-  toCardinality              Int?
+  fromMaxObjects            Int?
+  toMaxObjects              Int?
   associationCategory  AssociationCategory
   @@unique([fromObjectType, toObjectType, associationLabel, associationTypeId])
 }

@@ -95,19 +95,19 @@ export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
 export function formaCreateCardinalityRequest(response: any, data: AssociationDefinition) {
   const inputs: any[] = [];
 
-  if (data.toCardinality) {
+  if (data.toMaxObjects) {
     inputs.push({
       typeId: response.results[0].typeId,
       category: response.results[0].category,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.toMaxObjects,
     });
   }
 
-  if (data.fromCardinality) {
+  if (data.fromMaxObjects) {
     inputs.push({
       typeId: response.results[1].typeId,
       category: response.results[1].category,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.fromMaxObjects,
     });
   }
 
@@ -117,37 +117,37 @@ export function formaCreateCardinalityRequest(response: any, data: AssociationDe
 export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   const inputs: any[] = [];
 
-  if (data.fromCardinality) {
+  if (data.fromMaxObjects) {
     inputs.push({
       typeId: data.fromTypeId || data.associationTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.fromMaxObjects,
     });
   }
 
-  if (data.toCardinality) {
+  if (data.toMaxObjects) {
     inputs.push({
       typeId: data.toTypeId || data.associationTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.toMaxObjects,
     });
   }
   console.log('Here is the formatted inputs', inputs);
 
   // // If no inputs were added but we have an associationTypeId and cardinality
-  // if (inputs.length === 0 && data.associationTypeId && (data.fromCardinality || data.toCardinality)) {
-  //   if (data.fromCardinality) {
+  // if (inputs.length === 0 && data.associationTypeId && (data.fromMaxObjects || data.toMaxObjects)) {
+  //   if (data.fromMaxObjects) {
   //     inputs.push({
   //       typeId: data.associationTypeId,
   //       category: data.associationCategory,
-  //       maxFromObjectIds: data.fromCardinality,
+  //       maxFromObjectIds: data.fromMaxObjects,
   //     });
   //   }
-  //   if (data.toCardinality) {
+  //   if (data.toMaxObjects) {
   //     inputs.push({
   //       typeId: data.associationTypeId,
   //       category: data.associationCategory,
-  //       maxToObjectIds: data.toCardinality,
+  //       maxToObjectIds: data.toMaxObjects,
   //     });
   //   }
   // }

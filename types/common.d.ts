@@ -130,8 +130,8 @@ type AssociationDefinitionCreateRequest = {
 type AssociationDefinitionUpdateRequest = {
   fromObject: string;
   toObject: string;
-  fromCardinality?:number,
-  toCardinality?:number,
+  fromMaxObjects?:number,
+  toMaxObjects?:number,
   requestInfo: {
     label:string;
     associationTypeId: number;

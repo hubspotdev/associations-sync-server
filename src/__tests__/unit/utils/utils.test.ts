@@ -53,8 +53,8 @@ describe('Utils Functions', () => {
         toTypeId: 2,
         customerId: 'cust_123',
         cardinality: 'ONE_TO_ONE',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
         associationTypeId: 1,
       };
@@ -107,8 +107,8 @@ describe('Utils Functions', () => {
         toTypeId: 2,
         customerId: 'cust_123',
         cardinality: 'ONE_TO_ONE',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
         associationTypeId: 1,
       };
@@ -213,8 +213,8 @@ describe('Utils Functions', () => {
         id: 'def_123',
         fromObjectType: 'contact',
         toObjectType: 'company',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
       } as AssociationDefinition;
 
       const result = formaCreateCardinalityRequest(response, definition);
@@ -256,8 +256,8 @@ describe('Utils Functions', () => {
       const definition: AssociationDefinition = {
         fromTypeId: 1,
         toTypeId: 2,
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
       } as AssociationDefinition;
 

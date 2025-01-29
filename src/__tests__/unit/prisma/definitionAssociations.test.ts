@@ -40,8 +40,8 @@ describe('Definition Associations Database Client', () => {
     associationTypeId: 1,
     customerId: 'cust_123',
     cardinality: 'ONE_TO_ONE',
-    fromCardinality: 1,
-    toCardinality: 1,
+    fromMaxObjects: 1,
+    toMaxObjects: 1,
     associationCategory: 'USER_DEFINED',
   };
 
