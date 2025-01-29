@@ -5,7 +5,7 @@ import { AssociationDefinitionArchiveRequest } from '../../types/common';
 import {
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,
-  formaCreateCardinalityRequest,
+  formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
   getCustomerId,
   checkAccessToken,
@@ -17,7 +17,7 @@ async function saveAssociationDefinitionConfiguration(
   fromObject: string,
   toObject: string,
 ) {
-  const inputs = formaCreateCardinalityRequest(response, data);
+  const inputs = formatCreateCardinalityRequest(response, data);
   console.log('Here are the formatted association definition inputs for cardinality', inputs, fromObject, toObject);
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);

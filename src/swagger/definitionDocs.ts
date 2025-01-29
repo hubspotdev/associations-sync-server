@@ -11,23 +11,6 @@ export const definitionSchemas = {
       'associationCategory',
     ],
     properties: {
-      // id: {
-      //   type: 'string',
-      //   description: 'Auto-generated CUID identifier for the association definition',
-      //   example: 'clh7890abcdef',
-      // },
-      // fromTypeId: {
-      //   type: 'integer',
-      //   description: "HubSpot's internal ID for the source object type",
-      //   nullable: true,
-      //   example: 2,
-      // },
-      // toTypeId: {
-      //   type: 'integer',
-      //   description: "HubSpot's internal ID for the target object type",
-      //   nullable: true,
-      //   example: 3,
-      // },
       fromObjectType: {
         type: 'string',
         description: 'The source object type in HubSpot (e.g., contact, company, deal)',

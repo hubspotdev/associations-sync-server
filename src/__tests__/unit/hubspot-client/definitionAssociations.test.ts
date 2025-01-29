@@ -34,7 +34,7 @@ jest.mock('../../../auth', () => ({
 jest.mock('../../../utils/utils', () => ({
   formatDefinitionPostRequest: jest.fn(),
   formatDefinitionUpdateRequest: jest.fn(),
-  formaCreateCardinalityRequest: jest.fn(),
+  formatCreateCardinalityRequest: jest.fn(),
   formatUpdateCardinalityRequest: jest.fn(),
   getCustomerId: jest.fn(),
   checkAccessToken: jest.fn(),
@@ -122,7 +122,7 @@ describe('Definition Associations HubSpot Client', () => {
         },
       });
 
-      (utils.formaCreateCardinalityRequest as jest.Mock).mockReturnValue({
+      (utils.formatCreateCardinalityRequest as jest.Mock).mockReturnValue({
         inputs: [{
           associationTypeId: 138,
           cardinality: {

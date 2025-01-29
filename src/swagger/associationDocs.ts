@@ -170,7 +170,25 @@ export const associationPaths = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/AssociationResponse',
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  data: {
+                    type: 'object',
+                    properties: {
+                      deletedAssociation: {
+                        $ref: '#/components/schemas/Association',
+                      },
+                      deletedMappingsCount: {
+                        type: 'number',
+                        example: 1,
+                      },
+                    },
+                  },
+                },
               },
             },
           },

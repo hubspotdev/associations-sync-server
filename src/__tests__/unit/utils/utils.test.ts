@@ -6,7 +6,7 @@ import {
   formatBatchArchiveRequest,
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,
-  formaCreateCardinalityRequest,
+  formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
   checkAccessToken,
   PORT,
@@ -200,7 +200,7 @@ describe('Utils Functions', () => {
     });
   });
 
-  describe('formaCreateCardinalityRequest', () => {
+  describe('formatCreateCardinalityRequest', () => {
     it('should format create cardinality request correctly', () => {
       const response = {
         results: [
@@ -217,7 +217,7 @@ describe('Utils Functions', () => {
         toMaxObjects: 1,
       } as AssociationDefinition;
 
-      const result = formaCreateCardinalityRequest(response, definition);
+      const result = formatCreateCardinalityRequest(response, definition);
 
       expect(result).toEqual({
         inputs: [
@@ -245,7 +245,7 @@ describe('Utils Functions', () => {
 
       const definition = {} as AssociationDefinition;
 
-      const result = formaCreateCardinalityRequest(response, definition);
+      const result = formatCreateCardinalityRequest(response, definition);
 
       expect(result).toEqual({ inputs: [] });
     });
