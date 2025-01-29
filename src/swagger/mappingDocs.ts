@@ -88,7 +88,7 @@ export const mappingSchemas = {
         properties: {
           deletedCount: {
             type: 'number',
-            example: 5,
+            example: 1,
           },
           deletedRecords: {
             type: 'array',
@@ -149,7 +149,7 @@ export const mappingPaths = {
                     type: 'boolean',
                     example: false,
                   },
-                  error: {
+                  data: {
                     type: 'string',
                     example: 'Request body is required',
                   },
@@ -277,9 +277,43 @@ export const mappingPaths = {
         },
         400: {
           description: 'Invalid request body',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: false,
+                  },
+                  data: {
+                    type: 'string',
+                    example: 'Invalid request',
+                  },
+                },
+              },
+            },
+          },
         },
         500: {
           description: 'Server error',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: false,
+                  },
+                  data: {
+                    type: 'string',
+                    example: 'Error saving mapping',
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -542,7 +576,7 @@ export const mappingPaths = {
               schema: {
                 type: 'object',
                 properties: {
-                  error: {
+                  data: {
                     type: 'string',
                     example: 'Mapping not found',
                   },

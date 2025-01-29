@@ -13,7 +13,7 @@ router.post('/', async (req: Request, res: Response) => {
   if (!req.body || Object.keys(req.body).length === 0) {
     return res.status(400).json({
       success: false,
-      error: 'Request body is required',
+      data: 'Request body is required',
     });
   }
 
@@ -47,7 +47,7 @@ router.post('/batch', async (req: Request, res: Response) => {
     if (error instanceof Error && error.message.includes('Invalid request')) {
       return res.status(400).json({
         success: false,
-        error: error.message,
+        data: error.message,
       });
     }
 
@@ -112,7 +112,7 @@ router.delete('/basic/:mappingId', async (req: Request, res: Response) => {
     ]);
 
     if (!deleteResponse) {
-      return res.status(404).json({ error: 'Mapping not found' });
+      return res.status(404).json({ success: false, data: 'Mapping not found' });
     }
     // Uncomment this to have the ability to archive associations in HubSpot
     // if (associationMapping) {

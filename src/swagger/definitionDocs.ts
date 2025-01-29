@@ -16,18 +16,18 @@ export const definitionSchemas = {
       //   description: 'Auto-generated CUID identifier for the association definition',
       //   example: 'clh7890abcdef',
       // },
-      fromTypeId: {
-        type: 'integer',
-        description: "HubSpot's internal ID for the source object type",
-        nullable: true,
-        example: 2,
-      },
-      toTypeId: {
-        type: 'integer',
-        description: "HubSpot's internal ID for the target object type",
-        nullable: true,
-        example: 3,
-      },
+      // fromTypeId: {
+      //   type: 'integer',
+      //   description: "HubSpot's internal ID for the source object type",
+      //   nullable: true,
+      //   example: 2,
+      // },
+      // toTypeId: {
+      //   type: 'integer',
+      //   description: "HubSpot's internal ID for the target object type",
+      //   nullable: true,
+      //   example: 3,
+      // },
       fromObjectType: {
         type: 'string',
         description: 'The source object type in HubSpot (e.g., contact, company, deal)',
@@ -210,7 +210,7 @@ export const definitionPaths = {
       },
     },
   },
-  '/api/associations/definitions/{associationId}': {
+  '/api/associations/definitions/{AssociationDefinitionId}': {
     delete: {
       summary: 'Delete association definition',
       description: 'Delete an association definition and its related mappings from the database',
@@ -290,6 +290,74 @@ export const definitionPaths = {
                   data: {
                     type: 'string',
                     example: 'Failed to archive association definition: Database error',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    put: {
+      summary: 'Update association definition',
+      description: 'Update an existing association definition in both database and HubSpot',
+      tags: ['Definitions'],
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+          description: 'ID of the association definition to update',
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/AssociationDefinition',
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Successfully updated definition',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  data: {
+                    type: 'object',
+                    description: 'Response from HubSpot API',
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: 'Server error',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: false,
+                  },
+                  data: {
+                    type: 'string',
+                    example: 'Error updating association definition: Database error',
                   },
                 },
               },
@@ -451,76 +519,6 @@ export const definitionPaths = {
                   data: {
                     type: 'string',
                     example: 'Failed to save association definition: Database error',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  '/api/associations/definitions/{id}': {
-    put: {
-      summary: 'Update association definition',
-      description: 'Update an existing association definition in both database and HubSpot',
-      tags: ['Definitions'],
-      parameters: [
-        {
-          in: 'path',
-          name: 'id',
-          required: true,
-          schema: {
-            type: 'string',
-          },
-          description: 'ID of the association definition to update',
-        },
-      ],
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/AssociationDefinition',
-            },
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: 'Successfully updated definition',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  success: {
-                    type: 'boolean',
-                    example: true,
-                  },
-                  data: {
-                    type: 'object',
-                    description: 'Response from HubSpot API',
-                  },
-                },
-              },
-            },
-          },
-        },
-        500: {
-          description: 'Server error',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  success: {
-                    type: 'boolean',
-                    example: false,
-                  },
-                  data: {
-                    type: 'string',
-                    example: 'Error updating association definition: Database error',
                   },
                 },
               },
