@@ -55,3 +55,7 @@ This Express.js application provides a solution for integrating with HubSpot to 
 - `POST /api/associations/definitions`: Creates a new association definition.
 - `DELETE /api/associations/definitions/{associationId}`: Deletes an association definition by ID.
 - `PUT /api/associations/definitions/{id}`: Updates an existing association definition.
+
+## Where to get help?
+
+If you encounter any bugs or issues, please report them by opening a GitHub issue. For feedback or suggestions for new code examples, we encourage you to use this [form](https://survey.hsforms.com/1RT0f09LSTHuflzNtMbr2jA96it).
