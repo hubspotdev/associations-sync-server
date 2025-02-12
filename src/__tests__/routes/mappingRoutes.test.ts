@@ -56,7 +56,7 @@ describe('Mapping Routes', () => {
 
       expect(response.body).toEqual({
         success: false,
-        error: 'Request body is required',
+        data: 'Request body is required',
       });
     });
 

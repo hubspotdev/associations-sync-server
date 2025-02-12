@@ -90,7 +90,7 @@ async function getDBSingleAssociation(id: string): Promise<Association | null> {
   }
 }
 
-async function deleteDBAssociation(id: string): Promise<Association> {
+async function deleteDBAssociation(id: string): Promise<Association | null> {
   try {
     const deletedAssociation = await prisma.association.delete({
       where: { id },
@@ -99,7 +99,8 @@ async function deleteDBAssociation(id: string): Promise<Association> {
     return deletedAssociation;
   } catch (error: unknown) {
     handleError(error, 'There was an issue deleting this association');
-    throw error;
+    return null;
+    // throw error;
   }
 }
 

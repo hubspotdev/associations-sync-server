@@ -120,7 +120,7 @@ describe('Utils Functions', () => {
         toObject: 'company',
         requestInfo: {
           label: 'Primary Contact',
-          associationTypeId: 2,
+          associationTypeId: 1,
           inverseLabel: 'Primary Company',
         },
       });
@@ -266,12 +266,12 @@ describe('Utils Functions', () => {
       expect(result).toEqual({
         inputs: [
           {
-            typeId: 2,
+            typeId: 1,
             category: 'USER_DEFINED',
             maxToObjectIds: 1,
           },
           {
-            typeId: 1,
+            typeId: 2,
             category: 'USER_DEFINED',
             maxToObjectIds: 1,
           },

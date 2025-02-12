@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.33% </span>
+                <span class="strong">72.72% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/45</span>
+                <span class='fraction'>32/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.5% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/16</span>
+                <span class='fraction'>9/15</span>
             </div>
         
             
@@ -142,7 +142,10 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -192,36 +195,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Logger from './logger';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { StandardError } from '@hubspot/api-client/lib/codegen/crm/associations';
+import Logger from './logger';
 import { LogObject } from '../../types/common';
 import disconnectPrisma from '../../prisma/disconnect';
 import server from '../app';
@@ -270,20 +275,21 @@ async function shutdown(): Promise&lt;void&gt; {
   }
 }
 &nbsp;
-function isHubSpotApiError(error: any) {
-  return Boolean(error?.message?.includes('hubapi'));
+function isHubSpotApiError(error: unknown): error is StandardError {
+  return error instanceof StandardError;
 }
+&nbsp;
 function isGeneralPrismaError(error: any): boolean {
   return error?.stack?.includes('@prisma/client') || error?.message?.includes('prisma');
 }
 &nbsp;
-function formatError(logMessage: any, context: string = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span>: any {
-  const error: LogObject = { logMessage, context };
-  if (context) error.context = context;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (isGeneralPrismaError(error)) {
-<span class="cstat-no" title="statement not covered" >    error.type = 'Prisma';</span>
-  } else <span class="missing-if-branch" title="if path not taken" >I</span>if (isHubSpotApiError(error)) {
+function formatError(logMessage: any, context: string = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span>: LogObject {
+  const error: LogObject = { logMessage, context, type: '' };
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (isHubSpotApiError(logMessage)) {
 <span class="cstat-no" title="statement not covered" >    error.type = 'Hubspot API';</span>
+  } else <span class="missing-if-branch" title="if path not taken" >I</span>if (isGeneralPrismaError(logMessage)) {
+<span class="cstat-no" title="statement not covered" >    error.type = 'Prisma';</span>
   } else if (logMessage instanceof Error) {
     error.type = 'General';
   } else {
@@ -307,7 +313,7 @@ export default handleError;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-01-20T22:47:23.847Z
+                at 2025-02-02T20:49:58.288Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
