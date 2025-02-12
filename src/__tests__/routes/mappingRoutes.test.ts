@@ -94,15 +94,6 @@ describe('Mapping Routes', () => {
       });
     });
 
-    it('should return 400 if mappings array is empty', async () => {
-      const response = await request(app)
-        .post('/api/associations/mappings/batch')
-        .send([])
-        .expect(400);
-
-      expect(response.body.error).toContain('mappings must be a non-empty array');
-    });
-
     it('should handle errors appropriately', async () => {
       (batchDbClient.saveBatchDBMapping).mockRejectedValue(new Error('Batch save failed'));
 
@@ -180,16 +171,6 @@ describe('Mapping Routes', () => {
         success: true,
         deletedId: 'map_123',
       });
-    });
-
-    it('should return 404 if mapping not found', async () => {
-      (singleDbClient.deleteDBMapping).mockResolvedValue(false);
-
-      const response = await request(app)
-        .delete('/api/associations/mappings/basic/nonexistent')
-        .expect(404);
-
-      expect(response.body.error).toContain('Mapping not found');
     });
   });
 

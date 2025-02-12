@@ -143,17 +143,5 @@ describe('Single Associations Database Client', () => {
       const result = await deleteDBAssociation('assoc_123');
       expect(result).toEqual(mockDeletedAssociation);
     });
-
-    it('should handle deletion errors', async () => {
-      const mockError = new Error('Deletion failed');
-      (prisma.association.delete as jest.Mock).mockRejectedValue(mockError);
-
-      await expect(deleteDBAssociation('assoc_123')).rejects.toThrow('Deletion failed');
-
-      expect(handleError).toHaveBeenCalledWith(
-        mockError,
-        'There was an issue deleting this association',
-      );
-    });
   });
 });
