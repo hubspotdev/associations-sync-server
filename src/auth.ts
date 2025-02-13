@@ -1,9 +1,10 @@
-import "dotenv/config";
-import * as hubspot from "@hubspot/api-client";
-import { Authorization, PrismaClient } from "@prisma/client";
-import { PORT, getCustomerId } from "./utils/utils";
+/* eslint-disable @typescript-eslint/naming-convention */
+import 'dotenv/config';
+import * as hubspot from '@hubspot/api-client';
+import { Authorization } from '@prisma/client';
+import { PORT, getCustomerId } from './utils/utils';
 import handleError from './utils/error';
-import prisma from '../prisma/seed'
+import prisma from './prisma-client/prisma-initialization';
 
 interface ExchangeProof {
   grant_type: string;
@@ -16,6 +17,7 @@ interface ExchangeProof {
 
 type HubspotAccountInfo = {
   portalId: number;
+  // Additional properties can be uncommented as needed
   // accountType: string;
   // timeZone: string;
   // companyCurrency: string;
@@ -26,18 +28,29 @@ type HubspotAccountInfo = {
   // dataHostingLocation: string;
 };
 
-const CLIENT_ID: string = process.env.CLIENT_ID || "CLIENT_ID required";
-const CLIENT_SECRET: string =
-  process.env.CLIENT_SECRET || "CLIENT_SECRET required";
+const CLIENT_ID: string = process.env.CLIENT_ID || 'CLIENT_ID required';
+const CLIENT_SECRET: string = process.env.CLIENT_SECRET || 'CLIENT_SECRET required';
 
-const REDIRECT_URI: string = `http://localhost:${PORT}/oauth-callback`;
+const REDIRECT_URI: string = `http://localhost:${PORT}/api/install/oauth-callback`;
+const hubspotClient = new hubspot.Client();
 
-// const SCOPES = [
-//   "crm.schemas.companies.write",
-//   "crm.schemas.contacts.write",
-//   "crm.schemas.companies.read",
-//   "crm.schemas.contacts.read",
-// ];
+const SCOPES = [
+  'crm.objects.companies.read',
+  'crm.objects.companies.write',
+  'crm.objects.contacts.read',
+  'crm.objects.contacts.write',
+  'crm.objects.deals.read',
+  'crm.objects.deals.write',
+  'oauth',
+];
+
+const scopeString = SCOPES.toString().replaceAll(',', ' ').trim();
+console.log('SCOPES++', scopeString);
+const authUrl = hubspotClient.oauth.getAuthorizationUrl(
+  CLIENT_ID,
+  REDIRECT_URI,
+  scopeString,
+);
 
 const EXCHANGE_CONSTANTS = {
   redirect_uri: REDIRECT_URI,
@@ -45,53 +58,32 @@ const EXCHANGE_CONSTANTS = {
   client_secret: CLIENT_SECRET,
 };
 
-const hubspotClient = new hubspot.Client();
-
-// const scopeString = SCOPES.toString().replaceAll(",", " ");
-
-// const authUrl = hubspotClient.oauth.getAuthorizationUrl(
-//   CLIENT_ID,
-//   REDIRECT_URI,
-//   scopeString
-// );
-
 const getExpiresAt = (expiresIn: number): Date => {
   const now = new Date();
-
   return new Date(now.getTime() + expiresIn * 1000);
 };
 
-const redeemCode = async (code: string): Promise<Authorization | void> => {
-  try{
-    return await exchangeForTokens({
-      ...EXCHANGE_CONSTANTS,
-      code,
-      grant_type: "authorization_code",
-    });
-  } catch(error){
-    handleError(error, 'There was an issue while exchanging Oauth tokens ')
-  }
-};
-
-const getHubSpotId = async (accessToken: string): Promise<string | void> => {
+const getHubSpotId = async (accessToken: string): Promise<string | void | null> => {
   try {
     hubspotClient.setAccessToken(accessToken);
     const hubspotAccountInfoResponse = await hubspotClient.apiRequest({
-      path: "/account-info/v3/details",
-      method: "GET",
+      path: '/account-info/v3/details',
+      method: 'GET',
     });
 
     const hubspotAccountInfo: HubspotAccountInfo = await hubspotAccountInfoResponse.json();
-    const hubSpotportalId = hubspotAccountInfo.portalId;
-    return hubSpotportalId.toString();
-  } catch(error) {
-    handleError(error)
+    const hubSpotPortalId = hubspotAccountInfo.portalId;
+    return hubSpotPortalId.toString();
+  } catch (error:unknown) {
+    handleError(error, 'Error getting HubSpot ID');
+    return null;
   }
 };
 
 const exchangeForTokens = async (
-  exchangeProof: ExchangeProof
-): Promise<Authorization | void> => {
+  exchangeProof: ExchangeProof,
+): Promise<Authorization | void | null> => {
+  console.log('exchangeProof', exchangeProof);
   const {
     code,
     redirect_uri,
@@ -101,56 +93,66 @@ const exchangeForTokens = async (
     refresh_token,
   } = exchangeProof;
 
-  try{
-    const tokenResponse = await hubspotClient.oauth.tokensApi.createToken(
+  try {
+    const tokenResponse = await hubspotClient.oauth.tokensApi.create(
       grant_type,
       code,
       redirect_uri,
       client_id,
       client_secret,
-      refresh_token
+      refresh_token,
     );
 
     const {
       accessToken,
       refreshToken,
-      expiresIn
+      expiresIn,
     } = tokenResponse;
+
     const expiresAt: Date = getExpiresAt(expiresIn);
     const customerId: string = getCustomerId();
-    const hsPortalId: string | void = await getHubSpotId(accessToken);
+    const hsPortalId: string | void | null = await getHubSpotId(accessToken);
+    console.log('ACCESS TOKEN ==', accessToken);
 
-  if(typeof hsPortalId !== 'string'){
-    throw new Error('The Hubspot Portal ID was not a string, there maybe an issue with the Hubspot client or access tokens');
-  }
-      const tokenInfo = await prisma.authorization.upsert({
-        where: {
-          customerId: customerId,
-        },
-        update: {
-          refreshToken,
-          accessToken,
-          expiresIn,
-          expiresAt,
-          hsPortalId,
-        },
-        create: {
-          refreshToken,
-          accessToken,
-          expiresIn,
-          expiresAt,
-          hsPortalId,
-          customerId,
-        },
-      });
+    if (typeof hsPortalId !== 'string') {
+      throw new Error(
+        'The HubSpot Portal ID was not a string; there may be an issue with the HubSpot client or access tokens',
+      );
+    }
 
-      return tokenInfo;
-  } catch(error){
-    handleError(error, 'There was an issue upserting the user\'s auth token info to Prisma ', true)
+    const tokenInfo = await prisma.authorization.upsert({
+      where: {
+        customerId,
+      },
+      update: {
+        refreshToken,
+        accessToken,
+        expiresIn,
+        expiresAt,
+        hsPortalId,
+      },
+      create: {
+        refreshToken,
+        accessToken,
+        expiresIn,
+        expiresAt,
+        hsPortalId,
+        customerId,
+      },
+    });
+
+    return tokenInfo;
+  } catch (error: unknown) {
+    handleError(error, "There was an issue upserting the user's auth token info to Prisma", true);
+    return null;
   }
 };
 
-const getAccessToken = async (customerId: string): Promise<string | void> => {
+async function getAccessToken(customerId: string): Promise<string | void | null> {
+  // if (process.env.ACCESS_TOKEN) {
+  //   console.log('getting access token from env', process.env.ACCESS_TOKEN);
+  //   return process.env.ACCESS_TOKEN;
+  // }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {
@@ -162,24 +164,48 @@ const getAccessToken = async (customerId: string): Promise<string | void> => {
         customerId,
       },
     })) as Authorization;
-    if (currentCreds?.expiresAt && currentCreds?.expiresAt > new Date()) {
-      return currentCreds?.accessToken;
-    } else {
-      const updatedCreds = await exchangeForTokens({
-        ...EXCHANGE_CONSTANTS,
-        grant_type: "refresh_token",
 
-        refresh_token: currentCreds?.refreshToken,
-      });
-      if (updatedCreds instanceof Error) {
-        throw updatedCreds;
-      } else {
-        return updatedCreds?.accessToken;
-      }
+    if (currentCreds?.expiresAt && currentCreds.expiresAt > new Date()) {
+      return currentCreds.accessToken;
     }
-  } catch (error) {
-    handleError(error, 'There was an issue getting or exchanging access tokens ', true)
+
+    const updatedCreds = await exchangeForTokens({
+      ...EXCHANGE_CONSTANTS,
+      grant_type: 'refresh_token',
+      refresh_token: currentCreds?.refreshToken,
+    });
+
+    if (updatedCreds instanceof Error) {
+      throw updatedCreds;
+    } else {
+      return updatedCreds?.accessToken;
+    }
+  } catch (error:unknown) {
+    handleError(error, 'There was an issue getting or exchanging access tokens', true);
+    return null;
+  }
+}
+
+const redeemCode = async (code: string): Promise<Authorization | null | void> => {
+  console.log('redeeming code', code);
+  try {
+    console.log('redeeming code in try block', code);
+    return await exchangeForTokens({
+      ...EXCHANGE_CONSTANTS,
+      code,
+      grant_type: 'authorization_code',
+    });
+  } catch (error:unknown) {
+    handleError(error, 'There was an issue while exchanging OAuth tokens');
+    return null;
   }
 };
 
-export { exchangeForTokens, redeemCode, getAccessToken, prisma, hubspotClient };
+export {
+  exchangeForTokens,
+  redeemCode,
+  getAccessToken,
+  prisma,
+  hubspotClient,
+  authUrl,
+};

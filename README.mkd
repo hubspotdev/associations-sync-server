@@ -1,48 +1,79 @@
 # Associations Mappings Server
 
-This Express.js application provides a solution for integrating with HubSpot to manage associations between various CRM objects. The application handles the seamless creation, retrieval, deletion, and mapping of associations and definitions, while also enabling OAuth-based authentication with HubSpot.
-- **Associations** in HubSpot refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
-- **Association mapping** refers to the configuration process where users set up the rules or criteria that define how associations are created between different CRM objects.
+An Express.js application that provides seamless integration with HubSpot for managing associations between CRM objects. It handles creation, retrieval, deletion, and mapping of associations and definitions while enabling OAuth-based authentication with HubSpot.
+
+## Table of Contents
+- [What this project does](#what-this-project-does)
+- [Why is this project useful](#why-is-this-project-useful)
+- [Setup](#setup)
+- [Scopes](#scopes)
+- [Endpoints](#endpoints)
+  - [Authentication](#authentication)
+  - [Associations](#associations)
+  - [Mappings](#mappings)
+  - [Definitions](#definitions)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+  - [Core](#core)
+  - [Development](#development)
+- [License](#license)
+- [Where to get help?](#where-to-get-help)
+- [Who maintains and contributes to this project](#who-maintains-and-contributes-to-this-project)
+
+## What this project does
+
+This application provides a solution for integrating with HubSpot to manage associations between various CRM objects. It handles the creation, retrieval, deletion, and mapping of associations and definitions.
+
+Key concepts:
+- **Associations in HubSpot** refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
+- **Association mapping** refers to the mapping of HubSpot objects to a local database
 - **Association definition** involves specifying the nature and characteristics of the association between objects
 
-
 ## Why is this project useful
-- Comprehensive API Management: Provides endpoints for managing associations and definitions between CRM objects, allowing for complex relationship handling.
-- Authentication Handling: Manages OAuth authentication, streamlining the process of securely connecting to HubSpot's API.
-- Data Consistency: Ensures data consistency across platforms by handling interactions with both a local database and HubSpot.
 
-## Getting started with the project:
-### Setup:
-- Download and install PostgreSQL, make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
-- Clone the repo
-- Create the `.env` file with these entries:
-    - `DATABASE_URL` the (local) url to the postgres database (e.g. `postgresql://{username}:{password}@localhost:5432/{database name}`)
-    - `CLIENT_ID` from Hubspot public app
-    - `CLIENT_SECRET` from Hubspot public app
-- Run `npm install` to install the required Node packages.
-- In your HubSpot public app, add `localhost:3001/api/install/oauth-callback` as a redirect URL
-- The app uses the following scopes:
-    crm.objects.companies.read
-    crm.objects.companies.write
-    crm.objects.contacts.read
-    crm.objects.contacts.write
-    crm.objects.deals.read
-    crm.objects.deals.write
-    oauth
-- Run `npm run dev` to start the server
-- Visit `http://localhost:3001/api/install` in a browser to get the OAuth install link
-- Run `npm run seed` to seed the database with test data, select an industry for the data examples
-- Once the server is running, you can access the application and API documentation at `http://localhost:3001/api-docs`.
+- **Comprehensive API Management**: Provides endpoints for managing associations and definitions between CRM objects, allowing for complex relationship handling
+- **Data Consistency**: Ensures data consistency across platforms by handling interactions with both a local database and HubSpot
+
+## Setup
+
+1. Download and install PostgreSQL, make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
+2. Clone the repo
+3. Create the .env file with these entries:
+   - DATABASE_URL the (local) url to the postgres database (e.g. postgresql://{username}:{password}@localhost:5432/{database name})
+   - CLIENT_ID from Hubspot public app
+   - CLIENT_SECRET from Hubspot public app
+4. Run npm install to install the required Node packages.
+5. In your HubSpot public app, add localhost:3001/api/install/oauth-callback as a redirect URL
+6. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
+7. Run npm run dev to start the server
+8. Visit http://localhost:3001/api/install in a browser to get the OAuth install link
+9. Run npm run seed to seed the database with test data, select an industry for the data examples
+10. Once the server is running, you can access the application and API documentation at http://localhost:3001/api-docs.
+
+## Scopes
+
+'crm.objects.companies.read',
+'crm.objects.companies.write',
+'crm.objects.contacts.read',
+'crm.objects.contacts.write',
+'crm.objects.deals.read',
+'crm.objects.deals.write',
+'oauth'
+
 
 ## Endpoints
+
 ### Authentication Endpoints
 - `GET /api/install`: Redirects to HubSpot's OAuth authorization for initiating OAuth flow.
 - `GET /api/install/oauth-callback`: Handles HubSpot's OAuth callback for token exchange.
+
 ### Associations Endpoints
 - `GET /api/associations/{associationId}`: Retrieves a specific association by ID.
 - `POST /api/associations`: Creates a new association.
 - `DELETE /api/associations/{associationId}`: Deletes an association by ID.
 - `GET /api/associations/mappings/all`: Retrieves all associations
+
 ### Mappings Endpoints
 - `POST /api/associations/mappings`: Creates a single association mapping.
 - `POST /api/associations/mappings/batch`: Creates multiple association mappings.
@@ -50,12 +81,56 @@ This Express.js application provides a solution for integrating with HubSpot to 
 - `GET /api/associations/mappings/all`: Retrieves all mappings.
 - `DELETE /api/associations/mappings/basic/{mappingId}`: Deletes a single mapping by ID.
 - `GET /api/associations/mappings/basic/{mappingId}`: Retrieves a single mapping by ID.
+
 ### Definitions Endpoints
 - `GET /api/associations/definitions/{fromObject}/{toObject}`: Retrieves association definitions between specified object types.
 - `POST /api/associations/definitions`: Creates a new association definition.
 - `DELETE /api/associations/definitions/{associationId}`: Deletes an association definition by ID.
 - `PUT /api/associations/definitions/{id}`: Updates an existing association definition.
 
+
+## Available Scripts
+
+- `npm run dev` - Start development server with hot reload
+- `npm run prod` - Start production server
+- `npm start` - Start the production server
+- `npm run build` - Build TypeScript files
+- `npm run seed` - Run industry setup script
+- `npm run db-init` - Initialize database schema
+- `npm test` - Run test suite with coverage
+- `npm run test:routes` - Run route tests only
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage-report` - Generate and open coverage report
+- `npm run test:ci` - Run tests in CI environment
+
+
+## Dependencies
+
+### Core
+- @hubspot/api-client - HubSpot API integration
+- @prisma/client - Database ORM
+- express - Web framework
+- swagger-ui-express - API documentation
+- dotenv - Environment configuration
+
+### Development
+- typescript - Programming language
+- jest - Testing framework
+- prisma - Database toolkit
+- nodemon - Development server
+- supertest - API testing
+- eslint - Code linting
+- ts-node - TypeScript execution
+
+
 ## Where to get help?
 
 If you encounter any bugs or issues, please report them by opening a GitHub issue. For feedback or suggestions for new code examples, we encourage you to use this [form](https://survey.hsforms.com/1RT0f09LSTHuflzNtMbr2jA96it).
+
+## Who maintains and contributes to this project
+
+Various teams at HubSpot that focus on developer experience and app marketplace quality maintain and contribute to this project. In particular, this project was made possible by @therealdadams, @rahmona-henry, @zman81988, @natalijabujevic0708, and @zradford
+
+## License
+
+MIT

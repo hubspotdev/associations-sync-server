@@ -21,3 +21,16 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Test coverage
+/coverage
+/.nyc_output
+/test-results
+*.lcov
+.coveralls.yml
+
+# Jest
+/jest-cache
+jest.config.js.snap
+__snapshots__/
+*.snap

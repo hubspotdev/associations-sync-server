@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="128" failures="9" errors="0" time="2.081">
+  <testsuite name="Mapped Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="0.633" tests="13">
+    <testcase classname="Mapped Associations Database Client getDBMappings should successfully fetch mappings by native IDs" name="Mapped Associations Database Client getDBMappings should successfully fetch mappings by native IDs" time="0.007">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getDBMappings should handle empty results" name="Mapped Associations Database Client getDBMappings should handle empty results" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getDBMappings should handle database errors" name="Mapped Associations Database Client getDBMappings should handle database errors" time="0">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client saveDBMapping should successfully upsert a mapping" name="Mapped Associations Database Client saveDBMapping should successfully upsert a mapping" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client saveDBMapping should handle errors properly" name="Mapped Associations Database Client saveDBMapping should handle errors properly" time="0.006">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getSingleDBAssociationMapping should successfully fetch a single mapping by native ID" name="Mapped Associations Database Client getSingleDBAssociationMapping should successfully fetch a single mapping by native ID" time="0">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getSingleDBAssociationMapping should return null for non-existent mapping" name="Mapped Associations Database Client getSingleDBAssociationMapping should return null for non-existent mapping" time="0.007">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getSingleDBAssociationMappingFromId should successfully fetch a single mapping by ID" name="Mapped Associations Database Client getSingleDBAssociationMappingFromId should successfully fetch a single mapping by ID" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getSingleDBAssociationMappingFromId should return null for non-existent mapping" name="Mapped Associations Database Client getSingleDBAssociationMappingFromId should return null for non-existent mapping" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client deleteDBMapping should successfully delete a mapping" name="Mapped Associations Database Client deleteDBMapping should successfully delete a mapping" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client deleteDBMapping should handle deletion errors" name="Mapped Associations Database Client deleteDBMapping should handle deletion errors" time="0">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getAllDBMappings should successfully fetch all mappings" name="Mapped Associations Database Client getAllDBMappings should successfully fetch all mappings" time="0.001">
+    </testcase>
+    <testcase classname="Mapped Associations Database Client getAllDBMappings should handle database errors" name="Mapped Associations Database Client getAllDBMappings should handle database errors" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Utils Functions" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="0.647" tests="18">
+    <testcase classname="Utils Functions formatSingleRequestData should format single request data correctly" name="Utils Functions formatSingleRequestData should format single request data correctly" time="0.005">
+    </testcase>
+    <testcase classname="Utils Functions formatDefinitionPostRequest should format definition post request correctly" name="Utils Functions formatDefinitionPostRequest should format definition post request correctly" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions formatDefinitionPostRequest should handle missing optional fields" name="Utils Functions formatDefinitionPostRequest should handle missing optional fields" time="0">
+    </testcase>
+    <testcase classname="Utils Functions formatDefinitionUpdateRequest should format definition update request correctly" name="Utils Functions formatDefinitionUpdateRequest should format definition update request correctly" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions formatBatchRequestData should format batch request data correctly" name="Utils Functions formatBatchRequestData should format batch request data correctly" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions formatBatchArchiveRequest should format batch archive request correctly" name="Utils Functions formatBatchArchiveRequest should format batch archive request correctly" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions formatBatchArchiveRequest should return null for empty array" name="Utils Functions formatBatchArchiveRequest should return null for empty array" time="0">
+    </testcase>
+    <testcase classname="Utils Functions formaCreateCardinalityRequest should format create cardinality request correctly" name="Utils Functions formaCreateCardinalityRequest should format create cardinality request correctly" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions formaCreateCardinalityRequest should handle missing cardinality values" name="Utils Functions formaCreateCardinalityRequest should handle missing cardinality values" time="0">
+    </testcase>
+    <testcase classname="Utils Functions formatUpdateCardinalityRequest should format update cardinality request correctly" name="Utils Functions formatUpdateCardinalityRequest should format update cardinality request correctly" time="0">
+    </testcase>
+    <testcase classname="Utils Functions formatUpdateCardinalityRequest should handle missing cardinality values" name="Utils Functions formatUpdateCardinalityRequest should handle missing cardinality values" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for null token" name="Utils Functions checkAccessToken should throw error for null token" time="0.014">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for undefined token" name="Utils Functions checkAccessToken should throw error for undefined token" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for empty string token" name="Utils Functions checkAccessToken should throw error for empty string token" time="0">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should throw error for non-string token" name="Utils Functions checkAccessToken should throw error for non-string token" time="0.001">
+    </testcase>
+    <testcase classname="Utils Functions checkAccessToken should not throw for valid token" name="Utils Functions checkAccessToken should not throw for valid token" time="0">
+    </testcase>
+    <testcase classname="Utils Functions Constants and Simple Functions should export correct PORT value" name="Utils Functions Constants and Simple Functions should export correct PORT value" time="0">
+    </testcase>
+    <testcase classname="Utils Functions Constants and Simple Functions should get customer ID" name="Utils Functions Constants and Simple Functions should get customer ID" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Batch Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="0.663" tests="6">
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should successfully create batch associations" time="0.018">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should throw error when access token is missing" time="0.006">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client saveBatchHubspotAssociation should handle API errors" time="0.003">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should successfully archive batch associations" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle missing access token" time="0.001">
+    </testcase>
+    <testcase classname="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" name="Batch Associations HubSpot Client archiveBatchHubspotAssociation should handle API errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Error Handling Utils" errors="0" failures="4" skipped="0" timestamp="2025-01-20T22:47:21" time="0.694" tests="7">
+    <testcase classname="Error Handling Utils handleError should log Prisma errors correctly when stack trace is present" name="Error Handling Utils handleError should log Prisma errors correctly when stack trace is present" time="0.015">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+- Expected
++ Received
+
+  Object {
+    &quot;context&quot;: &quot;Test context&quot;,
+    &quot;logMessage&quot;: [PrismaClientKnownRequestError: Database error],
+-   &quot;type&quot;: &quot;Prisma&quot;,
++   &quot;type&quot;: &quot;General&quot;,
+  },
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/utils/error.test.ts:77:28)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should log Prisma errors correctly when message contains prisma" name="Error Handling Utils handleError should log Prisma errors correctly when message contains prisma" time="0.001">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+- Expected
++ Received
+
+  Object {
+    &quot;context&quot;: &quot;Test context&quot;,
+    &quot;logMessage&quot;: [Error: PRISMA Client Error: Invalid data],
+-   &quot;type&quot;: &quot;Prisma&quot;,
++   &quot;type&quot;: &quot;General&quot;,
+  },
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/utils/error.test.ts:95:28)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should log HubSpot API errors correctly" name="Error Handling Utils handleError should log HubSpot API errors correctly" time="0.002">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+- Expected
++ Received
+
+  Object {
+    &quot;context&quot;: &quot;Test context&quot;,
+    &quot;logMessage&quot;: [HubspotError: Failed to fetch from hubapi endpoint],
+-   &quot;type&quot;: &quot;Hubspot API&quot;,
++   &quot;type&quot;: &quot;General&quot;,
+  },
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/utils/error.test.ts:120:28)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should handle general errors" name="Error Handling Utils handleError should handle general errors" time="0">
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should handle non-error objects" name="Error Handling Utils handleError should handle non-error objects" time="0.001">
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should log Prisma errors with proper formatting" name="Error Handling Utils handleError should log Prisma errors with proper formatting" time="0.001">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+- Expected
++ Received
+
+  Object {
+    &quot;context&quot;: &quot;Test context&quot;,
+    &quot;logMessage&quot;: [PrismaClientKnownRequestError: Unique constraint failed on the fields: (`email`)],
+-   &quot;type&quot;: &quot;Prisma&quot;,
++   &quot;type&quot;: &quot;General&quot;,
+  },
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/utils/error.test.ts:188:28)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Error Handling Utils handleError should handle critical errors with proper shutdown sequence" name="Error Handling Utils handleError should handle critical errors with proper shutdown sequence" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:22" time="0.093" tests="1">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:22" time="0.114" tests="1">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:22" time="0.132" tests="12">
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" name="Definition Associations Database Client getDBAssociationDefinitionsByType should successfully fetch definitions by type" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle empty results" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle case-insensitive search" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" name="Definition Associations Database Client getDBAssociationDefinitionsByType should handle database errors" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" name="Definition Associations Database Client saveDBAssociationDefinition should successfully create a definition" time="0.008">
+    </testcase>
+    <testcase classname="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" name="Definition Associations Database Client saveDBAssociationDefinition should handle unique constraint violations" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" name="Definition Associations Database Client updateDBAssociationDefinition should successfully update a definition" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client updateDBAssociationDefinition should handle non-existent records" time="0.006">
+    </testcase>
+    <testcase classname="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" name="Definition Associations Database Client updateDBAssociationDefinition should handle partial updates" time="0.002">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" name="Definition Associations Database Client deleteDBAssociationDefinition should successfully delete a definition" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" name="Definition Associations Database Client deleteDBAssociationDefinition should handle non-existent records" time="0">
+    </testcase>
+    <testcase classname="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" name="Definition Associations Database Client deleteDBAssociationDefinition should handle database constraint violations" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="Single Associations Database Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:22" time="0.121" tests="8">
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" name="Single Associations Database Client getDBAssociationsByCustomerId should successfully fetch associations by customer ID" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" name="Single Associations Database Client getDBAssociationsByCustomerId should handle database errors" time="0.004">
+    </testcase>
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" name="Single Associations Database Client getSingleDBAssociationById should successfully fetch a single association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" name="Single Associations Database Client getSingleDBAssociationById should handle lookup errors" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should successfully upsert an association" name="Single Associations Database Client saveDBAssociation should successfully upsert an association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations Database Client saveDBAssociation should throw error when upsert fails" name="Single Associations Database Client saveDBAssociation should throw error when upsert fails" time="0">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should successfully delete an association" name="Single Associations Database Client deleteDBAssociation should successfully delete an association" time="0.006">
+    </testcase>
+    <testcase classname="Single Associations Database Client deleteDBAssociation should handle deletion errors" name="Single Associations Database Client deleteDBAssociation should handle deletion errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Logger" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:22" time="0.075" tests="2">
+    <testcase classname="Logger should log info messages correctly" name="Logger should log info messages correctly" time="0.003">
+    </testcase>
+    <testcase classname="Logger should log error messages with stack traces" name="Logger should log error messages with stack traces" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="Batch Associations Database Client" errors="0" failures="2" skipped="0" timestamp="2025-01-20T22:47:21" time="0.958" tests="9">
+    <testcase classname="Batch Associations Database Client saveBatchDBMapping should successfully batch upsert mappings" name="Batch Associations Database Client saveBatchDBMapping should successfully batch upsert mappings" time="0.003">
+      <failure>TypeError: op is not a function
+    at /Users/zradford/src/associations-server/src/__tests__/unit/prisma/batchAssociations.test.ts:20:80
+    at Array.map (&lt;anonymous&gt;)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/prisma/batchAssociations.test.ts:20:68)
+    at /Users/zradford/src/associations-server/node_modules/jest-mock/build/index.js:397:39
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/node_modules/jest-mock/build/index.js:404:13)
+    at Object.mockConstructor [as $transaction] (/Users/zradford/src/associations-server/node_modules/jest-mock/build/index.js:103:19)
+    at $transaction (/Users/zradford/src/associations-server/src/prisma-client/batchAssociations.ts:56:41)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/prisma/batchAssociations.test.ts:66:46)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Batch Associations Database Client saveBatchDBMapping should handle database errors during batch upsert" name="Batch Associations Database Client saveBatchDBMapping should handle database errors during batch upsert" time="0.002">
+    </testcase>
+    <testcase classname="Batch Associations Database Client saveBatchDBMapping should create correct upsert operations for each mapping" name="Batch Associations Database Client saveBatchDBMapping should create correct upsert operations for each mapping" time="0.002">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: ArrayContaining [ObjectContaining {&quot;create&quot;: ObjectContaining {&quot;associationCategory&quot;: &quot;USER_DEFINED&quot;, &quot;associationTypeId&quot;: 1, &quot;cardinality&quot;: &quot;ONE_TO_ONE&quot;, &quot;customerId&quot;: &quot;cust_123&quot;, &quot;fromHubSpotObjectId&quot;: &quot;hs_123&quot;, &quot;fromObjectType&quot;: &quot;contact&quot;, &quot;hubSpotAssociationLabel&quot;: &quot;Primary Contact&quot;, &quot;id&quot;: &quot;map_123&quot;, &quot;nativeAssociationId&quot;: &quot;nat_123&quot;, &quot;nativeAssociationLabel&quot;: &quot;Primary Contact&quot;, &quot;nativeObjectId&quot;: &quot;nat_obj_123&quot;, &quot;toHubSpotObjectId&quot;: &quot;hs_456&quot;, &quot;toNativeObjectId&quot;: &quot;nat_obj_456&quot;, &quot;toObjectType&quot;: &quot;company&quot;}, &quot;update&quot;: ObjectContaining {&quot;fromHubSpotObjectId&quot;: &quot;hs_123&quot;, &quot;hubSpotAssociationLabel&quot;: &quot;Primary Contact&quot;, &quot;toHubSpotObjectId&quot;: &quot;hs_456&quot;}, &quot;where&quot;: {&quot;nativeAssociationId&quot;: &quot;nat_123&quot;}}]
+Received: [{}]
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/prisma/batchAssociations.test.ts:108:35)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Batch Associations Database Client deleteBatchDBMappings should successfully delete multiple mappings" name="Batch Associations Database Client deleteBatchDBMappings should successfully delete multiple mappings" time="0">
+    </testcase>
+    <testcase classname="Batch Associations Database Client deleteBatchDBMappings should handle database errors during batch delete" name="Batch Associations Database Client deleteBatchDBMappings should handle database errors during batch delete" time="0">
+    </testcase>
+    <testcase classname="Batch Associations Database Client getBatchDBAssociationMappings should successfully fetch multiple mappings by IDs" name="Batch Associations Database Client getBatchDBAssociationMappings should successfully fetch multiple mappings by IDs" time="0">
+    </testcase>
+    <testcase classname="Batch Associations Database Client getBatchDBAssociationMappings should handle empty results" name="Batch Associations Database Client getBatchDBAssociationMappings should handle empty results" time="0">
+    </testcase>
+    <testcase classname="Batch Associations Database Client getBatchDBAssociationMappings should handle database errors" name="Batch Associations Database Client getBatchDBAssociationMappings should handle database errors" time="0">
+    </testcase>
+    <testcase classname="Batch Associations Database Client getBatchDBAssociationMappings should handle null response" name="Batch Associations Database Client getBatchDBAssociationMappings should handle null response" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Single Associations HubSpot Client" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="1.088" tests="4">
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" name="Single Associations HubSpot Client saveSingleHubspotAssociation should successfully create single association" time="0.004">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client saveSingleHubspotAssociation should handle API errors" time="0.012">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should successfully archive single association" time="0.001">
+    </testcase>
+    <testcase classname="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" name="Single Associations HubSpot Client archiveSingleHubspotAssociation should handle API errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Association Routes" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="1.118" tests="11">
+    <testcase classname="Association Routes GET /:associationId should successfully return an association" name="Association Routes GET /:associationId should successfully return an association" time="0.056">
+    </testcase>
+    <testcase classname="Association Routes GET /:associationId should return 404 when association is not found" name="Association Routes GET /:associationId should return 404 when association is not found" time="0.023">
+    </testcase>
+    <testcase classname="Association Routes GET /:associationId should handle database errors appropriately" name="Association Routes GET /:associationId should handle database errors appropriately" time="0.015">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should successfully delete an association" name="Association Routes DELETE /:associationId should successfully delete an association" time="0.014">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" name="Association Routes DELETE /:associationId should return 404 when trying to delete non-existent association" time="0.023">
+    </testcase>
+    <testcase classname="Association Routes DELETE /:associationId should handle deletion errors appropriately" name="Association Routes DELETE /:associationId should handle deletion errors appropriately" time="0.009">
+    </testcase>
+    <testcase classname="Association Routes POST / should successfully create a new association" name="Association Routes POST / should successfully create a new association" time="0.02">
+    </testcase>
+    <testcase classname="Association Routes POST / should return 400 when request body is empty" name="Association Routes POST / should return 400 when request body is empty" time="0.007">
+    </testcase>
+    <testcase classname="Association Routes POST / should return 500 when creation fails with no data" name="Association Routes POST / should return 500 when creation fails with no data" time="0.015">
+    </testcase>
+    <testcase classname="Association Routes POST / should handle creation errors appropriately" name="Association Routes POST / should handle creation errors appropriately" time="0.007">
+    </testcase>
+    <testcase classname="Association Routes POST / should validate required fields in the request body" name="Association Routes POST / should validate required fields in the request body" time="0.014">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="1.17" tests="12">
+    <testcase classname="Definition Mocks should exist" name="Definition Mocks should exist" time="0.003">
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" name="Definition Routes GET /:fromObject/:toObject should return definitions from both DB and HubSpot" time="0.051">
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" name="Definition Routes GET /:fromObject/:toObject should return 404 if parameters are missing" time="0.012">
+    </testcase>
+    <testcase classname="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" name="Definition Routes GET /:fromObject/:toObject should handle errors appropriately" time="0.014">
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should successfully delete a definition" name="Definition Routes DELETE /:associationId should successfully delete a definition" time="0.023">
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should return 404 if associationId is missing" name="Definition Routes DELETE /:associationId should return 404 if associationId is missing" time="0.015">
+    </testcase>
+    <testcase classname="Definition Routes DELETE /:associationId should handle errors appropriately" name="Definition Routes DELETE /:associationId should handle errors appropriately" time="0.007">
+    </testcase>
+    <testcase classname="Definition Routes POST / should successfully create a new definition" name="Definition Routes POST / should successfully create a new definition" time="0.009">
+    </testcase>
+    <testcase classname="Definition Routes POST / should return 400 if request body is empty" name="Definition Routes POST / should return 400 if request body is empty" time="0.007">
+    </testcase>
+    <testcase classname="Definition Routes POST / should return 422 if HubSpot response is invalid" name="Definition Routes POST / should return 422 if HubSpot response is invalid" time="0.009">
+    </testcase>
+    <testcase classname="Definition Routes PUT /:id should successfully update a definition" name="Definition Routes PUT /:id should successfully update a definition" time="0.007">
+    </testcase>
+    <testcase classname="Definition Routes PUT /:id should handle errors appropriately" name="Definition Routes PUT /:id should handle errors appropriately" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="Definition Associations HubSpot Client" errors="0" failures="3" skipped="0" timestamp="2025-01-20T22:47:21" time="1.255" tests="8">
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" name="Definition Associations HubSpot Client saveAssociationDefinition should successfully create definition with cardinality" time="0.004">
+      <failure>Error: expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+Expected number of calls: 2
+Received number of calls: 1
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:149:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client saveAssociationDefinition should handle API errors" name="Definition Associations HubSpot Client saveAssociationDefinition should handle API errors" time="0.001">
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" name="Definition Associations HubSpot Client updateAssociationDefinition should successfully update definition with cardinality" time="0">
+      <failure>TypeError: Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.
+    at fromObject (/Users/zradford/src/associations-server/src/hubspot-client/definitionAssociations.ts:110:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:200:22)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" name="Definition Associations HubSpot Client updateAssociationDefinition should handle errors" time="0.008">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected substring: &quot;Cannot destructure property &apos;fromObject&apos; of &apos;formattedData&apos; as it is undefined.&quot;
+Received message:   &quot;Cannot destructure property &apos;fromObject&apos; of &apos;((cov_8x65i4cya(...).s[54]++) , formattedData)&apos; as it is undefined.&quot;
+
+      108 |   hubspotClient.setAccessToken(accessToken);
+      109 |
+    &gt; 110 |   const { fromObject, toObject, requestInfo } = formattedData;
+          |           ^
+      111 |   try {
+      112 |     if (requestInfo.associationTypeId !== null) {
+      113 |       await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
+
+      at fromObject (src/hubspot-client/definitionAssociations.ts:110:11)
+      at Object.&lt;anonymous&gt; (src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:213:7)
+    at Object.toThrow (/Users/zradford/src/associations-server/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/zradford/src/associations-server/src/__tests__/unit/hubspot-client/definitionAssociations.test.ts:214:18)
+    at Promise.then.completed (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/zradford/src/associations-server/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/zradford/src/associations-server/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/zradford/src/associations-server/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/zradford/src/associations-server/node_modules/jest-runner/build/runTest.js:444:34)
+    at Object.worker (/Users/zradford/src/associations-server/node_modules/jest-runner/build/testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" name="Definition Associations HubSpot Client archiveAssociationDefinition should successfully archive definition" time="0">
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client archiveAssociationDefinition should handle archive errors" name="Definition Associations HubSpot Client archiveAssociationDefinition should handle archive errors" time="0">
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should successfully fetch all definitions" name="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should successfully fetch all definitions" time="0">
+    </testcase>
+    <testcase classname="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle fetch errors" name="Definition Associations HubSpot Client getAllAssociationDefinitionsByType should handle fetch errors" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Mapping Mocks" errors="0" failures="0" skipped="0" timestamp="2025-01-20T22:47:21" time="1.334" tests="16">
+    <testcase classname="Mapping Mocks should exist" name="Mapping Mocks should exist" time="0.002">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should successfully create a single mapping" name="Mapping Routes POST / should successfully create a single mapping" time="0.032">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should return 400 if request body is empty" name="Mapping Routes POST / should return 400 if request body is empty" time="0.007">
+    </testcase>
+    <testcase classname="Mapping Routes POST / should handle errors appropriately" name="Mapping Routes POST / should handle errors appropriately" time="0.009">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should successfully create batch mappings" name="Mapping Routes POST /batch should successfully create batch mappings" time="0.01">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should return 400 if mappings array is empty" name="Mapping Routes POST /batch should return 400 if mappings array is empty" time="0.007">
+    </testcase>
+    <testcase classname="Mapping Routes POST /batch should handle errors appropriately" name="Mapping Routes POST /batch should handle errors appropriately" time="0.008">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should successfully delete batch mappings" name="Mapping Routes DELETE /batch should successfully delete batch mappings" time="0.005">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" name="Mapping Routes DELETE /batch should return 400 if mappingIds array is empty" time="0.004">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" name="Mapping Routes DELETE /batch should return 404 if no mappings were deleted" time="0.006">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" name="Mapping Routes DELETE /basic/:mappingId should successfully delete a single mapping" time="0.004">
+    </testcase>
+    <testcase classname="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes DELETE /basic/:mappingId should return 404 if mapping not found" time="0.003">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" name="Mapping Routes GET /basic/:mappingId should successfully get a single mapping" time="0.003">
+    </testcase>
+    <testcase classname="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" name="Mapping Routes GET /basic/:mappingId should return 404 if mapping not found" time="0.004">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should successfully get all mappings" name="Mapping Routes GET /all should successfully get all mappings" time="0.004">
+    </testcase>
+    <testcase classname="Mapping Routes GET /all should handle errors appropriately" name="Mapping Routes GET /all should handle errors appropriately" time="0.004">
+    </testcase>
+  </testsuite>
+</testsuites>
