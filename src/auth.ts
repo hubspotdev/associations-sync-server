@@ -2,6 +2,7 @@
 import 'dotenv/config';
 import * as hubspot from '@hubspot/api-client';
 import { Authorization } from '@prisma/client';
+import { Client } from '@hubspot/api-client';
 import { PORT, getCustomerId } from './utils/utils';
 import handleError from './utils/error';
 import prisma from './prisma-client/prisma-initialization';
@@ -45,7 +46,6 @@ const SCOPES = [
 ];
 
 const scopeString = SCOPES.toString().replaceAll(',', ' ').trim();
-console.log('SCOPES++', scopeString);
 const authUrl = hubspotClient.oauth.getAuthorizationUrl(
   CLIENT_ID,
   REDIRECT_URI,
@@ -201,6 +201,20 @@ const redeemCode = async (code: string): Promise<Authorization | null | void> =>
   }
 };
 
+async function setAccessToken(): Promise<Client> {
+  try {
+    const accessToken = await getAccessToken(getCustomerId());
+    if (!accessToken) {
+      throw new Error('No access token returned');
+    }
+    hubspotClient.setAccessToken(accessToken);
+    return hubspotClient;
+  } catch (error) {
+    handleError(error, 'Error setting access token');
+    throw new Error('Failed to authenticate HubSpot client');
+  }
+}
+
 export {
   exchangeForTokens,
   redeemCode,
@@ -208,4 +222,5 @@ export {
   prisma,
   hubspotClient,
   authUrl,
+  setAccessToken,
 };

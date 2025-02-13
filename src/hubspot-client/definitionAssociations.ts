@@ -1,5 +1,5 @@
 import { AssociationDefinition } from '@prisma/client';
-import { hubspotClient, getAccessToken } from '../auth';
+import { hubspotClient, setAccessToken } from '../auth';
 import handleError from '../utils/error';
 import { AssociationDefinitionArchiveRequest } from '../../types/common';
 import {
@@ -7,8 +7,6 @@ import {
   formatDefinitionUpdateRequest,
   formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
-  getCustomerId,
-  checkAccessToken,
 } from '../utils/utils';
 
 async function saveAssociationDefinitionConfiguration(
@@ -18,11 +16,7 @@ async function saveAssociationDefinitionConfiguration(
   toObject: string,
 ) {
   const inputs = formatCreateCardinalityRequest(response, data);
-  console.log('Here are the formatted association definition inputs for cardinality', inputs, fromObject, toObject);
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
+  setAccessToken();
 
   try {
     const definitionWithConfig = await hubspotClient.apiRequest({
@@ -38,7 +32,6 @@ async function saveAssociationDefinitionConfiguration(
         path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/create`,
         body: inputs,
       });
-      console.log('attempting second post', secondDefinitionWithConfig);
     }
     return { config1: definitionWithConfig, config2: secondDefinitionWithConfig };
   } catch (error:unknown) {
@@ -53,14 +46,8 @@ async function updateAssociationDefinitionConfiguration(
   fromObject: string,
   toObject: string,
 ) {
-  console.log('Here is the data', data);
   const inputs = formatUpdateCardinalityRequest(data);
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
-
-  console.log('Here is the inputs', { inputs: [inputs.inputs[0]] });
+  setAccessToken();
   try {
     if (Array.isArray(inputs.inputs)) {
       const definitionWithConfig = await hubspotClient.apiRequest({
@@ -113,10 +100,7 @@ async function updateAssociationDefinitionConfiguration(
 
 async function saveAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionPostRequest(data);
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
+  setAccessToken();
 
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
@@ -135,10 +119,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
 
 async function updateAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionUpdateRequest(data);
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
+  setAccessToken();
 
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
@@ -168,10 +149,7 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
 }
 
 async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRequest) {
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
+  setAccessToken();
 
   const { fromObjectType, toObjectType, associationTypeId } = data;
 
@@ -191,10 +169,7 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
 
 async function getAllAssociationDefinitionsByType(data: { toObject:string, fromObject:string }) {
   const { toObject, fromObject } = data;
-  const customerId = getCustomerId();
-  const accessToken: string | void | null = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
+  setAccessToken();
 
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(toObject, fromObject);

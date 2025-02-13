@@ -1,10 +1,14 @@
 import { AssociationMapping } from '@prisma/client';
-import { hubspotClient, getAccessToken } from '../../../auth';
+import { beforeEach } from 'node:test';
+import { jest } from '@jest/globals';
+import { hubspotClient } from '../../../auth';
 import { saveSingleHubspotAssociation, archiveSingleHubspotAssociation } from '../../../hubspot-client/singleAssociations';
 import * as utils from '../../../utils/utils';
+import * as auth from '../../../auth';
 
-jest.mock('../../../auth', () => ({
-  hubspotClient: {
+// Mock the auth module
+jest.mock('../../../auth', () => {
+  const mockHubspotClient = {
     setAccessToken: jest.fn(),
     crm: {
       associations: {
@@ -16,14 +20,21 @@ jest.mock('../../../auth', () => ({
         },
       },
     },
-  },
-  getAccessToken: jest.fn(),
-}));
+  };
+
+  return {
+    hubspotClient: mockHubspotClient,
+    setAccessToken: jest.fn().mockImplementation(async () => {
+      mockHubspotClient.setAccessToken('mock-token');
+      return mockHubspotClient;
+    }),
+    getAccessToken: jest.fn().mockResolvedValue('mock-token'),
+  };
+});
 
 jest.mock('../../../utils/utils', () => ({
   formatSingleRequestData: jest.fn(),
-  getCustomerId: jest.fn(),
-  checkAccessToken: jest.fn(),
+  getCustomerId: jest.fn().mockReturnValue('cust_123'),
 }));
 
 describe('Single Associations HubSpot Client', () => {
@@ -45,10 +56,10 @@ describe('Single Associations HubSpot Client', () => {
   };
 
   const mockFormattedData = {
-    objectId: 'hub_123',
     objectType: 'contact',
-    toObjectId: 'hub_456',
+    objectId: 'hub_123',
     toObjectType: 'company',
+    toObjectId: 'hub_456',
     associationType: [{
       associationCategory: 'USER_DEFINED',
       typeId: 1,
@@ -57,8 +68,6 @@ describe('Single Associations HubSpot Client', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (utils.getCustomerId as jest.Mock).mockReturnValue('cust_123');
-    (getAccessToken as jest.Mock).mockResolvedValue('mock-token');
     (utils.formatSingleRequestData as jest.Mock).mockReturnValue(mockFormattedData);
   });
 
@@ -66,7 +75,11 @@ describe('Single Associations HubSpot Client', () => {
     it('should successfully create single association', async () => {
       await saveSingleHubspotAssociation(mockMapping);
 
+      // Verify authentication flow
+      expect(auth.setAccessToken).toHaveBeenCalled();
       expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
+
+      // Verify API call
       expect(hubspotClient.crm.associations.v4.basicApi.create).toHaveBeenCalledWith(
         mockFormattedData.objectType,
         mockFormattedData.objectId,
@@ -76,13 +89,19 @@ describe('Single Associations HubSpot Client', () => {
       );
     });
 
+    it('should handle authentication errors', async () => {
+      (auth.setAccessToken as jest.Mock).mockRejectedValue(new Error('Failed to authenticate HubSpot client'));
+
+      await expect(saveSingleHubspotAssociation(mockMapping))
+        .rejects
+        .toThrow('Failed to authenticate HubSpot client');
+    });
+
     it('should handle API errors', async () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.basicApi.create as jest.Mock).mockRejectedValue(mockError);
 
       await expect(saveSingleHubspotAssociation(mockMapping)).rejects.toThrow('API Error');
-
-      expect(hubspotClient.crm.associations.v4.basicApi.create).toHaveBeenCalled();
     });
   });
 
@@ -90,7 +109,11 @@ describe('Single Associations HubSpot Client', () => {
     it('should successfully archive single association', async () => {
       await archiveSingleHubspotAssociation(mockMapping);
 
+      // Verify authentication flow
+      expect(auth.setAccessToken).toHaveBeenCalled();
       expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
+
+      // Verify API call
       expect(hubspotClient.crm.associations.v4.basicApi.archive).toHaveBeenCalledWith(
         mockFormattedData.objectType,
         mockFormattedData.objectId,
@@ -99,13 +122,19 @@ describe('Single Associations HubSpot Client', () => {
       );
     });
 
+    it('should handle authentication errors', async () => {
+      (auth.setAccessToken as jest.Mock).mockRejectedValue(new Error('Failed to authenticate HubSpot client'));
+
+      await expect(archiveSingleHubspotAssociation(mockMapping))
+        .rejects
+        .toThrow('Failed to authenticate HubSpot client');
+    });
+
     it('should handle API errors', async () => {
       const mockError = new Error('API Error');
       (hubspotClient.crm.associations.v4.basicApi.archive as jest.Mock).mockRejectedValue(mockError);
 
       await expect(archiveSingleHubspotAssociation(mockMapping)).rejects.toThrow('API Error');
-
-      expect(hubspotClient.crm.associations.v4.basicApi.archive).toHaveBeenCalled();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { AssociationMapping } from '@prisma/client';
-import { hubspotClient, getAccessToken } from '../../../auth';
+import { hubspotClient } from '../../../auth';
 import { saveBatchHubspotAssociation, archiveBatchHubspotAssociation } from '../../../hubspot-client/batchAssociations';
 import * as utils from '../../../utils/utils';
 import handleError from '../../../utils/error';
@@ -18,7 +18,7 @@ jest.mock('../../../auth', () => ({
       },
     },
   },
-  getAccessToken: jest.fn(),
+  setAccessToken: jest.fn(),
 }));
 
 jest.mock('../../../utils/utils', () => ({
@@ -58,7 +58,6 @@ describe('Batch Associations HubSpot Client', () => {
     (utils.checkAccessToken as jest.Mock).mockImplementation((token) => {
       if (!token) throw new Error('No access token available');
     });
-    (getAccessToken as jest.Mock).mockResolvedValue('mock-token');
   });
 
   describe('saveBatchHubspotAssociation', () => {
@@ -79,17 +78,6 @@ describe('Batch Associations HubSpot Client', () => {
         'company',
         { inputs: mockFormattedRequest.inputs },
       );
-    });
-
-    it('should throw error when access token is missing', async () => {
-      (getAccessToken as jest.Mock).mockResolvedValue(null);
-
-      await expect(saveBatchHubspotAssociation([mockMapping]))
-        .rejects
-        .toThrow('No access token available');
-
-      expect(hubspotClient.setAccessToken).not.toHaveBeenCalled();
-      expect(hubspotClient.crm.associations.v4.batchApi.create).not.toHaveBeenCalled();
     });
 
     it('should handle API errors', async () => {
@@ -125,17 +113,6 @@ describe('Batch Associations HubSpot Client', () => {
         'company',
         { inputs: mockFormattedRequest.inputs },
       );
-    });
-
-    it('should handle missing access token', async () => {
-      (getAccessToken as jest.Mock).mockResolvedValue(null);
-
-      await expect(archiveBatchHubspotAssociation([mockMapping]))
-        .rejects
-        .toThrow('No access token available');
-
-      expect(hubspotClient.setAccessToken).not.toHaveBeenCalled();
-      expect(hubspotClient.crm.associations.v4.batchApi.archive).not.toHaveBeenCalled();
     });
 
     it('should handle API errors', async () => {

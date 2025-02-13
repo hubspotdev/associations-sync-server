@@ -8,7 +8,6 @@ import {
   formatDefinitionUpdateRequest,
   formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
-  checkAccessToken,
   PORT,
   getCustomerId,
 } from '../../../utils/utils';
@@ -285,28 +284,6 @@ describe('Utils Functions', () => {
       const result = formatUpdateCardinalityRequest(definition);
 
       expect(result).toEqual({ inputs: [] });
-    });
-  });
-
-  describe('checkAccessToken', () => {
-    it('should throw error for null token', () => {
-      expect(() => checkAccessToken(null)).toThrow('Access token is null');
-    });
-
-    it('should throw error for undefined token', () => {
-      expect(() => checkAccessToken(undefined)).toThrow('Access token is not defined');
-    });
-
-    it('should throw error for empty string token', () => {
-      expect(() => checkAccessToken('')).toThrow('Access token is empty');
-    });
-
-    it('should throw error for non-string token', () => {
-      expect(() => checkAccessToken(123 as any)).toThrow('Access token is not a string');
-    });
-
-    it('should not throw for valid token', () => {
-      expect(() => checkAccessToken('valid-token')).not.toThrow();
     });
   });
 

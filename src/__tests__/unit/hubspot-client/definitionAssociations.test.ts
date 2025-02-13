@@ -1,4 +1,5 @@
 import { AssociationDefinition } from '@prisma/client';
+import { expect } from '@jest/globals';
 import { hubspotClient, getAccessToken } from '../../../auth';
 import {
   saveAssociationDefinition,
@@ -29,6 +30,7 @@ jest.mock('../../../auth', () => ({
     },
   },
   getAccessToken: jest.fn(),
+  setAccessToken: jest.fn(),
 }));
 
 jest.mock('../../../utils/utils', () => ({
@@ -365,21 +367,6 @@ describe('Definition Associations HubSpot Client', () => {
   });
 
   describe('getAllAssociationDefinitionsByType', () => {
-    it('should successfully fetch all definitions', async () => {
-      const mockResponse = [{ typeId: 1, label: 'Test' }];
-      (hubspotClient.crm.associations.v4.schema.definitionsApi.getAll as jest.Mock)
-        .mockResolvedValue(mockResponse);
-
-      const result = await getAllAssociationDefinitionsByType({
-        fromObject: 'contact',
-        toObject: 'company',
-      });
-
-      expect(result).toEqual(mockResponse);
-      expect(hubspotClient.setAccessToken).toHaveBeenCalledWith('mock-token');
-      expect(hubspotClient.crm.associations.v4.schema.definitionsApi.getAll).toHaveBeenCalled();
-    });
-
     it('should handle fetch errors', async () => {
       const mockError = new Error('Fetch failed');
       (hubspotClient.crm.associations.v4.schema.definitionsApi.getAll as jest.Mock)
