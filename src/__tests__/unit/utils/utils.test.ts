@@ -6,7 +6,7 @@ import {
   formatBatchArchiveRequest,
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,
-  formaCreateCardinalityRequest,
+  formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
   checkAccessToken,
   PORT,
@@ -53,8 +53,8 @@ describe('Utils Functions', () => {
         toTypeId: 2,
         customerId: 'cust_123',
         cardinality: 'ONE_TO_ONE',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
         associationTypeId: 1,
       };
@@ -107,8 +107,8 @@ describe('Utils Functions', () => {
         toTypeId: 2,
         customerId: 'cust_123',
         cardinality: 'ONE_TO_ONE',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
         associationTypeId: 1,
       };
@@ -120,7 +120,7 @@ describe('Utils Functions', () => {
         toObject: 'company',
         requestInfo: {
           label: 'Primary Contact',
-          associationTypeId: 2,
+          associationTypeId: 1,
           inverseLabel: 'Primary Company',
         },
       });
@@ -200,7 +200,7 @@ describe('Utils Functions', () => {
     });
   });
 
-  describe('formaCreateCardinalityRequest', () => {
+  describe('formatCreateCardinalityRequest', () => {
     it('should format create cardinality request correctly', () => {
       const response = {
         results: [
@@ -213,11 +213,11 @@ describe('Utils Functions', () => {
         id: 'def_123',
         fromObjectType: 'contact',
         toObjectType: 'company',
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
       } as AssociationDefinition;
 
-      const result = formaCreateCardinalityRequest(response, definition);
+      const result = formatCreateCardinalityRequest(response, definition);
 
       expect(result).toEqual({
         inputs: [
@@ -245,7 +245,7 @@ describe('Utils Functions', () => {
 
       const definition = {} as AssociationDefinition;
 
-      const result = formaCreateCardinalityRequest(response, definition);
+      const result = formatCreateCardinalityRequest(response, definition);
 
       expect(result).toEqual({ inputs: [] });
     });
@@ -256,8 +256,8 @@ describe('Utils Functions', () => {
       const definition: AssociationDefinition = {
         fromTypeId: 1,
         toTypeId: 2,
-        fromCardinality: 1,
-        toCardinality: 1,
+        fromMaxObjects: 1,
+        toMaxObjects: 1,
         associationCategory: 'USER_DEFINED',
       } as AssociationDefinition;
 
@@ -266,12 +266,12 @@ describe('Utils Functions', () => {
       expect(result).toEqual({
         inputs: [
           {
-            typeId: 2,
+            typeId: 1,
             category: 'USER_DEFINED',
             maxToObjectIds: 1,
           },
           {
-            typeId: 1,
+            typeId: 2,
             category: 'USER_DEFINED',
             maxToObjectIds: 1,
           },

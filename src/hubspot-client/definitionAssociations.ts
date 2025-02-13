@@ -5,7 +5,7 @@ import { AssociationDefinitionArchiveRequest } from '../../types/common';
 import {
   formatDefinitionPostRequest,
   formatDefinitionUpdateRequest,
-  formaCreateCardinalityRequest,
+  formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
   getCustomerId,
   checkAccessToken,
@@ -17,7 +17,7 @@ async function saveAssociationDefinitionConfiguration(
   fromObject: string,
   toObject: string,
 ) {
-  const inputs = formaCreateCardinalityRequest(response, data);
+  const inputs = formatCreateCardinalityRequest(response, data);
   console.log('Here are the formatted association definition inputs for cardinality', inputs, fromObject, toObject);
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
@@ -30,16 +30,17 @@ async function saveAssociationDefinitionConfiguration(
       path: `/crm/v4/associations/definitions/configurations/${fromObject}/${toObject}/batch/create`,
       body: inputs,
     });
-
+    let secondDefinitionWithConfig;
     console.log('Configured definition response:', definitionWithConfig);
     if (inputs.inputs.length === 2) {
-      const secondDefinitionWithConfig = await hubspotClient.apiRequest({
+      secondDefinitionWithConfig = await hubspotClient.apiRequest({
         method: 'POST',
         path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/create`,
         body: inputs,
       });
       console.log('attempting second post', secondDefinitionWithConfig);
     }
+    return { config1: definitionWithConfig, config2: secondDefinitionWithConfig };
   } catch (error:unknown) {
     handleError(error, 'There was an issue configuring the association definition');
     throw error;
@@ -52,31 +53,61 @@ async function updateAssociationDefinitionConfiguration(
   fromObject: string,
   toObject: string,
 ) {
+  console.log('Here is the data', data);
   const inputs = formatUpdateCardinalityRequest(data);
   const customerId = getCustomerId();
   const accessToken: string | void | null = await getAccessToken(customerId);
   checkAccessToken(accessToken);
   hubspotClient.setAccessToken(accessToken);
 
+  console.log('Here is the inputs', { inputs: [inputs.inputs[0]] });
   try {
-    const definitionWithConfig = await hubspotClient.apiRequest({
-      method: 'POST',
-      path: `/crm/v4/associations/definitions/configurations/${fromObject}/${toObject}/batch/update`,
-      body: inputs,
-    });
-    if (inputs.inputs.length === 2) {
-      const secondDefinitionWithConfig = await hubspotClient.apiRequest({
+    if (Array.isArray(inputs.inputs)) {
+      const definitionWithConfig = await hubspotClient.apiRequest({
         method: 'POST',
-        path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/create`,
-        body: inputs,
+        path: `/crm/v4/associations/definitions/configurations/${fromObject}/${toObject}/batch/update`,
+        body: { inputs: [inputs.inputs[0]] },
       });
-      console.log('attempting second post', secondDefinitionWithConfig);
+
+      // Check first response
+      if (definitionWithConfig.status === 400) {
+        const errorBody = await definitionWithConfig.json();
+        throw new Error(`Failed to update ${fromObject} to ${toObject} configuration: ${JSON.stringify(errorBody)}`);
+      }
+
+      let secondDefinitionWithConfig;
+      if (inputs.inputs.length === 2) {
+        secondDefinitionWithConfig = await hubspotClient.apiRequest({
+          method: 'POST',
+          path: `/crm/v4/associations/definitions/configurations/${toObject}/${fromObject}/batch/update`,
+          body: { inputs: [inputs.inputs[1]] },
+        });
+
+        // Check second response
+        if (secondDefinitionWithConfig.status === 400) {
+          const errorBody = await secondDefinitionWithConfig.json();
+          throw new Error(`Failed to update ${toObject} to ${fromObject} configuration: ${JSON.stringify(errorBody)}`);
+        }
+      }
+
+      // If both requests were successful, return the combined response
+      return {
+        firstConfig: await definitionWithConfig.json(),
+        secondConfig: secondDefinitionWithConfig ? await secondDefinitionWithConfig.json() : undefined,
+      };
     }
-    console.log('Configured definition response:', definitionWithConfig);
-    return definitionWithConfig;
-  } catch (error:unknown) {
-    handleError(error, 'There was an issue configuring the association definition');
-    throw error;
+
+    throw new Error('Invalid inputs format: inputs array is missing or empty');
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      handleError(error, 'There was an issue configuring the association definition');
+      throw error;
+    }
+    // Handle non-Error objects
+    const errorMessage = error instanceof Object ? JSON.stringify(error) : 'Unknown error occurred';
+    const wrappedError = new Error(`Configuration update failed: ${errorMessage}`);
+    handleError(wrappedError, 'There was an issue configuring the association definition');
+    throw wrappedError;
   }
 }
 
@@ -90,10 +121,12 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
-    if (data.fromCardinality || data.toCardinality) {
-      await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
+    let configResponse;
+    console.log('Here is the response from the create request', response);
+    if (data.fromMaxObjects || data.toMaxObjects) {
+      configResponse = await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
-    return response;
+    return configResponse ? { configResponse, response } : response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue saving the association definition in HubSpot');
     throw error;
@@ -109,15 +142,25 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
 
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
-    if (requestInfo.associationTypeId !== null) {
+    if (requestInfo.associationTypeId) {
       await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
         ...requestInfo,
         associationTypeId: requestInfo.associationTypeId,
       });
     }
-    if (data.fromCardinality || data.toCardinality) {
-      await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
+    if (data.toTypeId && requestInfo.label) {
+      await hubspotClient.crm.associations.v4.schema.definitionsApi.update(fromObject, toObject, {
+        associationTypeId: data.toTypeId,
+        label: requestInfo.label,
+        inverseLabel: requestInfo.inverseLabel,
+      });
     }
+
+    let cardinalityRepsonse;
+    if (data.fromMaxObjects || data.toMaxObjects) {
+      cardinalityRepsonse = await updateAssociationDefinitionConfiguration(data, fromObject, toObject);
+    }
+    return cardinalityRepsonse || null;
   } catch (error: unknown) {
     handleError(error, 'There was an issue updating the association definition in HubSpot');
     throw error;

@@ -17,8 +17,8 @@ CREATE TABLE "AssociationDefinition" (
     "associationTypeId" INTEGER,
     "customerId" VARCHAR(255) NOT NULL,
     "cardinality" "Cardinality" NOT NULL,
-    "fromCardinality" INTEGER,
-    "toCardinality" INTEGER,
+    "fromMaxObjects" INTEGER,
+    "toMaxObjects" INTEGER,
     "associationCategory" "AssociationCategory" NOT NULL,
 
     CONSTRAINT "AssociationDefinition_pkey" PRIMARY KEY ("id")

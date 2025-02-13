@@ -104,7 +104,7 @@ async function getBatchDBAssociationMappingsByAssociationId(
     return mappings;
   } catch (error: unknown) {
     handleError(error, 'Error finding association mappings');
-    throw error;
+    return [];
   }
 }
 

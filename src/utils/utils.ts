@@ -44,7 +44,7 @@ export function formatDefinitionUpdateRequest(def: AssociationDefinition) {
     toObject: def.toObjectType,
     requestInfo: {
       label: def.associationLabel || '',
-      associationTypeId: def.toTypeId,
+      associationTypeId: def.associationTypeId,
       inverseLabel: def.inverseLabel || undefined,
     },
   };
@@ -92,22 +92,22 @@ export function formatBatchArchiveRequest(definitions: AssociationMapping[]) {
 }
 
 // Utility function to create the request body
-export function formaCreateCardinalityRequest(response: any, data: AssociationDefinition) {
+export function formatCreateCardinalityRequest(response: any, data: AssociationDefinition) {
   const inputs: any[] = [];
 
-  if (data.fromCardinality) {
+  if (data.toMaxObjects) {
     inputs.push({
       typeId: response.results[0].typeId,
       category: response.results[0].category,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.toMaxObjects,
     });
   }
 
-  if (data.toCardinality) {
+  if (data.fromMaxObjects) {
     inputs.push({
       typeId: response.results[1].typeId,
       category: response.results[1].category,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.fromMaxObjects,
     });
   }
 
@@ -116,21 +116,23 @@ export function formaCreateCardinalityRequest(response: any, data: AssociationDe
 
 export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
   const inputs: any[] = [];
-  if (data.fromCardinality) {
+
+  if (data.fromMaxObjects) {
     inputs.push({
-      typeId: data.toTypeId,
+      typeId: data.fromTypeId || data.associationTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.toCardinality,
+      maxToObjectIds: data.fromMaxObjects,
     });
   }
 
-  if (data.toCardinality) {
+  if (data.toMaxObjects) {
     inputs.push({
-      typeId: data.fromTypeId,
+      typeId: data.toTypeId || data.associationTypeId,
       category: data.associationCategory,
-      maxToObjectIds: data.fromCardinality,
+      maxToObjectIds: data.toMaxObjects,
     });
   }
+  console.log('Here is the formatted inputs', inputs);
 
   return { inputs };
 }

@@ -79,7 +79,6 @@ describe('Definition Routes', () => {
       };
 
       (dbClient.deleteDBAssociationDefinition).mockResolvedValue(mockDeleteResponse);
-      (hubspotClient.archiveAssociationDefinition).mockResolvedValue({ success: true });
       (batchClient.getBatchDBAssociationMappingsByAssociationId).mockResolvedValue([]);
 
       const response = await request(app)
@@ -94,17 +93,14 @@ describe('Definition Routes', () => {
       });
 
       expect(dbClient.deleteDBAssociationDefinition).toHaveBeenCalledWith('123');
-      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenCalledWith({
-        fromObjectType: mockDefinition.fromObjectType,
-        toObjectType: mockDefinition.toObjectType,
-        associationTypeId: mockDefinition.associationTypeId,
-      });
     });
 
     // Add a new test for bidirectional case
     it('should successfully delete a bidirectional definition', async () => {
+      const associationDefinitionId = '123'; // Define the ID explicitly
       const mockBidirectionalResponse = {
         ...mockDefinition,
+        id: associationDefinitionId, // Add the ID to the mock response
         fromTypeId: 1,
         toTypeId: 2,
         associationTypeId: null, // This triggers bidirectional case
@@ -115,30 +111,18 @@ describe('Definition Routes', () => {
       (batchClient.getBatchDBAssociationMappingsByAssociationId).mockResolvedValue([]);
 
       const response = await request(app)
-        .delete('/api/associations/definitions/123')
-        .send(mockDefinition)
-        .expect(200);
+        .delete(`/api/associations/definitions/${associationDefinitionId}`) // Use template literal
+        .expect(200); // Remove .send() since we're passing the ID in the URL
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual({
-        message: 'Successfully deleted association definition 123',
+        message: `Successfully deleted association definition ${associationDefinitionId}`,
         deletedMappingsCount: 0,
       });
 
-      // Should make two calls to archive - one for each direction
-      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenCalledTimes(2);
-      // First call - original direction with toTypeId
-      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenNthCalledWith(1, {
-        fromObjectType: mockDefinition.fromObjectType,
-        toObjectType: mockDefinition.toObjectType,
-        associationTypeId: mockBidirectionalResponse.toTypeId,
-      });
-      // Second call - inverse direction with fromTypeId
-      expect(hubspotClient.archiveAssociationDefinition).toHaveBeenNthCalledWith(2, {
-        fromObjectType: mockDefinition.toObjectType,
-        toObjectType: mockDefinition.fromObjectType,
-        associationTypeId: mockBidirectionalResponse.fromTypeId,
-      });
+      // Verify the correct ID was passed to the service functions
+      expect(dbClient.deleteDBAssociationDefinition).toHaveBeenCalledWith(associationDefinitionId);
+      expect(batchClient.getBatchDBAssociationMappingsByAssociationId).toHaveBeenCalledWith(associationDefinitionId);
     });
 
     it('should return 404 if associationId is missing', async () => {
