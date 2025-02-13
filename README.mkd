@@ -44,7 +44,7 @@ Key concepts:
    - CLIENT_ID from Hubspot public app
    - CLIENT_SECRET from Hubspot public app
 4. Run npm install to install the required Node packages.
-5. In your HubSpot public app, add localhost:3001/api/install/oauth-callback as a redirect URL
+5. In your HubSpot app, add localhost:3001/api/install/oauth-callback as a redirect URL
 6. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
 7. Run npm run db-init to initialize the database schema
 8. Run npm run seed to seed the database with test data, select an industry for the data examples
