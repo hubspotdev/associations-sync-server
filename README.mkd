@@ -88,6 +88,7 @@ Key concepts:
 - `DELETE /api/associations/definitions/{associationId}`: Deletes an association definition by ID.
 - `PUT /api/associations/definitions/{id}`: Updates an existing association definition.
 
+
 ## Available Scripts
 
 - `npm run dev` - Start development server with hot reload
