@@ -40,10 +40,10 @@ Key concepts:
 1. Download and install PostgreSQL, make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
 2. Clone the repo
 3. Create the .env file with these entries:
-   - DATABASE_URL the (local) url to the postgres database (e.g. postgresql://{username}:{password}@localhost:5432/{database name})
+   - DATABASE_URL the (local) url to the postgres database (e.g. `postgresql://{username}:{password}@localhost:5432/{database name}`)
    - CLIENT_ID from Hubspot public app
    - CLIENT_SECRET from Hubspot public app
-4. Run npm install to install the required Node packages.
+4. Run `npm install` to install the required Node packages.
 5. In your HubSpot app, add localhost:3001/api/install/oauth-callback as a redirect URL
 6. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
 7. Run `npm run db-init` to initialize the database schema
@@ -54,20 +54,13 @@ Key concepts:
 
 ## Scopes
 
-- `crm.objects.companies.read`
-  - Allows the application to read company objects from HubSpot.
-- `crm.objects.companies.write`
-  - Allows the application to create, update, or delete company objects in HubSpot.
-- `crm.objects.contacts.read`
-  - Allows the application to read contact objects from HubSpot.
-- `crm.objects.contacts.write`
-  - Allows the application to create, update, or delete contact objects in HubSpot.
-- `crm.objects.deals.read`
-  - Allows the application to read deal objects from HubSpot.
-- `crm.objects.deals.write`
-  - Allows the application to create, update, or delete deal objects in HubSpot.
-- `oauth`
-  - Enables OAuth-based authentication and authorization with HubSpot.
+- `crm.objects.companies.read` Read company objects from HubSpot.
+- `crm.objects.companies.write` Create, update, or delete company objects in HubSpot.
+- `crm.objects.contacts.read` Read contact objects from HubSpot.
+- `crm.objects.contacts.write` Create, update, or delete contact objects in HubSpot.
+- `crm.objects.deals.read` Read deal objects from HubSpot.
+- `crm.objects.deals.write` Create, update, or delete deal objects in HubSpot.
+- `oauth` Enables OAuth-based authentication and authorization with HubSpot.
 
 
 ## Endpoints
