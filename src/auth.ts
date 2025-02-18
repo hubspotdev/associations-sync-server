@@ -112,7 +112,6 @@ const exchangeForTokens = async (
     const expiresAt: Date = getExpiresAt(expiresIn);
     const customerId: string = getCustomerId();
     const hsPortalId: string | void | null = await getHubSpotId(accessToken);
-    console.log('ACCESS TOKEN ==', accessToken);
 
     if (typeof hsPortalId !== 'string') {
       throw new Error(
@@ -149,10 +148,10 @@ const exchangeForTokens = async (
 };
 
 async function getAccessToken(customerId: string): Promise<string | void | null> {
-  // if (process.env.ACCESS_TOKEN) {
-  //   console.log('getting access token from env', process.env.ACCESS_TOKEN);
-  //   return process.env.ACCESS_TOKEN;
-  // }
+  if (process.env.ACCESS_TOKEN) {
+    console.log('Getting access token from env', process.env.ACCESS_TOKEN);
+    return process.env.ACCESS_TOKEN;
+  }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {

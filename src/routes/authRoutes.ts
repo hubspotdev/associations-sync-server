@@ -18,7 +18,7 @@ router.get('/oauth-callback', async (req: Request, res: Response) => {
         res.send('Success!');
       }
     } catch (error:unknown) {
-      console.log('oops');
+      console.log('An error occurred while redeeming the code', error);
     }
   }
 });

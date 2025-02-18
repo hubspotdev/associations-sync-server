@@ -132,8 +132,6 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
       maxToObjectIds: data.toMaxObjects,
     });
   }
-  console.log('Here is the formatted inputs', inputs);
-
   return { inputs };
 }
 

@@ -25,7 +25,6 @@ async function saveAssociationDefinitionConfiguration(
       body: inputs,
     });
     let secondDefinitionWithConfig;
-    console.log('Configured definition response:', definitionWithConfig);
     if (inputs.inputs.length === 2) {
       secondDefinitionWithConfig = await hubspotClient.apiRequest({
         method: 'POST',
@@ -106,7 +105,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
     let configResponse;
-    console.log('Here is the response from the create request', response);
+    console.log('Response from the create request', response);
     if (data.fromMaxObjects || data.toMaxObjects) {
       configResponse = await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
