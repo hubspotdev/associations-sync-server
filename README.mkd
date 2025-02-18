@@ -8,10 +8,10 @@ An Express.js application that provides seamless integration with HubSpot for ma
 - [Setup](#setup)
 - [Scopes](#scopes)
 - [Endpoints](#endpoints)
-  - [Authentication](#authentication)
-  - [Associations](#associations)
-  - [Mappings](#mappings)
-  - [Definitions](#definitions)
+  - [Authentication Endpoints](#authentication-endpoints)
+  - [Associations Endpoints](#associations-endpoints)
+  - [Mappings Endpoints](#mappings-endpoints)
+  - [Definitions Endpoints](#definitions-endpoints)
 - [Available Scripts](#available-scripts)
 - [Project Structure](#project-structure)
 - [Dependencies](#dependencies)
@@ -62,17 +62,18 @@ Key concepts:
 - `crm.objects.deals.write` Create, update, or delete deal objects in HubSpot.
 - `oauth` Enables OAuth-based authentication and authorization with HubSpot.
 
-
 ## Endpoints
 
 ### Authentication Endpoints
 - `GET /api/install`: Redirects to HubSpot's OAuth authorization for initiating OAuth flow.
 - `GET /api/install/oauth-callback`: Handles HubSpot's OAuth callback for token exchange.
+
 ### Associations Endpoints
 - `GET /api/associations/{associationId}`: Retrieves a specific association by ID.
 - `POST /api/associations`: Creates a new association.
 - `DELETE /api/associations/{associationId}`: Deletes an association by ID.
 - `GET /api/associations/mappings/all`: Retrieves all associations
+
 ### Mappings Endpoints
 - `POST /api/associations/mappings`: Creates a single association mapping.
 - `POST /api/associations/mappings/batch`: Creates multiple association mappings.
@@ -80,6 +81,7 @@ Key concepts:
 - `GET /api/associations/mappings/all`: Retrieves all mappings.
 - `DELETE /api/associations/mappings/basic/{mappingId}`: Deletes a single mapping by ID.
 - `GET /api/associations/mappings/basic/{mappingId}`: Retrieves a single mapping by ID.
+
 ### Definitions Endpoints
 - `GET /api/associations/definitions/{fromObject}/{toObject}`: Retrieves association definitions between specified object types.
 - `POST /api/associations/definitions`: Creates a new association definition.
