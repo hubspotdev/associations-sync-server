@@ -3,7 +3,7 @@ import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
 
 export async function seedManufacturingData(prisma: PrismaClient, hubspotClient: Client) {
-  console.log('🚀 Starting manufacturing data seed...', prisma)
+  console.log('🚀 Starting manufacturing data seed...')
 
   // Check if AssociationDefinition already exists in Prisma
   let supplierProductAssoc;

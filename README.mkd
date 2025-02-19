@@ -43,10 +43,10 @@ Key concepts:
    - DATABASE_URL the (local) url to the postgres database (e.g. `postgresql://{username}:{password}@localhost:5432/{database name}`)
    - CLIENT_ID from Hubspot public app
    - CLIENT_SECRET from Hubspot public app
-4. In your HubSpot app, add localhost:3001/api/install/oauth-callback as a redirect URL
-5. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
-6. Run `npm install` to install the required Node packages.
-7. Run `npm run db-init` to initialize the database schema
+4. Run `npm run db-init` to initialize the database schema
+5. In your HubSpot app, add localhost:3001/api/install/oauth-callback as a redirect URL
+6. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
+7. Run `npm install` to install the required Node packages.
 8. Run `npm run dev` to start the server
 9. Visit http://localhost:3001/api/install in a browser to get the OAuth install link
 10. Run `npm run seed` to seed the database with test data, select an industry for the data examples
