@@ -9,7 +9,6 @@ import prisma from '../../src/prisma-client/prisma-initialization';
 
 async function main() {
   const customerId = getCustomerId()
-  console.log('getaccess token', getAccessToken)
   const accessToken = await getAccessToken(customerId);
   if(accessToken) hubspotClient.setAccessToken(accessToken)
 

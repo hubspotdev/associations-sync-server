@@ -3,7 +3,7 @@ import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
 
 export async function seedManufacturingData(prisma: PrismaClient, hubspotClient: Client) {
-  console.log('🚀 Starting manufacturing data seed...', prisma)
+  console.log('🚀 Starting manufacturing data seed...')
 
   // Check if AssociationDefinition already exists in Prisma
   let supplierProductAssoc;
@@ -159,7 +159,7 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'companies',
-        'products',
+        'companies',
         {
           label: 'Supplier to Buyer',
           name: 'supplier_buyer',
@@ -177,8 +177,8 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
   const existingAssocDef = await prisma.associationDefinition.findFirst({
     where: {
       fromObjectType: 'Company',
-      toObjectType: 'Product',
-      associationLabel: 'supplier_product',
+      toObjectType: 'Company',
+      associationLabel: 'supplier_buyer',
       associationTypeId: associationDefinition.results[0].typeId
     }
   });
