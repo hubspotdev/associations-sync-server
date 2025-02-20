@@ -5,61 +5,62 @@ An Express.js application that provides seamless integration with HubSpot for ma
 ## Table of Contents
 - [What this project does](#what-this-project-does)
 - [Why is this project useful](#why-is-this-project-useful)
-- [Setup](#setup)
-- [Scopes](#scopes)
+- [Getting started with the project](#getting-started-with-the-project)
+  - [Setup](#setup)
+  - [Scopes](#scopes)
 - [Endpoints](#endpoints)
-  - [Authentication](#authentication)
-  - [Associations](#associations)
-  - [Mappings](#mappings)
-  - [Definitions](#definitions)
+  - [Authentication Endpoints](#authentication-endpoints)
+  - [Associations Endpoints](#associations-endpoints)
+  - [Mappings Endpoints](#mappings-endpoints)
+  - [Definitions Endpoints](#definitions-endpoints)
 - [Available Scripts](#available-scripts)
-- [Project Structure](#project-structure)
 - [Dependencies](#dependencies)
   - [Core](#core)
   - [Development](#development)
-- [License](#license)
 - [Where to get help?](#where-to-get-help)
 - [Who maintains and contributes to this project](#who-maintains-and-contributes-to-this-project)
+- [License](#license)
 
 ## What this project does
 
 This application provides a solution for integrating with HubSpot to manage associations between various CRM objects. It handles the creation, retrieval, deletion, and mapping of associations and definitions.
 
-Key concepts:
-- **Associations in HubSpot** refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
-- **Association mapping** refers to the mapping of HubSpot objects to a local database
-- **Association definition** involves specifying the nature and characteristics of the association between objects
+**Key concepts**:
+- Associations in HubSpot refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
+- Association mapping refers to the mapping of HubSpot objects to a local database
+- Association definition involves specifying the nature and characteristics of the association between objects
 
 ## Why is this project useful
 
 - **Comprehensive API Management**: Provides endpoints for managing associations and definitions between CRM objects, allowing for complex relationship handling
 - **Data Consistency**: Ensures data consistency across platforms by handling interactions with both a local database and HubSpot
 
-## Setup
+ ## Getting started with the project:
 
-1. Download and install PostgreSQL, make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
+### Setup:
+
+1. Download and install [PostgreSQL](https://www.postgresql.org/download/), make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
 2. Clone the repo
-3. Create the .env file with these entries:
-   - DATABASE_URL the (local) url to the postgres database (e.g. postgresql://{username}:{password}@localhost:5432/{database name})
+3. Create the .env file with these entries (see examples in the [.env.example](./.env.example) file):
+   - DATABASE_URL the (local) url to the postgres database (e.g. `postgresql://{username}:{password}@localhost:5432/{database name}`)
    - CLIENT_ID from Hubspot public app
    - CLIENT_SECRET from Hubspot public app
-4. Run npm install to install the required Node packages.
-5. In your HubSpot public app, add localhost:3001/api/install/oauth-callback as a redirect URL
-6. The app uses the following scopes: crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write oauth
-7. Run npm run dev to start the server
-8. Visit http://localhost:3001/api/install in a browser to get the OAuth install link
-9. Run npm run seed to seed the database with test data, select an industry for the data examples
-10. Once the server is running, you can access the application and API documentation at http://localhost:3001/api-docs.
+4. Run `npm install` to install the required Node packages.
+5. In your HubSpot public app, add `localhost:3001/api/install/oauth-callback` as a redirect URL, set the requied scopes to be those in the [Scopes](#scopes) section down below
+7. Run `npm run dev` to start the server
+8. Visit `http://localhost:3001/api/install` in a browser to get the OAuth install link
+9. Run `npm run seed` to seed the database with test data, select an industry for the data examples
+10. Once the server is running, you can access the application and API documentation at `http://localhost:3001/api-docs`.
 
 ## Scopes
 
-'crm.objects.companies.read',
-'crm.objects.companies.write',
-'crm.objects.contacts.read',
-'crm.objects.contacts.write',
-'crm.objects.deals.read',
-'crm.objects.deals.write',
-'oauth'
+- `crm.objects.companies.read` - View properties and other details about companies
+- `crm.objects.companies.write` - View properties and create, delete, or make changes to companies
+- `crm.objects.contacts.read` - View properties and other details about contacts
+- `crm.objects.contacts.write` - View properties and create, delete, and make changes to contacts
+- `crm.objects.deals.read` - View properties and other details about deals
+- `crm.objects.deals.write` - View properties and create, delete, or make changes to deals
+- `oauth` - Basic scope required for OAuth. This scope is added by default to all apps
 
 
 ## Endpoints
