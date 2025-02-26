@@ -1,14 +1,16 @@
 import { AssociationDefinition } from '@prisma/client';
 import { expect } from '@jest/globals';
-import { hubspotClient, getAccessToken } from '../../../auth';
+import { hubspotClient, getAccessToken } from '../../../src/auth';
 import {
+  saveAssociationDefinition,
   archiveAssociationDefinition,
+  updateAssociationDefinition,
   getAllAssociationDefinitionsByType,
-} from '../../../hubspot-client/definitionAssociations';
-import * as utils from '../../../utils/utils';
-import handleError from '../../../utils/error';
+} from '../../../src/hubspot-client/definitionAssociations';
+import * as utils from '../../../src/utils/utils';
+import handleError from '../../../src/utils/error';
 
-jest.mock('../../../auth', () => ({
+jest.mock('../../../src/auth', () => ({
   hubspotClient: {
     setAccessToken: jest.fn(),
     apiRequest: jest.fn(),
@@ -31,7 +33,7 @@ jest.mock('../../../auth', () => ({
   setAccessToken: jest.fn(),
 }));
 
-jest.mock('../../../utils/utils', () => ({
+jest.mock('../../../src/utils/utils', () => ({
   formatDefinitionPostRequest: jest.fn(),
   formatDefinitionUpdateRequest: jest.fn(),
   formatCreateCardinalityRequest: jest.fn(),
@@ -40,7 +42,7 @@ jest.mock('../../../utils/utils', () => ({
   checkAccessToken: jest.fn(),
 }));
 
-jest.mock('../../../utils/error');
+jest.mock('../../../src/utils/error');
 
 describe('Definition Associations HubSpot Client', () => {
   const mockDefinition: AssociationDefinition = {

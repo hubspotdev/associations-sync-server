@@ -1,20 +1,20 @@
-import handleError from '../../../utils/error';
-import Logger from '../../../utils/logger';
-import disconnectPrisma from '../../../../prisma/disconnect';
-import server from '../../../app';
+import handleError from '../../../src/utils/error';
+import Logger from '../../../src/utils/logger';
+import disconnectPrisma from '../../../prisma/disconnect';
+import server from '../../../src/app';
 
 // Mock dependencies
-jest.mock('../../../utils/logger', () => ({
+jest.mock('../../../src/utils/logger', () => ({
   error: jest.fn(),
 }));
 
-jest.mock('../../../../prisma/disconnect', () => ({
+jest.mock('../../../prisma/disconnect', () => ({
   __esModule: true,
   default: jest.fn().mockResolvedValue(undefined),
 }));
 
 // Mock server with proper close behavior
-jest.mock('../../../app', () => ({
+jest.mock('../../../src/app', () => ({
   __esModule: true,
   default: {
     listen: jest.fn(() => ({

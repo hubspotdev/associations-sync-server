@@ -18,15 +18,14 @@ interface ExchangeProof {
 
 type HubspotAccountInfo = {
   portalId: number;
-  // Additional properties can be uncommented as needed
-  // accountType: string;
-  // timeZone: string;
-  // companyCurrency: string;
-  // additionalCurrencies: any[];
-  // utcOffset: string;
-  // utcOffsetMilliseconds: number;
-  // uiDomain: string;
-  // dataHostingLocation: string;
+  accountType: string;
+  timeZone: string;
+  companyCurrency: string;
+  additionalCurrencies: any[];
+  utcOffset: string;
+  utcOffsetMilliseconds: number;
+  uiDomain: string;
+  dataHostingLocation: string;
 };
 
 const CLIENT_ID: string = process.env.CLIENT_ID || 'CLIENT_ID required';

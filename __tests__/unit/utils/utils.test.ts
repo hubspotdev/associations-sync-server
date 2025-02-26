@@ -10,7 +10,7 @@ import {
   formatUpdateCardinalityRequest,
   PORT,
   getCustomerId,
-} from '../../../utils/utils';
+} from '../../../src/utils/utils';
 
 describe('Utils Functions', () => {
   describe('formatSingleRequestData', () => {
