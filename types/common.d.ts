@@ -2,7 +2,6 @@ import {  AssociationSpecAssociationCategoryEnum } from '@hubspot/api-client/lib
 import { BatchInputPublicAssociationMultiArchive, BatchInputPublicAssociationMultiPost, BatchInputPublicDefaultAssociationMultiPost } from '@hubspot/api-client/lib/codegen/crm/associations/v4';
 import {AssociationSpec} from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/AssociationSpec'
 
-// declare module "default" {
   enum Objects {
     Contact = "Contact",
     Company = "Company",
@@ -56,20 +55,11 @@ export interface AssociationRequest {
   associationType:AssociationSpec[];
 }
 
-// export interface AssociationBatchRequest {
-//   fromObjectType: string;
-//   toObjectType: string;
-//   inputs: BatchInputPublicAssociationMultiPost;
-// }
 export interface AssociationBatchArchiveRequest {
   objectType: string;
   toObjectType: string;
   associations: BatchInputPublicAssociationMultiArchive;
 }
-// type AssociationCategory =
-//   'HUBSPOT_DEFINED' |
-//   'INTEGRATOR_DEFINED' |
-//   'USER_DEFINED'
 
 export interface AssociationMapping {
   id: number;
@@ -145,4 +135,4 @@ type AssociationDefinitionArchiveRequest = {
   associationTypeId: number;
 };
 
-// }
+

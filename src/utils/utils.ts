@@ -59,7 +59,7 @@ const AssociationCategoryMapping = {
 export function formatBatchRequestData(data: AssociationMapping[]) {
   const formattedInputs = data.map((item) => ({
     _from: { id: item.fromHubSpotObjectId },
-    to: { id: item.toHubSpotObjectId }, // Changed from array to single PublicObjectId
+    to: { id: item.toHubSpotObjectId },
     types: [{
       associationCategory: AssociationCategoryMapping[item.associationCategory],
       associationTypeId: item.associationTypeId,

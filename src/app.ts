@@ -25,9 +25,4 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`App is listening on port ${PORT}!`);
   });
 }
-// process.on('SIGTERM', () => {
-//   console.info('SIGTERM signal received.');
-//   shutdown();
-// });
-
 export default app;
