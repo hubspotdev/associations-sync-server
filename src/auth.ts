@@ -147,10 +147,6 @@ const exchangeForTokens = async (
 };
 
 async function getAccessToken(customerId: string): Promise<string | void | null> {
-  if (process.env.ACCESS_TOKEN) {
-    console.log('Getting access token from env', process.env.ACCESS_TOKEN);
-    return process.env.ACCESS_TOKEN;
-  }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {
