@@ -1,10 +1,10 @@
 import { AssociationMapping } from '@prisma/client';
-import { hubspotClient, setAccessToken } from '../auth';
+import { hubspotClient, authenticateHubspotClient } from '../auth';
 import handleError from '../utils/error';
 import { formatSingleRequestData } from '../utils/utils';
 
 async function saveSingleHubspotAssociation(data: AssociationMapping) {
-  setAccessToken();
+  await authenticateHubspotClient();
 
   const {
     objectId, objectType, toObjectId, toObjectType, associationType,
@@ -27,7 +27,7 @@ async function saveSingleHubspotAssociation(data: AssociationMapping) {
 }
 
 async function archiveSingleHubspotAssociation(data: AssociationMapping) {
-  setAccessToken();
+  await authenticateHubspotClient();
 
   const {
     objectId, objectType, toObjectId, toObjectType,

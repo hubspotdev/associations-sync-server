@@ -1,5 +1,5 @@
 import { AssociationDefinition } from '@prisma/client';
-import { hubspotClient, setAccessToken } from '../auth';
+import { hubspotClient, authenticateHubspotClient } from '../auth';
 import handleError from '../utils/error';
 import { AssociationDefinitionArchiveRequest } from '../../types/common';
 import {
@@ -16,7 +16,7 @@ async function saveAssociationDefinitionConfiguration(
   toObject: string,
 ) {
   const inputs = formatCreateCardinalityRequest(response, data);
-  setAccessToken();
+  await authenticateHubspotClient();
 
   try {
     const definitionWithConfig = await hubspotClient.apiRequest({
@@ -46,7 +46,7 @@ async function updateAssociationDefinitionConfiguration(
   toObject: string,
 ) {
   const inputs = formatUpdateCardinalityRequest(data);
-  setAccessToken();
+  await authenticateHubspotClient();
   try {
     if (Array.isArray(inputs.inputs)) {
       const definitionWithConfig = await hubspotClient.apiRequest({
@@ -99,7 +99,7 @@ async function updateAssociationDefinitionConfiguration(
 
 async function saveAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionPostRequest(data);
-  setAccessToken();
+  await authenticateHubspotClient();
 
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
@@ -118,7 +118,7 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
 
 async function updateAssociationDefinition(data: AssociationDefinition) {
   const formattedData = formatDefinitionUpdateRequest(data);
-  setAccessToken();
+  await authenticateHubspotClient();
 
   const { fromObject, toObject, requestInfo } = formattedData;
   try {
@@ -148,7 +148,7 @@ async function updateAssociationDefinition(data: AssociationDefinition) {
 }
 
 async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRequest) {
-  setAccessToken();
+  await authenticateHubspotClient();
 
   const { fromObjectType, toObjectType, associationTypeId } = data;
 
@@ -168,7 +168,7 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
 
 async function getAllAssociationDefinitionsByType(data: { toObject:string, fromObject:string }) {
   const { toObject, fromObject } = data;
-  setAccessToken();
+  await authenticateHubspotClient();
 
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.getAll(toObject, fromObject);

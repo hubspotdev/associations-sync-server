@@ -12,7 +12,7 @@ import handleError from '../../../src/utils/error';
 
 jest.mock('../../../src/auth', () => ({
   hubspotClient: {
-    setAccessToken: jest.fn(),
+   authenticateHubspotClient: jest.fn(),
     apiRequest: jest.fn(),
     crm: {
       associations: {
@@ -30,7 +30,7 @@ jest.mock('../../../src/auth', () => ({
     },
   },
   getAccessToken: jest.fn(),
-  setAccessToken: jest.fn(),
+ authenticateHubspotClient: jest.fn(),
 }));
 
 jest.mock('../../../src/utils/utils', () => ({
