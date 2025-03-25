@@ -1,0 +1,37 @@
+# Dependency directories
+node_modules
+npm-debug.log
+
+# Build artifacts
+dist
+
+# Testing
+coverage
+jest.config.js
+__tests__
+junit.xml
+
+# Source control
+.git
+.github
+.gitignore
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Editor directories and files
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp
+temp
