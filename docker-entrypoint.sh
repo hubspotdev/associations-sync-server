@@ -31,20 +31,25 @@ echo "Database TCP connection successful."
 
 # Test direct database connection
 echo "Testing direct PostgreSQL connection..."
-if PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U zradford -d docker-test-associations -c "SELECT 1" > /dev/null 2>&1; then
+export PGPASSWORD=zradford
+if psql -h db -U zradford -d docker-test-associations-2 -c "SELECT 1" > /dev/null 2>&1; then
   echo "Direct PostgreSQL connection successful!"
 else
   echo "Direct PostgreSQL connection failed. Error code: $?"
   # List available databases for debugging
   echo "Available databases:"
-  PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U zradford -c "\l" || echo "Could not list databases"
+  psql -h db -U zradford -c "\l" || echo "Could not list databases"
 fi
 
 echo "Initializing database..."
 
-# First create the database schema
+# Generate Prisma client
 echo "Generating Prisma client..."
 npx prisma generate
+
+# Reset and push schema (this is simpler than using migrations for now)
+echo "Resetting and pushing database schema..."
+npx prisma db push --accept-data-loss --force-reset
 
 echo "Prisma DATABASE_URL parsing check:"
 # Use a simple Node script to verify Prisma can parse the URL
@@ -65,26 +70,6 @@ if (parts) {
   console.log('Failed to parse URL');
 }
 "
-
-echo "Creating database schema..."
-# Use db push to create tables without requiring migrations
-npx prisma db push --skip-generate
-
-# Capture the exit code to report it
-DB_PUSH_RESULT=$?
-if [ $DB_PUSH_RESULT -ne 0 ]; then
-  echo "Error: prisma db push failed with exit code $DB_PUSH_RESULT"
-fi
-
-# Now migrations can be checked since tables exist
-echo "Checking migrations..."
-npx prisma migrate deploy
-
-# Capture the exit code to report it
-MIGRATE_RESULT=$?
-if [ $MIGRATE_RESULT -ne 0 ]; then
-  echo "Error: prisma migrate deploy failed with exit code $MIGRATE_RESULT"
-fi
 
 echo "Starting the application..."
 exec "$@"
