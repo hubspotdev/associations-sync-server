@@ -6,6 +6,7 @@ An Express.js application that provides seamless integration with HubSpot for ma
 - [What this project does](#what-this-project-does)
 - [Why is this project useful](#why-is-this-project-useful)
 - [Setup](#setup)
+- [Docker Setup](#docker-setup)
 - [Scopes](#scopes)
 - [Endpoints](#endpoints)
   - [Authentication Endpoints](#authentication-endpoints)
@@ -51,6 +52,76 @@ Key concepts:
 9. Visit http://localhost:3001/api/install in a browser to get the OAuth install link
 10. Run `npm run seed` to seed the database with test data, select an industry for the data examples
 11. Once the server is running, you can access the application and API documentation at http://localhost:3001/api-docs.
+
+## Docker Setup
+
+This application can be run using Docker, which provides an isolated and consistent environment across different machines.
+
+### Prerequisites
+- Docker and Docker Compose installed on your machine
+- Git for cloning the repository
+
+### Running with Docker
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/associations-server.git
+   cd associations-server
+   ```
+
+2. Create a `.env` file in the project root with the following variables:
+   ```
+   DATABASE_URL=postgresql://zradford:zradford@db:5432/docker-test-associations
+   CLIENT_ID=your_hubspot_client_id
+   CLIENT_SECRET=your_hubspot_client_secret
+   INDUSTRY=your_industry_value
+   ```
+   Note: When using Docker, the database host in the DATABASE_URL should be `db` instead of `localhost`.
+
+3. Build and start the Docker containers:
+   ```bash
+   docker-compose build
+   docker-compose up
+   ```
+
+4. The application will be available at http://localhost:3001 and API documentation at http://localhost:3001/api-docs
+
+5. To seed the database with test data:
+   ```bash
+   docker-compose exec app npm run seed
+   ```
+
+6. To stop the application:
+   ```bash
+   docker-compose down
+   ```
+
+### Persisting Data
+Database data is persisted in a Docker volume named `postgres-data`. To completely reset the database:
+```bash
+docker-compose down -v
+```
+
+### Running with Other Docker Applications
+This application can be integrated with other Docker services by:
+
+1. Creating a shared network:
+   ```bash
+   docker network create shared-network
+   ```
+
+2. Modifying the `docker-compose.yml` to join the shared network:
+   ```yaml
+   networks:
+     app-network:
+       driver: bridge
+     shared-network:
+       external: true
+       name: shared-network
+   ```
+
+3. Other Docker applications can then connect to this service using the container names:
+   - API: `http://associations-server-app:3001`
+   - Database: `postgresql://zradford:zradford@associations-server-db:5432/docker-test-associations`
 
 ## Scopes
 
