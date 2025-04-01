@@ -5,15 +5,15 @@ An Express.js application that provides seamless integration with HubSpot for ma
 ## Table of Contents
 - [What this project does](#what-this-project-does)
 - [Why is this project useful](#why-is-this-project-useful)
-- [Setup](#setup)
-- [Scopes](#scopes)
+- [Getting started with the project](#getting-started-with-the-project)
+  - [Setup](#setup)
+  - [Scopes](#scopes)
 - [Endpoints](#endpoints)
   - [Authentication Endpoints](#authentication-endpoints)
   - [Associations Endpoints](#associations-endpoints)
   - [Mappings Endpoints](#mappings-endpoints)
   - [Definitions Endpoints](#definitions-endpoints)
 - [Available Scripts](#available-scripts)
-- [Project Structure](#project-structure)
 - [Dependencies](#dependencies)
   - [Core](#core)
   - [Development](#development)
@@ -25,19 +25,21 @@ An Express.js application that provides seamless integration with HubSpot for ma
 
 This application provides a solution for integrating with HubSpot to manage associations between various CRM objects. It handles the creation, retrieval, deletion, and mapping of associations and definitions.
 
-Key concepts:
-- **Associations in HubSpot** refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
-- **Association mapping** refers to the mapping of HubSpot objects to a local database
-- **Association definition** involves specifying the nature and characteristics of the association between objects
+**Key concepts**:
+- Associations in HubSpot refer to the connections or relationships between different CRM objects. For instance, a contact can be associated with a company, a deal, or a custom object
+- Association mapping refers to the mapping of HubSpot objects to a local database
+- Association definition involves specifying the nature and characteristics of the association between objects
 
 ## Why is this project useful
 
 - **Comprehensive API Management**: Provides endpoints for managing associations and definitions between CRM objects, allowing for complex relationship handling
 - **Data Consistency**: Ensures data consistency across platforms by handling interactions with both a local database and HubSpot
 
-## Setup
+ ## Getting started with the project:
 
-1. Download and install PostgreSQL, make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
+### Setup:
+
+1. Download and install [PostgreSQL](https://www.postgresql.org/download/), make sure it's running, and create an empty database. You need the username and password (defaults username is postgres and no password)
 2. Clone the repo
 3. Create the .env file with these entries:
    - DATABASE_URL the (local) url to the postgres database (e.g. `postgresql://{username}:{password}@localhost:5432/{database name}`)
