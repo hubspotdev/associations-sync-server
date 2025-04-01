@@ -2,6 +2,7 @@
 import 'dotenv/config';
 import * as hubspot from '@hubspot/api-client';
 import { Authorization } from '@prisma/client';
+import { Client } from '@hubspot/api-client';
 import { PORT, getCustomerId } from './utils/utils';
 import handleError from './utils/error';
 import prisma from './prisma-client/prisma-initialization';
@@ -17,15 +18,14 @@ interface ExchangeProof {
 
 type HubspotAccountInfo = {
   portalId: number;
-  // Additional properties can be uncommented as needed
-  // accountType: string;
-  // timeZone: string;
-  // companyCurrency: string;
-  // additionalCurrencies: any[];
-  // utcOffset: string;
-  // utcOffsetMilliseconds: number;
-  // uiDomain: string;
-  // dataHostingLocation: string;
+  accountType: string;
+  timeZone: string;
+  companyCurrency: string;
+  additionalCurrencies: any[];
+  utcOffset: string;
+  utcOffsetMilliseconds: number;
+  uiDomain: string;
+  dataHostingLocation: string;
 };
 
 const CLIENT_ID: string = process.env.CLIENT_ID || 'CLIENT_ID required';
@@ -45,7 +45,6 @@ const SCOPES = [
 ];
 
 const scopeString = SCOPES.toString().replaceAll(',', ' ').trim();
-console.log('SCOPES++', scopeString);
 const authUrl = hubspotClient.oauth.getAuthorizationUrl(
   CLIENT_ID,
   REDIRECT_URI,
@@ -112,7 +111,6 @@ const exchangeForTokens = async (
     const expiresAt: Date = getExpiresAt(expiresIn);
     const customerId: string = getCustomerId();
     const hsPortalId: string | void | null = await getHubSpotId(accessToken);
-    console.log('ACCESS TOKEN ==', accessToken);
 
     if (typeof hsPortalId !== 'string') {
       throw new Error(
@@ -149,10 +147,6 @@ const exchangeForTokens = async (
 };
 
 async function getAccessToken(customerId: string): Promise<string | void | null> {
-  // if (process.env.ACCESS_TOKEN) {
-  //   console.log('getting access token from env', process.env.ACCESS_TOKEN);
-  //   return process.env.ACCESS_TOKEN;
-  // }
   try {
     const currentCreds = (await prisma.authorization.findFirst({
       select: {
@@ -201,6 +195,32 @@ const redeemCode = async (code: string): Promise<Authorization | null | void> =>
   }
 };
 
+function applyHubSpotAccessToken(accessToken: string): Client {
+  try {
+    hubspotClient.setAccessToken(accessToken);
+    return hubspotClient;
+  } catch (error) {
+    handleError(error, 'Error setting HubSpot access token');
+    throw new Error(`Failed to apply access token: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+async function authenticateHubspotClient(): Promise<Client> {
+  try {
+    const customerId = getCustomerId();
+    const accessToken = await getAccessToken(customerId);
+    if (!accessToken) {
+      throw new Error(`No access token returned for customer ID: ${customerId}`);
+    }
+    return applyHubSpotAccessToken(accessToken);
+  } catch (error) {
+    handleError(error, 'Error retrieving HubSpot access token');
+    throw error instanceof Error
+      ? new Error(`Failed to authenticate HubSpot client: ${error.message}`)
+      : new Error('Failed to authenticate HubSpot client due to an unknown error');
+  }
+}
+
 export {
   exchangeForTokens,
   redeemCode,
@@ -208,4 +228,5 @@ export {
   prisma,
   hubspotClient,
   authUrl,
+  authenticateHubspotClient,
 };

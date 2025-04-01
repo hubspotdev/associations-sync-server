@@ -7,7 +7,7 @@ module.exports = {
       tsconfig: 'tsconfig.json'
     }],
   },
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   globals: {
     'ts-jest': {

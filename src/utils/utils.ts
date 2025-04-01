@@ -59,7 +59,7 @@ const AssociationCategoryMapping = {
 export function formatBatchRequestData(data: AssociationMapping[]) {
   const formattedInputs = data.map((item) => ({
     _from: { id: item.fromHubSpotObjectId },
-    to: { id: item.toHubSpotObjectId }, // Changed from array to single PublicObjectId
+    to: { id: item.toHubSpotObjectId },
     types: [{
       associationCategory: AssociationCategoryMapping[item.associationCategory],
       associationTypeId: item.associationTypeId,
@@ -132,23 +132,7 @@ export function formatUpdateCardinalityRequest(data: AssociationDefinition) {
       maxToObjectIds: data.toMaxObjects,
     });
   }
-  console.log('Here is the formatted inputs', inputs);
-
   return { inputs };
-}
-
-export function checkAccessToken(accessToken: string | null | undefined | void): asserts accessToken is string {
-  if (accessToken === null) {
-    throw new Error('Access token is null');
-  } else if (accessToken === undefined) {
-    throw new Error('Access token is not defined');
-  } else if (!accessToken) {
-    throw new Error('Access token is empty');
-  } else if (typeof accessToken !== 'string') {
-    throw new Error('Access token is not a string');
-  } else if (accessToken.length === 0) {
-    throw new Error('Access token is empty');
-  }
 }
 
 export { PORT, getCustomerId };

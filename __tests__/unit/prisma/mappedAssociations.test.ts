@@ -2,7 +2,7 @@ import { AssociationMapping } from '@prisma/client';
 import {
   describe, it, expect, jest, beforeEach,
 } from '@jest/globals';
-import prisma from '../../../prisma-client/prisma-initialization';
+import prisma from '../../../src/prisma-client/prisma-initialization';
 import {
   getDBMappings,
   saveDBMapping,
@@ -10,11 +10,11 @@ import {
   getSingleDBAssociationMappingFromId,
   getSingleDBAssociationMapping,
   getAllDBMappings,
-} from '../../../prisma-client/mappedAssociations';
-import handleError from '../../../utils/error';
+} from '../../../src/prisma-client/mappedAssociations';
+import handleError from '../../../src/utils/error';
 
 // Mock the Prisma client
-jest.mock('../../../prisma-client/prisma-initialization', () => ({
+jest.mock('../../../src/prisma-client/prisma-initialization', () => ({
   associationMapping: {
     findMany: jest.fn(),
     findUnique: jest.fn(),
@@ -24,7 +24,7 @@ jest.mock('../../../prisma-client/prisma-initialization', () => ({
 }));
 
 // Mock error handler
-jest.mock('../../../utils/error', () => ({
+jest.mock('../../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));

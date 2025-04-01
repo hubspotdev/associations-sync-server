@@ -1,5 +1,5 @@
-import Logger from '../../../utils/logger';
-import { LogObject } from '../../../../types/common';
+import Logger from '../../../src/utils/logger';
+import { LogObject } from '../../../types/common';
 
 describe('Logger', () => {
   const originalConsole = { ...console };

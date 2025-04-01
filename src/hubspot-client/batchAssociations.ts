@@ -6,11 +6,9 @@ import {
 import {
   BatchResponseLabelsBetweenObjectPair,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/BatchResponseLabelsBetweenObjectPair';
-import { hubspotClient, getAccessToken } from '../auth';
+import { hubspotClient, authenticateHubspotClient } from '../auth';
 import handleError from '../utils/error';
-import {
-  formatBatchArchiveRequest, formatBatchRequestData, getCustomerId, checkAccessToken,
-} from '../utils/utils';
+import { formatBatchArchiveRequest, formatBatchRequestData } from '../utils/utils';
 
 // Type guard function
 function isBatchResponseWithErrors(
@@ -20,11 +18,7 @@ function isBatchResponseWithErrors(
 }
 
 async function saveBatchHubspotAssociation(data: AssociationMapping[]): Promise<BatchResponseLabelsBetweenObjectPair> {
-  const customerId = getCustomerId();
-  const accessToken = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
-
+  await authenticateHubspotClient();
   const formattedRequest = formatBatchRequestData(data);
 
   try {
@@ -49,11 +43,7 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]): Promise<
 }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
-  const customerId = getCustomerId();
-  const accessToken = await getAccessToken(customerId);
-  checkAccessToken(accessToken);
-  hubspotClient.setAccessToken(accessToken);
-
+  await authenticateHubspotClient();
   const formattedData = formatBatchArchiveRequest(data);
 
   if (!formattedData) {

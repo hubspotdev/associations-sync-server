@@ -2,16 +2,16 @@ import { AssociationMapping } from '@prisma/client';
 import {
   describe, it, expect, jest, beforeEach,
 } from '@jest/globals';
-import prisma from '../../../prisma-client/prisma-initialization';
+import prisma from '../../../src/prisma-client/prisma-initialization';
 import {
   saveBatchDBMapping,
   deleteBatchDBMappings,
   getBatchDBAssociationMappings,
-} from '../../../prisma-client/batchAssociations';
-import handleError from '../../../utils/error';
+} from '../../../src/prisma-client/batchAssociations';
+import handleError from '../../../src/utils/error';
 
 // Mock the Prisma client
-jest.mock('../../../prisma-client/prisma-initialization', () => ({
+jest.mock('../../../src/prisma-client/prisma-initialization', () => ({
   associationMapping: {
     upsert: jest.fn(() => Promise.resolve({})),
     delete: jest.fn(() => Promise.resolve({})),
@@ -21,7 +21,7 @@ jest.mock('../../../prisma-client/prisma-initialization', () => ({
 }));
 
 // Mock error handler
-jest.mock('../../../utils/error', () => ({
+jest.mock('../../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));

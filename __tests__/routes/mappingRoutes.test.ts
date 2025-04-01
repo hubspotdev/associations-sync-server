@@ -3,11 +3,11 @@ import express from 'express';
 import {
   describe, it, expect, beforeEach, jest,
 } from '@jest/globals';
-import mappingRoutes from '../../routes/mappingRoutes';
-import * as singleDbClient from '../../prisma-client/mappedAssociations';
-import * as batchDbClient from '../../prisma-client/batchAssociations';
-import * as singleHubspotClient from '../../hubspot-client/singleAssociations';
-import * as batchHubspotClient from '../../hubspot-client/batchAssociations';
+import mappingRoutes from '../../src/routes/mappingRoutes';
+import * as singleDbClient from '../../src/prisma-client/mappedAssociations';
+import * as batchDbClient from '../../src/prisma-client/batchAssociations';
+import * as singleHubspotClient from '../../src/hubspot-client/singleAssociations';
+import * as batchHubspotClient from '../../src/hubspot-client/batchAssociations';
 import { mockMapping, mockHubspotResponse } from '../__mocks__/mappingMocks';
 
 // Setup express app for testing
@@ -16,11 +16,11 @@ app.use(express.json());
 app.use('/api/associations/mappings', mappingRoutes);
 
 // Mock all database and HubSpot client functions
-jest.mock('../../prisma-client/mappedAssociations');
-jest.mock('../../prisma-client/batchAssociations');
-jest.mock('../../hubspot-client/singleAssociations');
-jest.mock('../../hubspot-client/batchAssociations');
-jest.mock('../../utils/error', () => ({
+jest.mock('../../src/prisma-client/mappedAssociations');
+jest.mock('../../src/prisma-client/batchAssociations');
+jest.mock('../../src/hubspot-client/singleAssociations');
+jest.mock('../../src/hubspot-client/batchAssociations');
+jest.mock('../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
@@ -114,7 +114,6 @@ describe('Mapping Routes', () => {
       const mappingIds = ['map_123', 'map_124'];
       (batchDbClient.getBatchDBAssociationMappings).mockResolvedValue([mockMapping, mockMapping]);
       (batchDbClient.deleteBatchDBMappings).mockResolvedValue(true);
-      // (batchHubspotClient.archiveBatchHubspotAssociation).mockResolvedValue([]);
 
       const response = await request(app)
         .delete('/api/associations/mappings/batch')
@@ -131,7 +130,6 @@ describe('Mapping Routes', () => {
 
       expect(batchDbClient.getBatchDBAssociationMappings).toHaveBeenCalledWith(mappingIds);
       expect(batchDbClient.deleteBatchDBMappings).toHaveBeenCalledWith(mappingIds);
-      // expect(batchHubspotClient.archiveBatchHubspotAssociation).toHaveBeenCalledWith([mockMapping, mockMapping]);
     });
 
     it('should return 400 if mappingIds array is empty', async () => {
