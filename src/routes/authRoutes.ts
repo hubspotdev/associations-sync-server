@@ -14,11 +14,11 @@ router.get('/oauth-callback', async (req: Request, res: Response) => {
       const authInfo = await redeemCode(code.toString());
       if (authInfo) {
         const { accessToken } = authInfo;
-        console.log('Access token ==', accessToken);
+        console.log('Access token', accessToken);
         res.send('Success!');
       }
     } catch (error:unknown) {
-      console.log('oops');
+      console.log('An error occurred while redeeming the code', error);
     }
   }
 });

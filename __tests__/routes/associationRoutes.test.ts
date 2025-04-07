@@ -3,8 +3,8 @@ import express from 'express';
 import {
   describe, it, expect, beforeEach, jest,
 } from '@jest/globals';
-import associationRoutes from '../../routes/associationRoutes';
-import * as dbClient from '../../prisma-client/singleAssociations';
+import associationRoutes from '../../src/routes/associationRoutes';
+import * as dbClient from '../../src/prisma-client/singleAssociations';
 
 // Setup express app for testing
 const app = express();
@@ -12,8 +12,8 @@ app.use(express.json());
 app.use('/api/associations', associationRoutes);
 
 // Mock database client functions
-jest.mock('../../prisma-client/singleAssociations');
-jest.mock('../../utils/error', () => ({
+jest.mock('../../src/prisma-client/singleAssociations');
+jest.mock('../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));

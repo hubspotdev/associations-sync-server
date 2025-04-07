@@ -3,10 +3,10 @@ import express from 'express';
 import {
   describe, it, expect, beforeEach, jest,
 } from '@jest/globals';
-import definitionRoutes from '../../routes/definitionRoutes';
-import * as dbClient from '../../prisma-client/definitionAssociations';
-import * as batchClient from '../../prisma-client/batchAssociations';
-import * as hubspotClient from '../../hubspot-client/definitionAssociations';
+import definitionRoutes from '../../src/routes/definitionRoutes';
+import * as dbClient from '../../src/prisma-client/definitionAssociations';
+import * as batchClient from '../../src/prisma-client/batchAssociations';
+import * as hubspotClient from '../../src/hubspot-client/definitionAssociations';
 import { mockDefinition, mockHubspotResponse } from '../__mocks__/definitionMocks';
 
 // Setup express app for testing
@@ -15,10 +15,10 @@ app.use(express.json());
 app.use('/api/associations/definitions', definitionRoutes);
 
 // Mock all database and HubSpot client functions
-jest.mock('../../prisma-client/definitionAssociations');
-jest.mock('../../hubspot-client/definitionAssociations');
-jest.mock('../../prisma-client/batchAssociations');
-jest.mock('../../utils/error', () => ({
+jest.mock('../../src/prisma-client/definitionAssociations');
+jest.mock('../../src/hubspot-client/definitionAssociations');
+jest.mock('../../src/prisma-client/batchAssociations');
+jest.mock('../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));

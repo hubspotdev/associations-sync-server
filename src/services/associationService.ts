@@ -5,9 +5,8 @@ import {
 import { deleteDBAssociation } from '../prisma-client/singleAssociations';
 
 export default async function deleteAssociationAndRelatedMappings(associationId: string) {
-  //  delete the association itself
   const result = await deleteDBAssociation(associationId);
-  console.log('result', result);
+  console.log('Deleted association', result);
   const relatedMappings = await getBatchDBAssociationMappingsByAssociationId(associationId);
 
   if (relatedMappings.length > 0) {

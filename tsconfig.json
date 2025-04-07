@@ -10,7 +10,7 @@
     "typeRoots": ["./types"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "ts-node", "mocha"],
     "moduleResolution": "node"
   },
   "include": ["src/**/*"],

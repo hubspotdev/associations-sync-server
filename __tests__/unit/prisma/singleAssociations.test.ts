@@ -2,17 +2,17 @@ import { Association } from '@prisma/client';
 import {
   describe, it, expect, jest, beforeEach,
 } from '@jest/globals';
-import prisma from '../../../prisma-client/prisma-initialization';
+import prisma from '../../../src/prisma-client/prisma-initialization';
 import {
   getDBAssociationsByCustomerId,
   getSingleDBAssociationById,
   saveDBAssociation,
   deleteDBAssociation,
-} from '../../../prisma-client/singleAssociations';
-import handleError from '../../../utils/error';
+} from '../../../src/prisma-client/singleAssociations';
+import handleError from '../../../src/utils/error';
 
 // Mock the Prisma client
-jest.mock('../../../prisma-client/prisma-initialization', () => ({
+jest.mock('../../../src/prisma-client/prisma-initialization', () => ({
   association: {
     findMany: jest.fn(),
     findUnique: jest.fn(),
@@ -22,7 +22,7 @@ jest.mock('../../../prisma-client/prisma-initialization', () => ({
 }));
 
 // Mock error handler
-jest.mock('../../../utils/error', () => ({
+jest.mock('../../../src/utils/error', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
@@ -39,8 +39,6 @@ describe('Single Associations Database Client', () => {
     associationCategory: 'USER_DEFINED',
     customerId: 'cust_123',
     cardinality: 'ONE_TO_ONE',
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
 
   beforeEach(() => {
@@ -49,7 +47,7 @@ describe('Single Associations Database Client', () => {
 
   describe('getDBAssociationsByCustomerId', () => {
     it('should successfully fetch associations by customer ID', async () => {
-      const mockResults = [mockAssociation];
+      const mockResults: Association[] = [mockAssociation];
       (prisma.association.findMany as jest.Mock).mockResolvedValue(mockResults);
 
       const result = await getDBAssociationsByCustomerId('cust_123');
