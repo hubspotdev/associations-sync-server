@@ -6,7 +6,7 @@ import {
 import {
   BatchResponseLabelsBetweenObjectPair,
 } from '@hubspot/api-client/lib/codegen/crm/associations/v4/models/BatchResponseLabelsBetweenObjectPair';
-import { hubspotClient, setAccessToken } from '../auth';
+import { hubspotClient, authenticateHubspotClient } from '../auth';
 import handleError from '../utils/error';
 import { formatBatchArchiveRequest, formatBatchRequestData } from '../utils/utils';
 
@@ -18,7 +18,7 @@ function isBatchResponseWithErrors(
 }
 
 async function saveBatchHubspotAssociation(data: AssociationMapping[]): Promise<BatchResponseLabelsBetweenObjectPair> {
-  setAccessToken();
+  await authenticateHubspotClient();
   const formattedRequest = formatBatchRequestData(data);
 
   try {
@@ -43,7 +43,7 @@ async function saveBatchHubspotAssociation(data: AssociationMapping[]): Promise<
 }
 
 async function archiveBatchHubspotAssociation(data: AssociationMapping[]) {
-  setAccessToken();
+  await authenticateHubspotClient();
   const formattedData = formatBatchArchiveRequest(data);
 
   if (!formattedData) {
