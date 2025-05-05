@@ -5,7 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
+ run-tests:
+    name: Run Tests
     runs-on: ubuntu-latest
 
     env:

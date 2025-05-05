@@ -1,6 +1,6 @@
 # Associations Mappings Server
 
-An Express.js application that provides seamless integration with HubSpot for managing associations between CRM objects. It handles creation, retrieval, deletion, and mapping of associations and their definitions while enabling OAuth-based authentication with HubSpot.
+An Express.js application that provides seamless integration with HubSpot for managing associations between CRM objects. It handles creation, retrieval, deletion, and mapping of associations and definitions while enabling OAuth-based authentication with HubSpot.
 
 ## Table of Contents
 - [What this project does](#what-this-project-does)
