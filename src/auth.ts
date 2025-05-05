@@ -198,6 +198,7 @@ const redeemCode = async (code: string): Promise<Authorization | null | void> =>
 async function setAccessToken(): Promise<Client> {
   try {
     const accessToken = await getAccessToken(getCustomerId());
+    console.log('accessToken ===', accessToken);
     if (!accessToken) {
       throw new Error('No access token returned');
     }
