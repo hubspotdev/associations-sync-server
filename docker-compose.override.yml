@@ -1,0 +1,46 @@
+services:
+  # Main application service for development
+  app:
+    build:
+      context: .                # Use current directory as build context
+      target: development       # Use the development stage from Dockerfile
+    command: npm run dev       # Run the development server with hot-reloading
+    volumes:
+      - .:/app                 # Mount current directory to /app for live code updates
+      - /app/node_modules      # Preserve container's node_modules (don't override with host)
+    environment:
+      NODE_ENV: development    # Set Node environment to development
+    restart: unless-stopped    # Restart container unless explicitly stopped
+
+  # Service to handle database migrations and Prisma client generation
+  prisma-migrate:
+    build:
+      target: development      # Use the development stage from Dockerfile
+    command: sh -c "npx prisma db push && npx prisma generate"  # Push schema and generate Prisma client
+
+  # Seed service configuration for populating the database with initial data
+  seed:
+    # Only runs when explicitly requested via --profile seed flag
+    profiles: ["seed"]
+
+    # Uses the development target from the Dockerfile
+    build:
+      context: .
+      target: development
+
+    # Ensures app and oauth services are running before seeding
+    depends_on:
+      - app
+      - oauth-check
+
+    # Runs the seed script defined in package.json
+    command: npm run seed
+
+    # Connects to both the default network and the oauth service network
+    # This allows the seed service to communicate with both the main app
+    # and the oauth service during the seeding process
+    networks:
+      - default
+      - oauth-service_oauth-network
+
+
