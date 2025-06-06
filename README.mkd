@@ -7,9 +7,7 @@ An Express.js application that provides seamless integration with HubSpot for ma
 - [Why is this project useful](#why-is-this-project-useful)
 - [Getting started with the project](#getting-started-with-the-project)
   - [Setup](#setup)
-  - [Scopes](#scopes)
 - [Endpoints](#endpoints)
-  - [Authentication Endpoints](#authentication-endpoints)
   - [Associations Endpoints](#associations-endpoints)
   - [Mappings Endpoints](#mappings-endpoints)
   - [Definitions Endpoints](#definitions-endpoints)
@@ -61,22 +59,23 @@ This application provides a solution for integrating with HubSpot to manage asso
    - `oauth` - Enables OAuth-based authentication and authorization with HubSpot
 
 5. Start the application:
-   ```bash
-  # For development:
-    docker-compose up --build
 
-  # Start with seeding enabled (requires INDUSTRY in .env)
-    docker-compose --profile seed up --build
+```bash
+# For development:
+docker-compose up --build
 
-  # For production:
-    docker-compose -f docker-compose.yml up --build
+# Start with seeding enabled (requires INDUSTRY in .env)
+docker-compose --profile seed up --build
+
+# For production:
+docker-compose -f docker-compose.yml up --build
 ```
 
 6. Once the server is running, you can access:
    - Application: http://localhost:3000
    - API documentation: http://localhost:3000/api-docs
 
-## Endpoints
+## Endpoints:
 
 ### Associations Endpoints
 These endpoints manage basic associations between objects:
