@@ -8,7 +8,7 @@
     "prod": "node dist/app.js",
     "start": "node dist/src/app.js",
     "build": "tsc",
-    "seed": "tsx scripts/industry-prompt.ts && npx prisma db seed",
+    "seed": "npx prisma db seed",
     "db-init": "npx prisma db push",
     "test": "jest --config jest.config.js --coverage",
     "test:routes": "jest --config jest.config.js \"src/__tests__/routes/.*\\.ts$\"",
