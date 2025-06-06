@@ -289,7 +289,7 @@ describe('Utils Functions', () => {
 
   describe('Constants and Simple Functions', () => {
     it('should export correct PORT value', () => {
-      expect(PORT).toBe(3001);
+      expect(PORT).toBe(3000);
     });
 
     it('should get customer ID', () => {

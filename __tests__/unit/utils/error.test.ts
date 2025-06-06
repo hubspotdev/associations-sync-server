@@ -6,6 +6,7 @@ import server from '../../../src/app';
 // Mock dependencies
 jest.mock('../../../src/utils/logger', () => ({
   error: jest.fn(),
+  info: jest.fn(),
 }));
 
 jest.mock('../../../prisma/disconnect', () => ({
@@ -74,19 +75,26 @@ describe('Error Handling Utils', () => {
 
     it('should handle critical errors with proper shutdown sequence', async () => {
       const criticalError = new Error('Critical error');
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
       handleError(criticalError, 'Test context', true);
 
       // Verify shutdown sequence
-      expect(consoleSpy).toHaveBeenCalledWith('Initiating graceful shutdown...');
+      expect(Logger.info).toHaveBeenCalledWith({
+        type: 'Server',
+        context: 'Shutdown',
+        logMessage: { message: 'Initiating graceful shutdown...' }
+      });
       expect(server.listen).toHaveBeenCalled();
       expect(disconnectPrisma).toHaveBeenCalled();
 
       // Wait for shutdown to complete
       await new Promise((resolve) => setImmediate(resolve));
 
-      expect(consoleSpy).toHaveBeenCalledWith('Graceful shutdown complete.');
+      expect(Logger.info).toHaveBeenCalledWith({
+        type: 'Server',
+        context: 'Shutdown',
+        logMessage: { message: 'Graceful shutdown complete.' }
+      });
     });
   });
 });
