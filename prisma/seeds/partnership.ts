@@ -2,9 +2,16 @@ import { AssociationCategory, Cardinality, PrismaClient } from '@prisma/client'
 import handleError from '../../src/utils/error'
 import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+import Logger from '../../src/utils/logger';
 
 export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
-  console.log('🚀 Starting base data seed...')
+  Logger.info({
+    type: 'Seed',
+    context: 'Partnership',
+    logMessage: {
+      message: 'Starting base data seed...'
+    }
+  });
 
   // Check if AssociationDefinition already exists in Prisma
   let employeeCompanyAssoc;
@@ -30,10 +37,22 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         associationCategory: AssociationCategory.INTEGRATOR_DEFINED
       }
     })
-    console.log('✅ Created employee-company association definition in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created employee-company association definition in Prisma'
+      }
+    });
   } else {
     employeeCompanyAssoc = existingEmployeeCompanyDef;
-    console.log('ℹ️ Employee-company association definition already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Employee-company association definition already exists in Prisma'
+      }
+    });
   }
 
   // Check for existing company1 in Prisma
@@ -53,10 +72,24 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         archived: false,
       }
     })
-    console.log('✅ Created company in Prisma:', company1.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created company in Prisma:',
+        data: { company: company1.name }
+      }
+    });
   } else {
     company1 = existingCompany1;
-    console.log('ℹ️ Company already exists in Prisma:', company1.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Company already exists in Prisma:',
+        data: { company: company1.name }
+      }
+    });
   }
 
   // Check for existing company1 in HubSpot
@@ -74,7 +107,14 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
 
     if (searchResults.results.length > 0) {
       hubspotCompany1 = searchResults.results[0];
-      console.log('ℹ️ Company already exists in HubSpot:', hubspotCompany1.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Company already exists in HubSpot:',
+          data: { company: hubspotCompany1.properties.name }
+        }
+      });
     } else {
       hubspotCompany1 = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -82,10 +122,23 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           name: 'Example Company',
         }
       })
-      console.log('✅ Created company in HubSpot:', hubspotCompany1.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created company in HubSpot:',
+          data: { company: hubspotCompany1.properties.name }
+        }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating company in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Partnership - Company creation',
+      logMessage: {
+        message: error instanceof Error ? error.message : String(error)
+      }
+    });
     throw error;
   }
 
@@ -106,10 +159,24 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         archived: false,
       }
     })
-    console.log('✅ Created second company in Prisma:', company2.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created second company in Prisma:',
+        data: { company: company2.name }
+      }
+    });
   } else {
     company2 = existingCompany2;
-    console.log('ℹ️ Second company already exists in Prisma:', company2.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Second company already exists in Prisma:',
+        data: { company: company2.name }
+      }
+    });
   }
 
   // Check for existing company2 in HubSpot
@@ -127,7 +194,14 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
 
     if (searchResults.results.length > 0) {
       hubspotCompany2 = searchResults.results[0];
-      console.log('ℹ️ Second company already exists in HubSpot:', hubspotCompany2.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Second company already exists in HubSpot:',
+          data: { company: hubspotCompany2.properties.name }
+        }
+      });
     } else {
       hubspotCompany2 = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -135,10 +209,23 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           name: 'Sample Corporation',
         }
       })
-      console.log('✅ Created second company in HubSpot:', hubspotCompany2.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created second company in HubSpot:',
+          data: { company: hubspotCompany2.properties.name }
+        }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating second company in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Partnership - Company creation',
+      logMessage: {
+        message: error instanceof Error ? error.message : String(error)
+      }
+    });
     throw error;
   }
 
@@ -161,10 +248,24 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         archived: false,
       }
     })
-    console.log('✅ Created contact in Prisma:', `${contact1.firstname} ${contact1.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created contact in Prisma:',
+        data: { contact: `${contact1.firstname} ${contact1.lastname}` }
+      }
+    });
   } else {
     contact1 = existingContact1;
-    console.log('ℹ️ Contact already exists in Prisma:', `${contact1.firstname} ${contact1.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Contact already exists in Prisma:',
+        data: { contact: `${contact1.firstname} ${contact1.lastname}` }
+      }
+    });
   }
 
   // Check for existing contact1 in HubSpot
@@ -182,7 +283,14 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
 
     if (searchResults.results.length > 0) {
       hubspotContact1 = searchResults.results[0];
-      console.log('ℹ️ Contact already exists in HubSpot:', `${hubspotContact1.properties.firstname} ${hubspotContact1.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Contact already exists in HubSpot:',
+          data: { contact: `${hubspotContact1.properties.firstname} ${hubspotContact1.properties.lastname}` }
+        }
+      });
     } else {
       hubspotContact1 = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -191,10 +299,23 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           lastname: 'Doe',
         }
       })
-      console.log('✅ Created contact in HubSpot:', `${hubspotContact1.properties.firstname} ${hubspotContact1.properties.lastname}`)
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created contact in HubSpot:',
+          data: { contact: `${hubspotContact1.properties.firstname} ${hubspotContact1.properties.lastname}` }
+        }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating contact in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Partnership - Contact creation',
+      logMessage: {
+        message: error instanceof Error ? error.message : String(error)
+      }
+    });
     throw error;
   }
 
@@ -217,10 +338,24 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         archived: false,
       }
     })
-    console.log('✅ Created second contact in Prisma:', `${contact2.firstname} ${contact2.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created second contact in Prisma:',
+        data: { contact: `${contact2.firstname} ${contact2.lastname}` }
+      }
+    });
   } else {
     contact2 = existingContact2;
-    console.log('ℹ️ Second contact already exists in Prisma:', `${contact2.firstname} ${contact2.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Second contact already exists in Prisma:',
+        data: { contact: `${contact2.firstname} ${contact2.lastname}` }
+      }
+    });
   }
 
   // Check for existing contact2 in HubSpot
@@ -238,7 +373,14 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
 
     if (searchResults.results.length > 0) {
       hubspotContact2 = searchResults.results[0];
-      console.log('ℹ️ Second contact already exists in HubSpot:', `${hubspotContact2.properties.firstname} ${hubspotContact2.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Second contact already exists in HubSpot:',
+          data: { contact: `${hubspotContact2.properties.firstname} ${hubspotContact2.properties.lastname}` }
+        }
+      });
     } else {
       hubspotContact2 = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -247,10 +389,23 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           lastname: 'Smith',
         }
       })
-      console.log('✅ Created second contact in HubSpot:', `${hubspotContact2.properties.firstname} ${hubspotContact2.properties.lastname}`)
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created second contact in HubSpot:',
+          data: { contact: `${hubspotContact2.properties.firstname} ${hubspotContact2.properties.lastname}` }
+        }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating second contact in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Partnership - Contact creation',
+      logMessage: {
+        message: error instanceof Error ? error.message : String(error)
+      }
+    });
     throw error;
   }
 
@@ -268,7 +423,14 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
 
     if (existingDefinition) {
       associationDefinition = { results: [existingDefinition] };
-      console.log('ℹ️ Association definition already exists in HubSpot with typeId:', existingDefinition.typeId);
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Association definition already exists in HubSpot with typeId:',
+          data: { typeId: existingDefinition.typeId }
+        }
+      });
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'contacts',
@@ -278,10 +440,23 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           name: 'partner_representative'
         }
       )
-      console.log('✅ Created association definition in HubSpot with typeId:', associationDefinition.results[0].typeId)
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created association definition in HubSpot with typeId:',
+          data: { typeId: associationDefinition.results[0].typeId }
+        }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating association definition in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Partnership - Association definition creation',
+      logMessage: {
+        message: error instanceof Error ? error.message : String(error)
+      }
+    });
     throw error;
   }
 
@@ -302,9 +477,21 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         associationTypeId: associationDefinition.results[0].typeId
       }
     })
-    console.log('✅ Updated Prisma association definition with HubSpot typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Updated Prisma association definition with HubSpot typeId'
+      }
+    });
   } else {
-    console.log('ℹ️ Association definition already exists with this typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Association definition already exists with this typeId'
+      }
+    });
   }
 
   // Check for existing associations in Prisma
@@ -335,10 +522,22 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         associationCategory: AssociationCategory.HUBSPOT_DEFINED,
       }
     })
-    console.log('✅ Created first association in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created first association in Prisma'
+      }
+    });
   } else {
     association1 = existingAssociation1;
-    console.log('ℹ️ First association already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'First association already exists in Prisma'
+      }
+    });
   }
 
   // Create association mapping if association was created
@@ -372,9 +571,21 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           cardinality: Cardinality.ONE_TO_ONE,
         }
       })
-      console.log('✅ Created first association mapping')
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created first association mapping'
+        }
+      });
     } else {
-      console.log('ℹ️ First association mapping already exists')
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'First association mapping already exists'
+        }
+      });
     }
   }
 
@@ -406,10 +617,22 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
         associationCategory: AssociationCategory.INTEGRATOR_DEFINED,
       }
     })
-    console.log('✅ Created second association in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Created second association in Prisma'
+      }
+    });
   } else {
     association2 = existingAssociation2;
-    console.log('ℹ️ Second association already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Partnership',
+      logMessage: {
+        message: 'Second association already exists in Prisma'
+      }
+    });
   }
 
   if (association2) {
@@ -442,11 +665,29 @@ export async function seedPRMData(prisma: PrismaClient, hubspotClient:Client) {
           cardinality: Cardinality.ONE_TO_ONE,
         }
       })
-      console.log('✅ Created second association mapping')
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Created second association mapping'
+        }
+      });
     } else {
-      console.log('ℹ️ Second association mapping already exists')
+      Logger.info({
+        type: 'Seed',
+        context: 'Partnership',
+        logMessage: {
+          message: 'Second association mapping already exists'
+        }
+      });
     }
   }
 
-  console.log('✨ Base data seed completed successfully!')
+  Logger.info({
+    type: 'Seed',
+    context: 'Partnership',
+    logMessage: {
+      message: 'Base data seed completed successfully!'
+    }
+  });
 }

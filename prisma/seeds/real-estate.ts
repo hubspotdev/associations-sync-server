@@ -1,9 +1,14 @@
 import { PrismaClient, AssociationCategory, Cardinality } from '@prisma/client'
 import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+import Logger from '../../src/utils/logger';
 
 export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Client) {
-  console.log('🚀 Starting real estate data seed...')
+  Logger.info({
+    type: 'Seed',
+    context: 'Real Estate',
+    logMessage: { message: 'Starting real estate data seed...' }
+  });
 
   // Check if AssociationDefinition already exists in Prisma
   let agentCompanyAssoc;
@@ -29,10 +34,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
         associationCategory: AssociationCategory.USER_DEFINED
       }
     })
-    console.log('✅ Created agent-company association definition in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Created agent-company association definition in Prisma' }
+    });
   } else {
     agentCompanyAssoc = existingAgentCompanyDef;
-    console.log('ℹ️ Agent-company association definition already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Agent-company association definition already exists in Prisma' }
+    });
   }
 
   // Check for existing agent in Prisma
@@ -54,10 +67,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
         archived: false
       }
     })
-    console.log('✅ Created agent in Prisma:', `${agent.firstname} ${agent.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Created agent in Prisma:', data: { firstname: agent.firstname, lastname: agent.lastname } }
+    });
   } else {
     agent = existingAgent;
-    console.log('ℹ️ Agent already exists in Prisma:', `${agent.firstname} ${agent.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Agent already exists in Prisma:', data: { firstname: agent.firstname, lastname: agent.lastname } }
+    });
   }
 
   // Check for existing agent in HubSpot
@@ -75,7 +96,11 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
 
     if (searchResults.results.length > 0) {
       hubspotAgent = searchResults.results[0];
-      console.log('ℹ️ Agent already exists in HubSpot:', `${hubspotAgent.properties.firstname} ${hubspotAgent.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Agent already exists in HubSpot:', data: { firstname: hubspotAgent.properties.firstname, lastname: hubspotAgent.properties.lastname } }
+      });
     } else {
       hubspotAgent = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -84,10 +109,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
           lastname: 'Johnson',
         }
       });
-      console.log('✅ Created agent in HubSpot:', `${hubspotAgent.properties.firstname} ${hubspotAgent.properties.lastname}`)
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Created agent in HubSpot:', data: { firstname: hubspotAgent.properties.firstname, lastname: hubspotAgent.properties.lastname } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating agent in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Real Estate - Agent creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -108,10 +141,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
         archived: false
       }
     })
-    console.log('✅ Created company in Prisma:', company.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Created company in Prisma:', data: { name: company.name } }
+    });
   } else {
     company = existingCompany;
-    console.log('ℹ️ Company already exists in Prisma:', company.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Company already exists in Prisma:', data: { name: company.name } }
+    });
   }
 
   // Check for existing company in HubSpot
@@ -129,7 +170,11 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
 
     if (searchResults.results.length > 0) {
       hubspotCompany = searchResults.results[0];
-      console.log('ℹ️ Company already exists in HubSpot:', hubspotCompany.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Company already exists in HubSpot:', data: { name: hubspotCompany.properties.name } }
+      });
     } else {
       hubspotCompany = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -137,10 +182,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
           domain: 'luxuryestates.com',
         }
       });
-      console.log('✅ Created company in HubSpot:', hubspotCompany.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Created company in HubSpot:', data: { name: hubspotCompany.properties.name } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating company in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Real Estate - Company creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -158,7 +211,11 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
 
     if (existingDefinition) {
       associationDefinition = { results: [existingDefinition] };
-      console.log('ℹ️ Association definition already exists in HubSpot with typeId:', existingDefinition.typeId);
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Association definition already exists in HubSpot with typeId:', data: { typeId: existingDefinition.typeId } }
+      });
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'contacts',
@@ -168,10 +225,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
           name: 'agent_to_company'
         }
       );
-      console.log('✅ Created association definition in HubSpot with typeId:', associationDefinition.results[0].typeId)
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Created association definition in HubSpot with typeId:', data: { typeId: associationDefinition.results[0].typeId } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating association definition in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Real Estate - Association definition creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -192,9 +257,17 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
         associationTypeId: associationDefinition.results[0].typeId
       }
     });
-    console.log('✅ Updated Prisma association definition with HubSpot typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Updated Prisma association definition with HubSpot typeId' }
+    });
   } else {
-    console.log('ℹ️ Association definition already exists with this typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Association definition already exists with this typeId' }
+    });
   }
 
   // Check if association exists in Prisma
@@ -225,10 +298,18 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
         associationCategory: AssociationCategory.USER_DEFINED
       }
     });
-    console.log('✅ Created association in Prisma between agent and company')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Created association in Prisma between agent and company' }
+    });
   } else {
     agentCompanyAssociation = existingAssociation;
-    console.log('ℹ️ Association already exists in Prisma between agent and company')
+    Logger.info({
+      type: 'Seed',
+      context: 'Real Estate',
+      logMessage: { message: 'Association already exists in Prisma between agent and company' }
+    });
   }
 
   // Create association mapping if association was created
@@ -262,11 +343,23 @@ export async function seedRealEstateData(prisma: PrismaClient, hubspotClient:Cli
           cardinality: Cardinality.ONE_TO_MANY
         }
       });
-      console.log('✅ Created association mapping between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Created association mapping between Prisma and HubSpot' }
+      });
     } else {
-      console.log('ℹ️ Association mapping already exists between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Real Estate',
+        logMessage: { message: 'Association mapping already exists between Prisma and HubSpot' }
+      });
     }
   }
 
-  console.log('✨ Real estate data seed completed successfully!')
+  Logger.info({
+    type: 'Seed',
+    context: 'Real Estate',
+    logMessage: { message: 'Real estate data seed completed successfully!' }
+  });
 }

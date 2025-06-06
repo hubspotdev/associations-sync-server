@@ -1,9 +1,14 @@
 import { PrismaClient, AssociationCategory, Cardinality } from '@prisma/client'
 import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+import Logger from '../../src/utils/logger';
 
 export async function seedManufacturingData(prisma: PrismaClient, hubspotClient: Client) {
-  console.log('🚀 Starting manufacturing data seed...')
+  Logger.info({
+    type: 'Seed',
+    context: 'Manufacturing',
+    logMessage: { message: 'Starting manufacturing data seed...' }
+  });
 
   // Check if AssociationDefinition already exists in Prisma
   let supplierProductAssoc;
@@ -29,10 +34,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         associationCategory: AssociationCategory.USER_DEFINED
       }
     })
-    console.log('✅ Created association definition in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Created supplier-buyer association definition in Prisma' }
+    });
   } else {
     supplierProductAssoc = existingSupplierProductDef;
-    console.log('ℹ️ Association definition already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Association definition already exists in Prisma' }
+    });
   }
 
   // Check for existing supplier in Prisma
@@ -52,10 +65,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         archived: false
       }
     })
-    console.log('✅ Created supplier in Prisma:', supplier.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Created supplier in Prisma:', data: { supplierName: supplier.name } }
+    });
   } else {
     supplier = existingSupplier;
-    console.log('ℹ️ Supplier already exists in Prisma:', supplier.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Supplier already exists in Prisma:', data: { supplierName: supplier.name } }
+    });
   }
 
   // Check for existing supplier in HubSpot
@@ -73,7 +94,11 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
 
     if (searchResults.results.length > 0) {
       hubspotSupplier = searchResults.results[0];
-      console.log('ℹ️ Supplier already exists in HubSpot:', hubspotSupplier.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Supplier already exists in HubSpot:', data: { supplierName: hubspotSupplier.properties.name } }
+      });
     } else {
       hubspotSupplier = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -81,10 +106,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
           domain: 'acmesupplies.com',
         }
       });
-      console.log('✅ Created supplier in HubSpot:', hubspotSupplier.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Created supplier in HubSpot:', data: { supplierName: hubspotSupplier.properties.name } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating supplier in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Manufacturing - Supplier creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -105,10 +138,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         archived: false
       }
     })
-    console.log('✅ Created product in Prisma:', buyer.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Created product in Prisma:', data: { productName: buyer.name } }
+    });
   } else {
     buyer = existingBuyer;
-    console.log('ℹ️ Buyer already exists in Prisma:', buyer.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Buyer already exists in Prisma:', data: { productName: buyer.name } }
+    });
   }
 
   // Check for existing product in HubSpot
@@ -126,7 +167,11 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
 
     if (searchResults.results.length > 0) {
       hubspotBuyer = searchResults.results[0];
-      console.log('ℹ️ Buyer already exists in HubSpot:', hubspotBuyer.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Buyer already exists in HubSpot:', data: { productName: hubspotBuyer.properties.name } }
+      });
     } else {
       hubspotBuyer = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -134,10 +179,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
           domain: 'techmanufacturing.com',
         }
       });
-      console.log('✅ Created product in HubSpot:', hubspotBuyer.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Created product in HubSpot:', data: { productName: hubspotBuyer.properties.name } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating product in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Manufacturing - Product creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -155,7 +208,11 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
 
     if (existingDefinition) {
       associationDefinition = { results: [existingDefinition] };
-      console.log('ℹ️ Association definition already exists in HubSpot with typeId:', existingDefinition.typeId);
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Association definition already exists in HubSpot with typeId:', data: { typeId: existingDefinition.typeId } }
+      });
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'companies',
@@ -166,10 +223,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
           inverseLabel:'Buyer to Supplier'
         }
       );
-      console.log('✅ Created association definition in HubSpot with typeId:', associationDefinition.results[0].typeId)
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Created association definition in HubSpot with typeId:', data: { typeId: associationDefinition.results[0].typeId } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating association definition in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Manufacturing - Association definition creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -190,9 +255,17 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         associationTypeId: associationDefinition.results[0].typeId
       }
     });
-    console.log('✅ Updated Prisma association definition with HubSpot typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Updated Prisma association definition with HubSpot typeId' }
+    });
   } else {
-    console.log('ℹ️ Association definition already exists with this typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Association definition already exists with this typeId' }
+    });
   }
 
   // Check if association exists in Prisma
@@ -223,10 +296,18 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
         associationCategory: AssociationCategory.USER_DEFINED
       }
     });
-    console.log('✅ Created association in Prisma between supplier and buyer')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Created association in Prisma between supplier and buyer' }
+    });
   } else {
     supplierBuyerAssociation = existingAssociation;
-    console.log('ℹ️ Association already exists in Prisma between supplier and buyer')
+    Logger.info({
+      type: 'Seed',
+      context: 'Manufacturing',
+      logMessage: { message: 'Association already exists in Prisma between supplier and buyer' }
+    });
   }
 
   // Create association mapping if association was created
@@ -260,11 +341,23 @@ export async function seedManufacturingData(prisma: PrismaClient, hubspotClient:
           cardinality: Cardinality.ONE_TO_MANY
         }
       });
-      console.log('✅ Created association mapping between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Created association mapping between Prisma and HubSpot' }
+      });
     } else {
-      console.log('ℹ️ Association mapping already exists between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Manufacturing',
+        logMessage: { message: 'Association mapping already exists between Prisma and HubSpot' }
+      });
     }
   }
 
-  console.log('✨ Manufacturing data seed completed successfully!')
+  Logger.info({
+    type: 'Seed',
+    context: 'Manufacturing',
+    logMessage: { message: 'Manufacturing data seed completed successfully!' }
+  });
 }

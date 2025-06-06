@@ -1,6 +1,7 @@
 import { AssociationMapping } from '@prisma/client';
 import handleError from '../utils/error';
 import prisma from './prisma-initialization';
+import Logger from '../utils/logger';
 
 async function getDBMappings(nativeAssociationIds: string[]) {
   try {
@@ -95,7 +96,11 @@ async function getSingleDBAssociationMappingFromId(mappingId: string) {
     });
 
     if (!mapping) {
-      console.log(`Mapping with ID ${mappingId} was not found.`);
+      Logger.warn({
+        type: 'Association Mapping',
+        context: 'Find operation',
+        logMessage: { message: `Mapping with ID ${mappingId} was not found.` }
+      });
       return null;
     }
 
@@ -115,7 +120,11 @@ async function getSingleDBAssociationMapping(nativeAssociationId: string) {
     });
 
     if (!mapping) {
-      console.log(`Mapping with ID ${nativeAssociationId} was not found.`);
+      Logger.warn({
+        type: 'Association Mapping',
+        context: 'Find operation',
+        logMessage: { message: `Mapping with ID ${nativeAssociationId} was not found.` }
+      });
       return null;
     }
 

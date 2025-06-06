@@ -8,7 +8,7 @@ import {
   AssociationRequest, AssociationDefinitionCreateRequest,
 } from '../../types/common';
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3000;
 const getCustomerId = () => '1'; // faking this because buåilding an account provisiong/login system is out of scope
 
 export function formatSingleRequestData(data: any): AssociationRequest {

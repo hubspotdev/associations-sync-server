@@ -1,9 +1,14 @@
 import { PrismaClient, AssociationCategory, Cardinality } from '@prisma/client'
 import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+import Logger from '../../src/utils/logger';
 
 export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Client) {
-  console.log('🚀 Starting healthcare data seed...')
+  Logger.info({
+    type: 'Seed',
+    context: 'Healthcare',
+    logMessage: { message: 'Starting healthcare data seed...' }
+  });
 
   // Check if AssociationDefinition already exists in Prisma
   let doctorPatientAssoc;
@@ -29,10 +34,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         associationCategory: AssociationCategory.USER_DEFINED
       }
     })
-    console.log('✅ Created doctor-patient association definition in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Created doctor-patient association definition in Prisma' }
+    });
   } else {
     doctorPatientAssoc = existingDoctorPatientDef;
-    console.log('ℹ️ Doctor-patient association definition already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Doctor-patient association definition already exists in Prisma' }
+    });
   }
 
   // Check for existing hospital in Prisma
@@ -52,10 +65,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         archived: false
       }
     })
-    console.log('✅ Created hospital in Prisma:', hospital.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Created hospital in Prisma:', data: { hospitalName: hospital.name } }
+    });
   } else {
     hospital = existingHospital;
-    console.log('ℹ️ Hospital already exists in Prisma:', hospital.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Hospital already exists in Prisma:', data: { hospitalName: hospital.name } }
+    });
   }
 
   // Check for existing hospital in HubSpot
@@ -73,7 +94,11 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
 
     if (searchResults.results.length > 0) {
       hubspotHospital = searchResults.results[0];
-      console.log('ℹ️ Hospital already exists in HubSpot:', hubspotHospital.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Hospital already exists in HubSpot:', data: { hospitalName: hubspotHospital.properties.name } }
+      });
     } else {
       hubspotHospital = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -81,10 +106,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           domain: 'mercyhospital.org',
         }
       });
-      console.log('✅ Created hospital in HubSpot:', hubspotHospital.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Created hospital in HubSpot:', data: { hospitalName: hubspotHospital.properties.name } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating hospital in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Healthcare - Hospital creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -107,10 +140,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         archived: false
       }
     })
-    console.log('✅ Created patient in Prisma:', `${patient.firstname} ${patient.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Created patient in Prisma:', data: { patientName: `${patient.firstname} ${patient.lastname}` } }
+    });
   } else {
     patient = existingPatient;
-    console.log('ℹ️ Patient already exists in Prisma:', `${patient.firstname} ${patient.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Patient already exists in Prisma:', data: { patientName: `${patient.firstname} ${patient.lastname}` } }
+    });
   }
 
   // Check for existing patient in HubSpot
@@ -128,7 +169,11 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
 
     if (searchResults.results.length > 0) {
       hubspotPatient = searchResults.results[0];
-      console.log('ℹ️ Patient already exists in HubSpot:', `${hubspotPatient.properties.firstname} ${hubspotPatient.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Patient already exists in HubSpot:', data: { patientName: `${hubspotPatient.properties.firstname} ${hubspotPatient.properties.lastname}` } }
+      });
     } else {
       hubspotPatient = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -137,10 +182,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           lastname: 'Doe',
         }
       });
-      console.log('✅ Created patient in HubSpot:', `${hubspotPatient.properties.firstname} ${hubspotPatient.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Created patient in HubSpot:', data: { patientName: `${hubspotPatient.properties.firstname} ${hubspotPatient.properties.lastname}` } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating patient in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Healthcare - Patient creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
   // Check if doctor exists in Prisma
@@ -162,10 +215,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         archived: false
       }
     })
-    console.log('✅ Created doctor in Prisma:', `${doctor.firstname} ${doctor.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Created doctor in Prisma:', data: { doctorName: `${doctor.firstname} ${doctor.lastname}` } }
+    });
   } else {
     doctor = existingDoctor;
-    console.log('ℹ️ Doctor already exists in Prisma:', `${doctor.firstname} ${doctor.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Doctor already exists in Prisma:', data: { doctorName: `${doctor.firstname} ${doctor.lastname}` } }
+    });
   }
 
   // Check for existing doctor in HubSpot
@@ -183,7 +244,11 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
 
     if (searchResults.results.length > 0) {
       hubspotDoctor = searchResults.results[0];
-      console.log('ℹ️ Doctor already exists in HubSpot:', `${hubspotDoctor.properties.firstname} ${hubspotDoctor.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Doctor already exists in HubSpot:', data: { doctorName: `${hubspotDoctor.properties.firstname} ${hubspotDoctor.properties.lastname}` } }
+      });
     } else {
       hubspotDoctor = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -192,10 +257,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           lastname: 'Smith',
         }
       });
-      console.log('✅ Created doctor in HubSpot:', `${hubspotDoctor.properties.firstname} ${hubspotDoctor.properties.lastname}`)
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Created doctor in HubSpot:', data: { doctorName: `${hubspotDoctor.properties.firstname} ${hubspotDoctor.properties.lastname}` } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating doctor in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Healthcare - Doctor creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -213,7 +286,11 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
 
     if (existingDefinition) {
       doctorPatientDefinition = { results: [existingDefinition] };
-      console.log('ℹ️ Association definition already exists in HubSpot with typeId:', existingDefinition.typeId);
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Association definition already exists in HubSpot with typeId:', data: { typeId: existingDefinition.typeId } }
+      });
     } else {
       doctorPatientDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'contacts',
@@ -223,10 +300,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           name: 'doctor_to_patient'
         }
       );
-      console.log('✅ Created doctor-patient association definition in HubSpot with typeId:', doctorPatientDefinition.results[0].typeId)
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Created doctor-patient association definition in HubSpot with typeId:', data: { typeId: doctorPatientDefinition.results[0].typeId } }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating association definition in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Healthcare - Association definition creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -247,9 +332,17 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         associationTypeId: doctorPatientDefinition.results[0].typeId
       }
     });
-    console.log('✅ Updated Prisma association definition with HubSpot typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Updated Prisma association definition with HubSpot typeId' }
+    });
   } else {
-    console.log('ℹ️ Association definition already exists with this typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Association definition already exists with this typeId' }
+    });
   }
 
   // Check if association exists in Prisma
@@ -280,10 +373,18 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
         associationCategory: AssociationCategory.USER_DEFINED
       }
     });
-    console.log('✅ Created association in Prisma between doctor and patient')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Created association in Prisma between doctor and patient' }
+    });
   } else {
     doctorPatientAssociation = existingAssociation;
-    console.log('ℹ️ Association already exists in Prisma between doctor and patient')
+    Logger.info({
+      type: 'Seed',
+      context: 'Healthcare',
+      logMessage: { message: 'Association already exists in Prisma between doctor and patient' }
+    });
   }
 
   // Create association mapping if association was created
@@ -317,11 +418,23 @@ export async function seedHealthcareData(prisma: PrismaClient, hubspotClient:Cli
           cardinality: Cardinality.ONE_TO_MANY
         }
       });
-      console.log('✅ Created association mapping for doctor-patient relationship')
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Created association mapping for doctor-patient relationship' }
+      });
     } else {
-      console.log('ℹ️ Association mapping already exists for doctor-patient relationship')
+      Logger.info({
+        type: 'Seed',
+        context: 'Healthcare',
+        logMessage: { message: 'Association mapping already exists for doctor-patient relationship' }
+      });
     }
   }
 
-  console.log('✨ Healthcare data seed completed successfully!')
+  Logger.info({
+    type: 'Seed',
+    context: 'Healthcare',
+    logMessage: { message: 'Healthcare data seed completed successfully!' }
+  });
 }

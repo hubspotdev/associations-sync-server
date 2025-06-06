@@ -3,10 +3,18 @@ import {
   deleteBatchDBMappings,
 } from '../prisma-client/batchAssociations';
 import { deleteDBAssociation } from '../prisma-client/singleAssociations';
+import Logger from '../utils/logger';
 
 export default async function deleteAssociationAndRelatedMappings(associationId: string) {
   const result = await deleteDBAssociation(associationId);
-  console.log('Deleted association', result);
+  Logger.info({
+    type: 'Association',
+    context: 'Delete operation',
+    logMessage: {
+      message: 'Association deleted successfully',
+      data: result
+    }
+  });
   const relatedMappings = await getBatchDBAssociationMappingsByAssociationId(associationId);
 
   if (relatedMappings.length > 0) {

@@ -8,6 +8,7 @@ import {
   formatCreateCardinalityRequest,
   formatUpdateCardinalityRequest,
 } from '../utils/utils';
+import Logger from '../utils/logger';
 
 async function saveAssociationDefinitionConfiguration(
   response: any,
@@ -105,7 +106,11 @@ async function saveAssociationDefinition(data: AssociationDefinition) {
   try {
     const response = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(fromObject, toObject, requestInfo);
     let configResponse;
-    console.log('Response from the create request', response);
+    Logger.info({
+      type: 'HubSpot',
+      context: 'Association Definition',
+      logMessage: { message: 'Response from the create request', data: response }
+    });
     if (data.fromMaxObjects || data.toMaxObjects) {
       configResponse = await saveAssociationDefinitionConfiguration(response, data, fromObject, toObject);
     }
@@ -158,7 +163,11 @@ async function archiveAssociationDefinition(data: AssociationDefinitionArchiveRe
       toObjectType,
       associationTypeId,
     );
-    console.log('Archived HubSpot association definition', response);
+    Logger.info({
+      type: 'HubSpot',
+      context: 'Association Definition',
+      logMessage: { message: 'Archived HubSpot association definition', data: response }
+    });
     return response;
   } catch (error: unknown) {
     handleError(error, 'There was an issue archiving the association definition in HubSpot');

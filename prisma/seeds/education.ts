@@ -1,8 +1,14 @@
 import { PrismaClient, AssociationCategory, Cardinality } from '@prisma/client'
 import { Client } from '@hubspot/api-client';
 import { FilterOperatorEnum } from '@hubspot/api-client/lib/codegen/crm/companies';
+import Logger from '../../src/utils/logger';
+
 export async function seedEducationData(prisma: PrismaClient, hubspotClient:Client) {
-  console.log('🚀 Starting education data seed...')
+  Logger.info({
+    type: 'Seed',
+    context: 'Education',
+    logMessage: { message: 'Starting education data seed...' }
+  });
 
   // Check if AssociationDefinition already exists in Prisma
   let schoolStudentAssoc;
@@ -28,10 +34,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
         associationCategory: AssociationCategory.USER_DEFINED
       }
     })
-    console.log('✅ Created school-student association definition in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'Created school-student association definition in Prisma' }
+    });
   } else {
     schoolStudentAssoc = existingSchoolStudentDef;
-    console.log('ℹ️ School-student association definition already exists in Prisma')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'School-student association definition already exists in Prisma' }
+    });
   }
 
   // Check for existing school in Prisma
@@ -51,10 +65,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
         archived: false
       }
     })
-    console.log('✅ Created school in Prisma:', school.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: `Created school in Prisma: ${school.name}` }
+    });
   } else {
     school = existingSchool;
-    console.log('ℹ️ School already exists in Prisma:', school.name)
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: `School already exists in Prisma: ${school.name}` }
+    });
   }
 
   // Check for existing school in HubSpot
@@ -72,7 +94,11 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
 
     if (searchResults.results.length > 0) {
       hubspotSchool = searchResults.results[0];
-      console.log('ℹ️ School already exists in HubSpot:', hubspotSchool.properties.name);
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `School already exists in HubSpot: ${hubspotSchool.properties.name}` }
+      });
     } else {
       hubspotSchool = await hubspotClient.crm.companies.basicApi.create({
         properties: {
@@ -80,10 +106,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
           domain: 'springfieldelem.edu',
         }
       });
-      console.log('✅ Created school in HubSpot:', hubspotSchool.properties.name)
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `Created school in HubSpot: ${hubspotSchool.properties.name}` }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating school in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Education - School creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -106,10 +140,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
         archived: false
       }
     })
-    console.log('✅ Created student in Prisma:', `${student.firstname} ${student.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: `Created student in Prisma: ${student.firstname} ${student.lastname}` }
+    });
   } else {
     student = existingStudent;
-    console.log('ℹ️ Student already exists in Prisma:', `${student.firstname} ${student.lastname}`)
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: `Student already exists in Prisma: ${student.firstname} ${student.lastname}` }
+    });
   }
 
   // Check for existing student in HubSpot
@@ -127,7 +169,11 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
 
     if (searchResults.results.length > 0) {
       hubspotStudent = searchResults.results[0];
-      console.log('ℹ️ Student already exists in HubSpot:', `${hubspotStudent.properties.firstname} ${hubspotStudent.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `Student already exists in HubSpot: ${hubspotStudent.properties.firstname} ${hubspotStudent.properties.lastname}` }
+      });
     } else {
       hubspotStudent = await hubspotClient.crm.contacts.basicApi.create({
         properties: {
@@ -136,10 +182,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
           lastname: 'Simpson',
         }
       });
-      console.log('✅ Created student in HubSpot:', `${hubspotStudent.properties.firstname} ${hubspotStudent.properties.lastname}`);
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `Created student in HubSpot: ${hubspotStudent.properties.firstname} ${hubspotStudent.properties.lastname}` }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating student in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Education - Student creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -157,7 +211,11 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
 
     if (existingDefinition) {
       associationDefinition = { results: [existingDefinition] };
-      console.log('ℹ️ Association definition already exists in HubSpot with typeId:', existingDefinition.typeId);
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `Association definition already exists in HubSpot with typeId: ${existingDefinition.typeId}` }
+      });
     } else {
       associationDefinition = await hubspotClient.crm.associations.v4.schema.definitionsApi.create(
         'companies',
@@ -167,10 +225,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
           name: 'school_to_student'
         }
       );
-      console.log('✅ Created association definition in HubSpot with typeId:', associationDefinition.results[0].typeId)
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: `Created association definition in HubSpot with typeId: ${associationDefinition.results[0].typeId}` }
+      });
     }
   } catch (error) {
-    console.error('Error while checking/creating association definition in HubSpot:', error);
+    Logger.error({
+      type: 'Seed',
+      context: 'Education - Association definition creation',
+      logMessage: { message: error instanceof Error ? error.message : String(error) }
+    });
     throw error;
   }
 
@@ -191,9 +257,17 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
         associationTypeId: associationDefinition.results[0].typeId
       }
     });
-    console.log('✅ Updated Prisma association definition with HubSpot typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'Updated Prisma association definition with HubSpot typeId' }
+    });
   } else {
-    console.log('ℹ️ Association definition already exists with this typeId')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'Association definition already exists with this typeId' }
+    });
   }
 
   // Check if association exists in Prisma
@@ -224,10 +298,18 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
         associationCategory: AssociationCategory.USER_DEFINED
       }
     });
-    console.log('✅ Created association in Prisma between school and student')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'Created association in Prisma between school and student' }
+    });
   } else {
     schoolStudentAssociation = existingAssociation;
-    console.log('ℹ️ Association already exists in Prisma between school and student')
+    Logger.info({
+      type: 'Seed',
+      context: 'Education',
+      logMessage: { message: 'Association already exists in Prisma between school and student' }
+    });
   }
 
   // Create association mapping if association was created
@@ -261,11 +343,23 @@ export async function seedEducationData(prisma: PrismaClient, hubspotClient:Clie
           cardinality: Cardinality.ONE_TO_MANY
         }
       });
-      console.log('✅ Created association mapping between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: 'Created association mapping between Prisma and HubSpot' }
+      });
     } else {
-      console.log('ℹ️ Association mapping already exists between Prisma and HubSpot')
+      Logger.info({
+        type: 'Seed',
+        context: 'Education',
+        logMessage: { message: 'Association mapping already exists between Prisma and HubSpot' }
+      });
     }
   }
 
-  console.log('✨ Education data seed completed successfully!')
+  Logger.info({
+    type: 'Seed',
+    context: 'Education',
+    logMessage: { message: 'Education data seed completed successfully!' }
+  });
 }

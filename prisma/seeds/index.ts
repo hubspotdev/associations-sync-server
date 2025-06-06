@@ -3,18 +3,23 @@ import { seedHealthcareData } from './healthcare'
 import { seedRealEstateData } from './real-estate'
 import { seedManufacturingData } from './manufacturing'
 import { seedPRMData } from './partnership'
-import { hubspotClient, getAccessToken } from '../../src/auth'
+import { hubspotClient, getHubSpotToken } from '../../src/auth'
 import { getCustomerId } from '../../src/utils/utils';
 import prisma from '../../src/prisma-client/prisma-initialization';
+import Logger from '../../src/utils/logger';
 
 async function main() {
   const customerId = getCustomerId()
-  const accessToken = await getAccessToken(customerId);
+  const accessToken = await getHubSpotToken(customerId);
   if(accessToken) hubspotClient.setAccessToken(accessToken)
 
   const seedType = process.env.INDUSTRY || 'EDUCATION'
 
-  console.log(`Seeding database and HubSpot with ${seedType} data...`)
+  Logger.info({
+    type: 'Seed',
+    context: 'Initialization',
+    logMessage: { message: `Seeding database and HubSpot with ${seedType} data...` }
+  });
 
   switch (seedType) {
     case 'EDUCATION':
@@ -33,13 +38,21 @@ async function main() {
       await seedPRMData(prisma, hubspotClient)
       break
     default:
-      console.log('Invalid seed type specified')
+      Logger.warn({
+        type: 'Seed',
+        context: 'Initialization',
+        logMessage: { message: 'Invalid seed type specified' }
+      });
   }
 }
 
 main()
   .catch((e) => {
-    console.error(e)
+    Logger.error({
+      type: 'Seed',
+      context: 'Initialization',
+      logMessage: e
+    });
     process.exit(1)
   })
   .finally(async () => {
