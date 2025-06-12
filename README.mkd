@@ -7,9 +7,7 @@ An Express.js application that provides seamless integration with HubSpot for ma
 - [Why is this project useful](#why-is-this-project-useful)
 - [Getting started with the project](#getting-started-with-the-project)
   - [Setup](#setup)
-  - [Scopes](#scopes)
 - [Endpoints](#endpoints)
-  - [Authentication Endpoints](#authentication-endpoints)
   - [Associations Endpoints](#associations-endpoints)
   - [Mappings Endpoints](#mappings-endpoints)
   - [Definitions Endpoints](#definitions-endpoints)
@@ -93,8 +91,7 @@ docker-compose -f docker-compose.yml up --build
   docker-compose --profile seed up
 ```
 
-
-## Endpoints
+## Endpoints:
 
 ### Associations Endpoints
 These endpoints manage basic associations between objects:
