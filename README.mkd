@@ -32,6 +32,10 @@ This application provides a solution for integrating with HubSpot to manage asso
 
 ## Why is this project useful
 
+- **Use an external OAuth service for HubSpot authentication**:
+  - Integrates with the [HubSpot OAuth Service](https://github.com/hubspotdev/oauth-service/tree/containerization) for secure token management
+  - Handles OAuth 2.0 processes including initial installation and token refresh
+  - Stores OAuth refresh and access tokens in a dedicated PostgreSQL database
 - **Comprehensive API Management**: Provides endpoints for managing associations and definitions between CRM objects, allowing for complex relationship handling
 - **Data Consistency**: Ensures data consistency across platforms by handling interactions with both a local database and HubSpot
 
@@ -43,38 +47,52 @@ This application provides a solution for integrating with HubSpot to manage asso
 
 2. If you haven't done so yet, please make sure to install [Docker](https://www.docker.com/get-started/) on your local environment.
 
-3. Create the .env file with these entries (see .env.example):
-   - DATABASE_URL - PostgreSQL connection string
-   - POSTGRES_USER - PostgreSQL username (default: postgres)
-   - POSTGRES_PASSWORD - PostgreSQL password (default: postgres)
-   - POSTGRES_DB - PostgreSQL database name 
-   - OAUTH_SERVICE_URL - URL of the external OAuth service
-   - INDUSTRY - Industry type for seeding data (choose between REAL_ESTATE, EDUCATION, HEALTHCARE, MANUFACTURING or PRM )
+3. Create two environment files (see .env.example and oauth-service.env.example):
 
-4. Ensure the [OAuth service](https://github.com/hubspotdev/oauth-service) is running and accessible. The OAuth service must have the following HubSpot scopes configured for this application to function properly:
-   - `crm.objects.companies.read` - Read company objects from HubSpot
-   - `crm.objects.companies.write` - Create, update, or delete company objects in HubSpot
-   - `crm.objects.contacts.read` - Read contact objects from HubSpot
-   - `crm.objects.contacts.write` - Create, update, or delete contact objects in HubSpot
-   - `crm.objects.deals.read` - Read deal objects from HubSpot
-   - `crm.objects.deals.write` - Create, update, or delete deal objects in HubSpot
-   - `oauth` - Enables OAuth-based authentication and authorization with HubSpot
+   a. `.env` file for the main application:
+   ```
+   DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_DB=hubspot_sync
+   OAUTH_SERVICE_URL=http://oauth-service:3001
+   ```
 
-5. Start the application:
-   ```bash
-  # For development:
-    docker-compose up --build
+   b. `oauth-service.env` file for the OAuth service:
+   ```
+   CLIENT_ID=your_client_id
+   CLIENT_SECRET=your_client_secret
+   DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@oauth-db:5432/${POSTGRES_DB}
+   SCOPES=crm.objects.companies.read crm.objects.companies.write crm.objects.contacts.read crm.objects.contacts.write crm.objects.deals.read crm.objects.deals.write
 
-  # Start with seeding enabled (requires INDUSTRY in .env)
-    docker-compose --profile seed up --build
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_DB=oauth_service
+   ```
 
-  # For production:
-    docker-compose -f docker-compose.yml up --build
+4. Build and run the application:
+```bash
+# For development:
+docker-compose up --build
+
+# For production:
+docker-compose -f docker-compose.yml up --build
 ```
 
-6. Once the server is running, you can access:
-   - Application: http://localhost:3000
-   - API documentation: http://localhost:3000/api-docs
+5. Initialize OAuth token:
+   - Visit `http://localhost:3001/install`
+   - Click the authorization link
+   - Complete the HubSpot OAuth flow
+   - A token will be stored with customerId="1"
+
+6. Optional - Seed the databse, important:
+  - available only in development mode
+  - requires INDUSTRY in .env
+  - requires completed OAuth flow and generated token
+```bash
+  docker-compose --profile seed up
+```
+
 
 ## Endpoints
 

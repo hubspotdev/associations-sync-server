@@ -31,7 +31,7 @@ services:
     # Ensures app and oauth services are running before seeding
     depends_on:
       - app
-      - oauth-check
+      - oauth-service
 
     # Runs the seed script defined in package.json
     command: npm run seed
@@ -41,6 +41,5 @@ services:
     # and the oauth service during the seeding process
     networks:
       - default
-      - oauth-service_oauth-network
 
 
