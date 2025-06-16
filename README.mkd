@@ -1,3 +1,9 @@
+![Containerization Available](https://img.shields.io/badge/Containerization-Available-blue)
+
+> ⚠️ **For Docker users:**  
+> Switch to the [`containerization`](https://github.com/hubspotdev/associations-sync-server/tree/containerization) branch for Docker setup and usage instructions.
+
+
 # Associations Mappings Server
 
 An Express.js application that provides seamless integration with HubSpot for managing associations between CRM objects. It handles creation, retrieval, deletion, and mapping of associations and their definitions while enabling OAuth-based authentication with HubSpot.
